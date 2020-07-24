@@ -28,7 +28,7 @@
                 </div>
                 @endif
                 <div class="card-body">
-                    <p>Nama Aplikasi : <b>{{ $pengaturan->nama }}</b></p>
+                    <p>Nama Aplikasi : <b>{{ $pengaturan->value }}</b></p>
                     {{-- <p>Logo : </p>
                         <img src="{{ asset("img/logo.jpg") }}" alt="Logo Sistem" height="250px">
                     <div class="mt-8"> --}}

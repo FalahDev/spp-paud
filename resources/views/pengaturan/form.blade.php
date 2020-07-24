@@ -22,8 +22,8 @@
                         <div class="col-12">
                             @csrf
                             <div class="form-group">
-                                <label class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="nama" placeholder="Nama" value="{{ $pengaturan->nama }}" required>
+                                <label class="form-label">{{ $pengaturan->name }}</label>
+                                <input type="text" class="form-control" name="{{ $pengaturan->key }}" placeholder="{{ $pengaturan->name }}" value="{{ $pengaturan->value }}" required>
                             </div>
                             {{-- <div class="form-group">
                                 <div class="form-label">Logo</div>

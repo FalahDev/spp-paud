@@ -44,7 +44,13 @@ class HomeController extends Controller
     public function pengaturan(){
         $pengaturan = DB::table('pengaturan')->first();
         if($pengaturan == null){
-            DB::table('pengaturan')->insert(['nama' => 'Sistem Informasi']);
+            DB::table('pengaturan')->insert(
+                [
+                    'name' => 'nama',
+                    'value' => 'Sistem Informasi',
+                    'created_at' =>  \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
+                ]);
             $pengaturan = DB::table('pengaturan')->first();
         }
         return view('pengaturan.index', ['pengaturan' => $pengaturan]);
@@ -57,17 +63,16 @@ class HomeController extends Controller
 
     public function storePengaturan(Request $request){
         $request->validate([
-            'nama' => 'required|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png'
+            'nama' => 'required|max:255'
         ]);
 
         if($request->hasFile('logo')){
             $logo = $request->file('logo');
             $logo->storeAs('img','logo.jpg','standart');
             $logo = $logo->hashName();
-            DB::table('pengaturan')->update(['nama' => $request->nama, 'logo' => $logo]);
+            DB::table('pengaturan')->update(['value' => $logo]);
         }else{
-            DB::table('pengaturan')->update(['nama' => $request->nama]);
+            DB::table('pengaturan')->where('key', 'nama')->update(['value' => $request->nama]);
         }
 
         return redirect()->route('pengaturan.index')->with([
