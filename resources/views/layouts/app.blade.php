@@ -37,6 +37,7 @@
 	<link href="{{ asset('assets/plugins/datepicker/datepicker.css')}}" rel="stylesheet" />
 	<!-- requirejs and Custom CSS -->
 	@yield('css')
+	@laravelPWA
 </head>
 
 <body class="">
