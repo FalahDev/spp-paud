@@ -26,7 +26,7 @@
                                 <select class="form-control" name="periode_id">
                                     @foreach($periode as $item)
                                         <option value=""></option>
-                                        <option value="{{ $item->id }}" {{ isset($kelas) ? ($item->id == $kelas->id ? 'selected' : '') : '' }}>{{ $item->nama }}</option>
+                                        <option value="{{ $item->id }}" {{ isset($kelas) ? ($item->id == $kelas->periode_id ? 'selected' : '') : '' }}>{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
