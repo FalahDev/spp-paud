@@ -48,9 +48,9 @@
                             <th class="w-1">No.</th>
                             <th>Kelas</th>
                             <th>Nama</th>
+                            <th>Gender</th>
                             <th>Wali</th>
                             <th>Telp. Wali</th>
-                            <th>Yatim</th>
                             <th></th> 
                         </tr>
                         </thead>
@@ -65,15 +65,13 @@
                                     </a>
                                 </td>
                                 <td>
+                                    {{ $item->jenis_kelamin }}
+                                </td>
+                                <td>
                                     {{ $item->nama_wali }}
                                 </td>
                                 <td>
                                     {{ $item->telp_wali }}
-                                </td>
-                                <td>
-                                    @if($item->is_yatim)
-                                        <span class="tag tag-green">Yatim</span>
-                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <a class="icon" href="{{ route('siswa.show', $item->id) }}" title="lihat detail">

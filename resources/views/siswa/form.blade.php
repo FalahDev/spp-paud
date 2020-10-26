@@ -68,14 +68,14 @@
                                 <label class="form-label">Pekerjaan Wali</label>
                                 <input type="text" class="form-control" name="pekerjaan_wali" placeholder="Pekerjaan Wali" value="{{ isset($siswa) ? $siswa->pekerjaan_wali : old('pekerjaan_wali') }}">
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="form-label">Status</div>
                                 <label class="custom-switch">
                                 <input type="checkbox" name="is_yatim" value="1" class="custom-switch-input" {{ isset($siswa) ? ($siswa->is_yatim ? 'checked' : '') : '' }}>
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Anak Yatim Piatu</span>
                                 </label>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
