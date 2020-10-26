@@ -5,6 +5,7 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-md-12">
+            <div class="card-group">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">@yield('page-name')</h3>
@@ -19,13 +20,22 @@
                     </p>
                     <p><b>Tempat, Tanggal Lahir</b> : {{$siswa->tempat_lahir.', '.$siswa->tanggal_lahir}} </p>
                     <p><b>Alamat</b> : {{$siswa->alamat}} </p>
+                    
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Wali</h3>
+                </div>
+                <div class="card-body">
                     <p><b>Nama Wali</b> : {{$siswa->nama_wali}} </p>
                     <p><b>No. Telp Wali</b> : {{$siswa->telp_wali}} </p>
                     <p><b>Pekerjaan Wali</b> : {{$siswa->pekerjaan_wali}} </p>
                 </div>
             </div>
+            </div>
         </div>
-        <div class="col-6 col-md-6">
+        <!--<div class="col-6 col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Tabungan</h3>
@@ -69,8 +79,11 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-6 col-md-6">
+        </div>-->
+    </div>
+    <div class="row pt-2 pb-2"></div>
+    <div class="row">
+        <div class="col-12 col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Tagihan SPP</h3>

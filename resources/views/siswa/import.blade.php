@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('site-name','Sistem Informasi SPP')
-@section('page-name','Import Siswa'))
+@section('page-name','Import Siswa')
 
 @section('content')
     <div class="row">

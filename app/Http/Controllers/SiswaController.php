@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Siswa;
 use App\Models\Kelas;
-use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SiswaExport;
 use App\Imports\SiswaImport;
@@ -29,7 +28,7 @@ class SiswaController extends Controller
             $siswa = Siswa::where('nama','like','%'.$q.'%')->orderBy('created_at','desc')->paginate(15);
         }
         return view('siswa.index', [
-            'siswa' => $siswa->appends(Input::except('page'))
+            'siswa' => $siswa->appends($request->except('page'))
         ]);
     }
 

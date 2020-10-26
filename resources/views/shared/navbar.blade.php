@@ -13,11 +13,11 @@
                             <i class="fe fe-repeat"></i> Transaksi SPP
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                             <a href="{{ route('tabungan.index') }}" class="nav-link {{ set_active(['tabungan.*'], 'active') }}">
                             <i class="fe fe-repeat"></i> Tabungan
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{ route('keuangan.index') }}" class="nav-link {{ set_active(['keuangan.*'], 'active') }}">
                             <i class="fe fe-repeat"></i> Keuangan
@@ -51,7 +51,7 @@
                     @if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SuperAdmin')
                     <li class="nav-item">
                             <a href="{{ route('user.index') }}" class="nav-link {{ set_active(['user.*'], 'active') }}">
-                            <i class="fe fe-box"></i> Pengguna
+                            <i class="fe fe-box"></i> Admin
                         </a>
                     </li>
                     @endif
