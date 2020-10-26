@@ -1,0 +1,8 @@
+---
+    deployment:
+        tasks:
+            - export DEPLOYPATH=/home/arroudlo/spp/
+            - export APPPATH=/home/arroudlo/spp.git/
+            - /bin/cp -Ru $APPPATH/public/* $DEPLOYPATH
+            - /bin/mv $DEPLOYPATH/index-prod.php $DEPLOYPATH/index.php
+    
