@@ -8,6 +8,7 @@ use App\Models\Siswa;
 use App\Models\Tagihan;
 use Illuminate\Support\Facades\DB;
 use App\Models\Keuangan;
+use App\Models\Kekurangan;
 use App\Models\Tabungan;
 use App\Exports\SppSiswaExport;
 use App\Exports\SppExport;
@@ -29,17 +30,22 @@ class TransaksiController extends Controller
     {
         DB::beginTransaction();
         //mulai transaksi, membersihkan request->jumlah dari titik dan koma
+        $kurang = $request->kurang;
         $jumlah = preg_replace("/[,.]/", "", $request->jumlah);
         $jumlah = $jumlah - $request->diskon;
+        $message = 'dibayarkan secara tunai';
+        if ($request->via == 'kredit') {
+            $message = 'dibayarkan secara angsur';
+            $jumlah = $jumlah - $kurang;
+        }
 
         //membuat transaksi baru
         $transaksi = Transaksi::make([
             'siswa_id' => $siswa->id,
             'tagihan_id' => $request->tagihan_id,
             'diskon' => $request->diskon,
-            'is_lunas' => 1,
-            'keterangan' => ($request->via == 'tabungan' ? 'dibayarkan melalui tabungan' : 'dibayarkan secara tunai, ').
-                            ', '.$request->keterangan,
+            'is_lunas' => empty($kurang) ? 1 : 0,
+            'keterangan' => $message.', '.$request->keterangan,
         ]);
         
         //menyimpan transaksi
@@ -62,7 +68,18 @@ class TransaksiController extends Controller
         }
         
         // jika pembayaran dilakukan melalui tabungan
-        if($request->via == 'tabungan'){
+        if ($request->via == 'kredit') {
+            $kekurangan = Kekurangan::create([
+                'siswa_id' => $siswa->id,
+                'tagihan_id' => $request->tagihan_id,
+                'transaksi_id' => $transaksi->id,
+                'jumlah' => $request->kurang,
+                'keterangan' => $request->keterangan
+            ]);
+            
+            // $jumlah = $jumlah - $kurang;
+
+        } else if($request->via == 'tabungan'){
             $tabungan = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc')->first();
             $menabung = Tabungan::create([
                 'siswa_id' => $siswa->id,
@@ -90,7 +107,8 @@ class TransaksiController extends Controller
             ]);
         }
 
-        if($keuangan){
+
+        if(isset($keuangan) || isset($kekurangan)){
             DB::commit();
             return response()->json(['msg' => 'transaksi berhasil dilakukan']);
         }else{

@@ -42,11 +42,11 @@
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Hanya Kelas</span>
                                 </label>
-                                <label class="custom-switch">
+                                {{-- <label class="custom-switch">
                                 <input type="radio" name="peserta" value="3" class="custom-switch-input" {{ isset($tagihan) ? (($tagihan->kelas_id == null && $tagihan->wajib_semua == null) ? 'checked' : '') : '' }}>
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Hanya Siswa</span>
-                                </label>
+                                </label> --}}
                             </div>
                             </div>
                             <div class="form-group" style="display: {{ isset($tagihan) ? (($tagihan->kelas_id != null) ? 'block' : 'none') : 'none' }}" id="form-kelas">

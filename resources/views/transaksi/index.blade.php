@@ -44,7 +44,7 @@
                                             <option value="{{ $item->id }}"> {{ $item->nama.' - '.$item->kelas->nama.' - ' }} </option>
                                         @endforeach
                                     </select><br>
-                                    Saldo: IDR. <span id="saldo">0</span>
+                                    {{-- Saldo: IDR. <span id="saldo">0</span> --}}
                                 </div>
                                 <div class="form-group" style="display: none" id="form-tagihan">
                                     <label class="form-label" >Tagihan</label>
@@ -54,12 +54,12 @@
                                 </div>
                                 <div class="form-group" style="display: none" id="form-tagihan-2">
                                         <label class="form-label">Total Tagihan</label>
-                                        IDR. <span id="harga">0</span>
-                                        <label class="custom-switch">
+                                        Rp<span id="harga">0</span>
+                                        {{-- <label class="custom-switch">
                                             <input type="checkbox" class="custom-switch-input" id="ada-diskon">
                                             <span class="custom-switch-indicator"></span>
                                             <span class="custom-switch-description">Ada diskon? </span>
-                                        </label>
+                                        </label> --}}
                                 </div>
                                 <div class="form-group" style="display: none" id="form-diskon">
                                         <label class="form-label">Diskon (IDR)</label>
@@ -70,11 +70,15 @@
                                         <input type="text" name="pembayaran" class="form-control" id="total" readonly>
                                 </div>
                                 <div class="form-group" style="display: none" id="form-pembayaran">
-                                    <label class="form-label">Pembayaran</label>
+                                    <label class="form-label">Pembayaran secara</label>
                                     <div class="selectgroup w-100">
                                         <label class="selectgroup-item">
-                                            <input type="radio" name="via" value="tunai" class="selectgroup-input" checked="">
+                                            <input type="radio" name="via" value="tunai" class="selectgroup-input" checked="checked">
                                             <span class="selectgroup-button">Tunai</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="via" value="kredit" class="selectgroup-input">
+                                            <span class="selectgroup-button">Titip</span>
                                         </label>
                                         <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
                                             <input type="radio" name="via" value="tabungan" class="selectgroup-input">
@@ -112,8 +116,8 @@
                             <th>Tanggal</th>
                             <th>Siswa</th>
                             <th>Tagihan</th>
-                            <th>Diskon</th>
                             <th>Dibayarkan</th>
+                            <th>Kurang</th>
                             <th>Keterangan</th>
                             <th>Cetak</th>
                         </tr>
@@ -129,8 +133,8 @@
                                     </a>
                                 </td>
                                 <td>{{ $item->tagihan->nama }}</td>
-                                <td>IDR. {{ format_idr($item->diskon) }}</td>
-                                <td>IDR. {{ format_idr($item->keuangan->jumlah) }}</td>
+                                <td>Rp{{ format_idr($item->keuangan->jumlah) }}</td>
+                                <td>Rp{{ format_idr($item->kekurangan->jumlah) }}</td>
                                 <td style="max-width:150px;">{{ $item->keterangan }}</td>
                                 <td>
                                     <label class="custom-control custom-checkbox">
@@ -183,6 +187,7 @@
             var saldo;      //saldo dari siswa
             var harga;      //harga dari tagihan
             var diskon = 0; //diskon
+            var kurang = 0; //kekurangan
             var via = 'tunai';  //pembayaran via 
             // memilih siswa
             $('#siswa').on('change',function(){
@@ -289,15 +294,60 @@
                 }
             })
 
+            $('#total').keyup(function(event){
+
+                // 1.
+                var selection = window.getSelection().toString();
+                if ( selection !== '' ) {
+                    return;
+                }
+            
+                // 2.
+                if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                    return;
+                }
+
+                // 1
+                var $this = $( this );
+                var input = $this.val();
+                
+                // 2
+                var input = input.replace(/[\D\s\._\-]+/g, "");
+                
+                // 3
+                input = input ? parseInt( input, 10 ) : 0;
+                
+                if (input > harga) {
+                    swal({title: "Nominal yang dimasukkan kebanyakan bu!", icon: 'error'})
+                    // alert('nominal yang dimasukkan kebanyakan bu!')
+                }
+                kurang = harga - input
+
+                // 4
+                $this.val( function() {
+                    return ( input === 0 ) ? "" : input.toLocaleString( "id-ID" );
+                } );
+
+                // console.log(kurang)
+            })
+
             //pembayaran via
             $('.selectgroup-input').change(function(){
                 via = this.value
+                if (via == 'kredit') {
+                    $('#total').prop('readonly', false)
+                } else {
+                    $('#total').prop('readonly', true)
+                }
             })
 
             $('#btn-simpan').on('click', function(){
-                console.log(harga)
+                // console.log(harga)
                 if((harga - diskon) == NaN){
                     alert('diskon invalid')
+                } else if(kurang < 0) {
+                    // alert('nominal pembayaran masih kebanyakan bu!')
+                    swal({title: "Nominal pembayaran masih kebanyakan bu!", icon: 'error'})
                 }else{
                     $('#btn-simpan').addClass("btn-loading")
                     $.ajax({
@@ -308,6 +358,7 @@
                             siswa_id : siswa_id,
                             jumlah : harga,
                             diskon : diskon,
+                            kurang : kurang,
                             keterangan : keterangan.value,
                             via : via
                         },

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Keuangan;
+use App\Models\Kekurangan;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
 use App\Exports\LaporanHarianExport;
@@ -20,6 +21,7 @@ class HomeController extends Controller
         $total_uang_spp = Keuangan::where('tipe','in')->where('transaksi_id','!=','null')->sum('jumlah') - Keuangan::where('tipe','out')->where('transaksi_id','!=','null')->sum('jumlah');;
         $total_uang_masuk = Keuangan::where('tipe','in')->sum('jumlah');
         $total_uang_keluar = Keuangan::where('tipe','out')->sum('jumlah');
+        $total_kekurangan = Kekurangan::where('dibayar', false)->sum('jumlah');
 
         $transaksi = Transaksi::orderBy('siswa_id','desc')->whereDate('created_at', now()->today())->get();
 
@@ -33,6 +35,7 @@ class HomeController extends Controller
             'total_uang_spp' => $total_uang_spp,
             'total_uang_masuk' => $total_uang_masuk,
             'total_uang_keluar' => $total_uang_keluar,
+            'total_kekurangan' => $total_kekurangan,
             'transaksi' => $transaksi,
             'jumlah' => '0',
             'siswa' => $siswa,

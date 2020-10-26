@@ -44,8 +44,8 @@
         <div class="col-6 col-sm-3 col-lg-3">
             <div class="card">
                 <div class="card-body p-3 text-center">
-                <div class="h1 m-0">IDR {{ format_idr($total_uang_tabungan) }}</div>
-                <div class="text-muted mb-4">Total Uang Tabungan</div>
+                <div class="h1 m-0">IDR {{ format_idr($total_kekurangan) }}</div>
+                <div class="text-muted mb-4">Total Kurang Bayar</div>
                 </div>
             </div>
         </div>

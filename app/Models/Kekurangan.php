@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Transaksi extends Model
+class Kekurangan extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
-    protected $table = 'transaksi';
+    protected $table = 'kekurangan';
 
     protected $fillable = [
         'siswa_id',
         'tagihan_id',
-        'total',
-        'diskon',
-        'is_lunas',
+        'transaksi_id',
+        'jumlah',
+        'dibayar',
         'keterangan'
     ];
 
@@ -28,11 +28,7 @@ class Transaksi extends Model
         return $this->hasOne('App\Models\Siswa','id','siswa_id');
     }
 
-    public function keuangan(){
-        return $this->hasOne('App\Models\Keuangan','transaksi_id','id');
-    }
-
-    public function kekurangan(){
-        return $this->hasOne('App\Models\Kekurangan','transaksi_id','id');
+    public function transaksi(){
+        return $this->hasOne('App\Models\Transaksi','id','transaksi_id');
     }
 }
