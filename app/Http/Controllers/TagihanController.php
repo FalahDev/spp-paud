@@ -8,6 +8,7 @@ use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Periode;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
 
 class TagihanController extends Controller
 {
@@ -53,7 +54,7 @@ class TagihanController extends Controller
             'peserta' => 'required|numeric'
         ]);
 
-        $tagihan = Tagihan::make($request->except('kelas_id'));
+        $tagihan = Tagihan::make($request->except(['kelas_id','periode','periode_id']));
 
         switch($request->peserta){
             case 1: // semua
@@ -70,6 +71,12 @@ class TagihanController extends Controller
                 break;
             default:
                 return Redirect::back()->withErrors(['Peserta Wajib diisi']);
+        }
+
+        if (isset($request->periode)) {
+            $tagihan->periode_id = $request->periode_id;
+        } else {
+            $tagihan->periode_id = null;
         }
 
         if($tagihan->save()){
@@ -118,8 +125,8 @@ class TagihanController extends Controller
             'jumlah' => 'required|numeric',
             'peserta' => 'required|numeric'
         ]);
-
-        $tagihan->fill($request->except('kelas_id'));
+        // Log::debug($request);
+        $tagihan->fill($request->except(['kelas_id','periode','periode_id']));
         
         //remove all related
         $tagihan->siswa()->detach();
@@ -140,6 +147,12 @@ class TagihanController extends Controller
                 break;
             default:
                 return Redirect::back()->withErrors(['Peserta Wajib diisi']);
+        }
+
+        if (isset($request->periode)) {
+            $tagihan->periode_id = $request->periode_id;
+        } else {
+            $tagihan->periode_id = null;
         }
 
         if($tagihan->save()){
