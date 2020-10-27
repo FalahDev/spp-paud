@@ -81,13 +81,13 @@
                                             <input type="radio" name="via" value="tunai" class="selectgroup-input" checked="checked">
                                             <span class="selectgroup-button">Tunai</span>
                                         </label>
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="via" value="kredit" class="selectgroup-input">
-                                            <span class="selectgroup-button">Titip</span>
-                                        </label>
                                         <label class="selectgroup-item" style="display: none" id="opsi-pelunasan">
                                             <input type="radio" name="via" value="pelunasan" class="selectgroup-input">
                                             <span class="selectgroup-button">Pelunasan</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="via" value="kredit" class="selectgroup-input">
+                                            <span class="selectgroup-button">Titip</span>
                                         </label>
                                         <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
                                             <input type="radio" name="via" value="tabungan" class="selectgroup-input">
@@ -218,7 +218,7 @@
                     siswa_id = this.value
                 }
                 //get kekurangan
-                // console.log(this.value)
+                $.when(
                 $.ajax({url: "{{ route('api.getkurang') }}/" + this.value,
                     success: function(result){
                         // $('#saldo').text(result.kurang)
@@ -228,16 +228,17 @@
                         $('#form-pembayaran').show()
                         $('#form-keterangan').show()
                         $('#btn-simpan').show()
+                        $('.selectgroup-item:first').show()
+                        $('.selectgroup-item:first > input')
+                            .prop('checked',true).trigger('change');
                         kekurangan = result.kurang;
                         if ('msg' in result == false && result.kurang != 0) {
-                            
+                            $('.selectgroup-item:first').hide();
                             $('#form-total').hide();
                             $('#form-lunas').show();
-                            // $('.selectgroup-item').hide();
                             $('#opsi-pelunasan').show();
                             $('#opsi-pelunasan > input')
-                                .prop('checked', true)
-                                .trigger('changed');
+                                .prop('checked', true).trigger('change');
                             via =  $('#opsi-pelunasan > input').val();
                         }
                         // console.log(result)
@@ -252,13 +253,16 @@
                         $('#opsi-tabungan').hide()
                         $('#form-keterangan').hide()
                         $('#btn-simpan').hide()
-                }});
+                }}),
                 //get tagihan
                 $.ajax({url: "{{ route('api.gettagihan') }}/" + this.value, success: function(result){
-                    if(result.length == 0){
-                        alert('tidak ada item tagihan yang tersedia')
-                    }
                     $("#tagihan").empty()
+                    if(result.length == 0){
+                        // alert('tidak ada item tagihan yang tersedia')
+                        swal({title:'tidak ada tagihan yang belum dibayar'})
+                        $('#btn-simpan').prop('disabled', true);
+                        return
+                    }
                     for(i=0;i < result.length ;i++){
                         $("#tagihan").append('<option value="'+ result[i].id +'" data-harga="'+ result[i].jumlah +'">'+ result[i].nama +'</option>');
                     }
@@ -278,7 +282,7 @@
                     } else {
                         $('#infokurang').hide();
                     }
-                    console.log(result)
+                    // console.log(kekurangan)
 
                     //menampilkan harga
                     $('#harga').text(formatNumber(harga));
@@ -289,7 +293,12 @@
                     } else {
                         $('#btn-simpan').prop('disabled', false);
                     }
-                },});
+                    
+                }}))
+                .done(function(satu, dua){
+                    // console.log('selesai')
+                });
+            
             })
 
             $('#tagihan').on('change', function(){

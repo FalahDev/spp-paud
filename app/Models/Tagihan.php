@@ -20,12 +20,20 @@ class Tagihan extends Model
     ];
 
     protected $visible = [
+        'id',
         'nama',
         'jumlah',
         'wajib_semua',
         'kelas_id',
         'periode_id'
     ];
+
+    protected $appends = ['tagihan_id'];
+
+    public function getTagihanIdAttribute()
+    {
+        return $this->attributes['id'];
+    }
 
     public function transaksi(){
         return $this->hasMany('App\Models\Transaksi','tagihan_id','id');
