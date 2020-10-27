@@ -8,9 +8,11 @@ use App\Models\Kelas;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SiswaExport;
 use App\Imports\SiswaImport;
+use App\Models\Kekurangan;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
 use App\Models\Tagihan;
+use Illuminate\Support\Facades\Log;
 
 class SiswaController extends Controller
 {
@@ -261,6 +263,28 @@ class SiswaController extends Controller
         }else{
             return response()->json(['saldo' => '0', 'sal' => 'invalid '.format_idr($input - $output)]);
         }
+    }
+
+    public function getKekurangan(Siswa $siswa)
+    {
+        $data = ['kurang' => '0'];
+        if($siswa == null){
+            $data['msg'] = 'siswa tidak ditemukan';
+            return response()->json($data, 404);
+        }
+        if($siswa->kekurangan->count() == 0){
+            return response()->json($data);
+        }
+        // Log::debug(var_export($siswa->id, true));
+
+        $kekurangan = Kekurangan::where('siswa_id', $siswa->id)->where('dibayar',0)->get();
+        
+        foreach ($kekurangan as $key => $kurang) {
+            $data['kurang'] = [];
+            $data['kurang'][$kurang->tagihan_id] = $kurang->jumlah;
+        }
+        // Log::debug($data);
+        return response()->json($data);
     }
 
     protected function getTagihan(Siswa $siswa)

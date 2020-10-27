@@ -12,6 +12,7 @@ use App\Models\Kekurangan;
 use App\Models\Tabungan;
 use App\Exports\SppSiswaExport;
 use App\Exports\SppExport;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiController extends Controller
 {
@@ -67,7 +68,7 @@ class TransaksiController extends Controller
                                 ', '.$request->keterangan . $additional_message
             ]);
         }
-        
+        // Log::debug($request);
         // jika pembayaran dilakukan melalui tabungan
         if ($request->via == 'kredit') {
             $kekurangan = Kekurangan::create([
@@ -77,6 +78,22 @@ class TransaksiController extends Controller
                 'jumlah' => $request->kurang,
                 'keterangan' => $request->keterangan
             ]);
+            // Log::debug($kekurangan);
+
+            Kekurangan::where([
+                ['id', '!=', $kekurangan->id],
+                ['siswa_id', '=', $siswa->id],
+                ['tagihan_id', '=', $request->tagihan_id],
+                ['dibayar', '=', '0']
+                ])
+                ->update(['dibayar' => 1]);
+
+        } else if($request->via == 'pelunasan') {
+            Kekurangan::where([['siswa_id', '=', $siswa->id], ['tagihan_id', '=', $request->tagihan_id], ['dibayar', '=', '0']])
+                ->update(['dibayar' => 1]);
+
+            Transaksi::where([['siswa_id', '=', $siswa->id], ['tagihan_id', '=', $request->tagihan_id], ['is_lunas', '=', '0']])
+                ->update(['is_lunas' => 1]);
             
             // $jumlah = $jumlah - $kurang;
 

@@ -13,14 +13,14 @@
             <div class="card" id="print">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-9">
+                        <div class="col-8">
                             <h2>{{ $sitename }}</h2>
                             <p>
                                 Pembayaran Biaya SPP<br>
-                                Invoice: <span id="invoice">01/SPP/{{ now()->format('YmdHis') }}</span>
+                                Invoice: <span id="invoice">{{ now()->format('YmdHis') }}</span>
                             </p>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <div class="d-flex">
                                 <p class="ml-auto"> 
                                     Tanggal : {{ now()->format('d-m-Y') }}<br>
@@ -34,7 +34,8 @@
                             <tr>
                                 <th>Tanggal</th>
                                 <th>Nama Siswa</th>
-                                <th>Nama Tagihan</th>
+                                <th>Kelas</th>
+                                <th>Jenis Tagihan</th>
                                 <th>Kekurangan</th>
                                 <th>Dibayarkan</th>
                             </tr>
@@ -44,6 +45,7 @@
                                 <tr>
                                     <td><input type="text" class="form-control" value="{{ $item->created_at->format('d-m-Y') }}"></td>
                                     <td><input type="text" class="form-control" id="jumlah-0" value="{{ $item->siswa->nama }}"></td>
+                                    <td><input type="text" class="form-control" data-id="0" value="{{ $item->siswa->kelas->nama }}"></td>
                                     <td><input type="text" class="form-control" data-id="0" value="{{ ($item->tagihan->nama) }}"></td>
                                     <td><input type="text" class="form-control" data-id="0" value="Rp{{ isset($item->kekurangan) ? format_idr($item->kekurangan->jumlah) : 0 }}"></td>
                                     <td><input type="text" class="form-control" data-id="0" value="Rp{{ format_idr($item->keuangan->jumlah) }}"></td>
