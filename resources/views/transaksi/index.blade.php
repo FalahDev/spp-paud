@@ -186,40 +186,9 @@
             function formatNumber(num) {
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
-            $('#siswa').select2({
-                placeholder: "Pilih Siswa",
-            });
-            $('#tagihan').select2({});
-            
-            var siswa_id;   //siswa_id
-            var tagihan_id; //tagihan_id
-            var saldo;      //saldo dari siswa
-            var harga;      //harga dari tagihan
-            var diskon = 0; //diskon
-            var kurang = 0; //kekurangan
-            var kekurangan;
-            var via = 'tunai';  //pembayaran via 
-            // memilih siswa
-            $('#siswa').on('change',function(){
-                if(this.value == '#'){
-                    $('#saldo').text('0') 
-                    $('#form-tagihan').hide()
-                    $('#form-tagihan-2').hide()
-                    $('#form-total').hide()
-                    $('#form-lunas').hide()
-                    $('#form-pembayaran').hide()
-                    $('#opsi-pelunasan').hide()
-                    $('#opsi-tabungan').hide()
-                    $('#form-keterangan').hide()
-                    $('#btn-simpan').hide()
-                    $('#infokurang').hide();
-                    return;
-                }else{
-                    siswa_id = this.value
-                }
+            function getKekurangan(val){
                 //get kekurangan
-                $.when(
-                $.ajax({url: "{{ route('api.getkurang') }}/" + this.value,
+                return $.ajax({url: "{{ route('api.getkurang') }}/" + val,
                     success: function(result){
                         // $('#saldo').text(result.kurang)
                         $('#form-tagihan').show()
@@ -253,9 +222,12 @@
                         $('#opsi-tabungan').hide()
                         $('#form-keterangan').hide()
                         $('#btn-simpan').hide()
-                }}),
+                }})
+            }
+            function getTagihan(val){
                 //get tagihan
-                $.ajax({url: "{{ route('api.gettagihan') }}/" + this.value, success: function(result){
+                return $.ajax({url: "{{ route('api.gettagihan') }}/" + val,
+                    success: function(result){
                     $("#tagihan").empty()
                     if(result.length == 0){
                         // alert('tidak ada item tagihan yang tersedia')
@@ -274,7 +246,7 @@
                     }else{
                         $('#opsi-tabungan').hide()
                     }
-                    if (kekurangan && kekurangan != 0) {
+                    if (kekurangan != 0) {
                         if(tagihan_id in kekurangan) {
                             harga = kekurangan[tagihan_id];
                             $('#infokurang').show();
@@ -282,7 +254,7 @@
                     } else {
                         $('#infokurang').hide();
                     }
-                    // console.log(kekurangan)
+                    console.log(result)
 
                     //menampilkan harga
                     $('#harga').text(formatNumber(harga));
@@ -294,9 +266,47 @@
                         $('#btn-simpan').prop('disabled', false);
                     }
                     
-                }}))
+                }})
+            }
+            $('#siswa').select2({
+                placeholder: "Pilih Siswa",
+            });
+            $('#tagihan').select2({});
+            
+            var siswa_id;   //siswa_id
+            var tagihan_id; //tagihan_id
+            var saldo;      //saldo dari siswa
+            var harga;      //harga dari tagihan
+            var diskon = 0; //diskon
+            var kurang = 0; //kekurangan
+            var kekurangan;
+            var via = 'tunai';  //pembayaran via 
+            // memilih siswa
+            $('#siswa').on('change',function(){
+                if(this.value == '#'){
+                    $('#saldo').text('0') 
+                    $('#form-tagihan').hide()
+                    $('#form-tagihan-2').hide()
+                    $('#form-total').hide()
+                    $('#form-lunas').hide()
+                    $('#form-pembayaran').hide()
+                    $('#opsi-pelunasan').hide()
+                    $('#opsi-tabungan').hide()
+                    $('#form-keterangan').hide()
+                    $('#btn-simpan').hide()
+                    $('#infokurang').hide();
+                    return;
+                }else{
+                    siswa_id = this.value
+                }
+                
+                $.when(
+                    getKekurangan(this.value),
+                    getTagihan(this.value)
+                )
                 .done(function(satu, dua){
-                    // console.log('selesai')
+                    console.log(harga)
+                    console.log(kekurangan)
                 });
             
             })
@@ -315,7 +325,7 @@
                 if (kekurangan && kekurangan[tagihan_id]) {
                     harga = kekurangan[tagihan_id];
                     $('#infokurang').show();
-                    // console.log(kekurangan[tagihan_id])
+                    console.log(kekurangan[tagihan_id])
                 } else {
                     $('#infokurang').hide();
                 }
