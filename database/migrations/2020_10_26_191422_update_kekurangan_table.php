@@ -16,6 +16,7 @@ class UpdateKekuranganTable extends Migration
         Schema::table('kekurangan', function (Blueprint $table) {
             $table->unsignedBigInteger('transaksi_id');
             $table->boolean('dibayar')->default(false);
+            $table->softDeletes();
 
             $table->foreign('transaksi_id')->references('id')->on('transaksi')->onDelete('cascade');
         });
@@ -31,9 +32,10 @@ class UpdateKekuranganTable extends Migration
         Schema::table('kekurangan', function (Blueprint $table) {
             $table->dropForeign(['transaksi_id']);
         });
-        Schema::table('kekurangan', function (Blueprint $table) {
-            $table->removeColumn('transaksi_id');
-            $table->removeColumn('dibayar');
-        });
+        if (Schema::hasColumns('kekurangan', ['transaksi_id', 'dibayar'])) {
+            Schema::table('kekurangan', function (Blueprint $table) {
+                $table->dropColumn(['transaksi_id', 'dibayar']);
+            });
+        }
     }
 }

@@ -134,7 +134,7 @@
                                 </td>
                                 <td>{{ $item->tagihan->nama }}</td>
                                 <td>Rp{{ format_idr($item->keuangan->jumlah) }}</td>
-                                <td>Rp{{ format_idr($item->kekurangan->jumlah) }}</td>
+                                <td>Rp{{ isset($item->kekurangan) ? format_idr($item->kekurangan->jumlah) : 0 }}</td>
                                 <td style="max-width:150px;">{{ $item->keterangan }}</td>
                                 <td>
                                     <label class="custom-control custom-checkbox">
@@ -336,6 +336,7 @@
                 via = this.value
                 if (via == 'kredit') {
                     $('#total').prop('readonly', false)
+                    $('#total').select()
                 } else {
                     $('#total').prop('readonly', true)
                 }

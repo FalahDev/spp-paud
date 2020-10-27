@@ -17,7 +17,7 @@ class TransaksiController extends Controller
 {
     public function index()
     {
-        $siswa = Siswa::where('is_yatim','0')->orderBy('created_at','desc')->get();
+        $siswa = Siswa::where('is_lulus','0')->orderBy('created_at','desc')->get();
         $transaksi = Transaksi::orderBy('created_at','desc')->paginate(10);
         return view('transaksi.index', [
             'siswa' => $siswa,
@@ -52,6 +52,7 @@ class TransaksiController extends Controller
         if($transaksi->save()){
             //tambahkan transaksi ke keuangan
             $keuangan = Keuangan::orderBy('created_at','desc')->first();
+            $additional_message = empty($kurang) ? '' : ', kurang Rp' .format_idr($kurang);
             if($keuangan != null){
                 $total_kas = $keuangan->total_kas + $jumlah;
             }else{
@@ -62,8 +63,8 @@ class TransaksiController extends Controller
                 'tipe' => 'in',
                 'jumlah' => $jumlah,
                 'total_kas' => $total_kas,
-                'keterangan' => 'Pembayaran SPP oleh '.$transaksi->siswa->nama.' pada tanggal '.$transaksi->created_at.' dengan catatan : dibayarkan dengan '.$request->via.
-                                ', '.$request->keterangan
+                'keterangan' => 'Pembayaran '. $transaksi->tagihan->nama.' oleh '.$transaksi->siswa->nama.' pada tanggal '.$transaksi->created_at.' dengan catatan : dibayarkan dengan '.$request->via.
+                                ', '.$request->keterangan . $additional_message
             ]);
         }
         
