@@ -240,7 +240,7 @@
                                 .trigger('changed');
                             via =  $('#opsi-pelunasan > input').val();
                         }
-                        console.log(result)
+                        // console.log(result)
                     }, beforeSend: function(){ 
                         $('#saldo').text('tunggu, sedang mengambil kekurangan...') 
                         $('#form-tagihan').hide()
@@ -278,7 +278,7 @@
                     } else {
                         $('#infokurang').hide();
                     }
-                    console.log(harga)
+                    console.log(result)
 
                     //menampilkan harga
                     $('#harga').text(formatNumber(harga));
@@ -378,7 +378,7 @@
                     return ( input === 0 ) ? "" : input.toLocaleString( "id-ID" );
                 } );
 
-                console.log(kurang)
+                // console.log(kurang)
             })
 
             //pembayaran via
@@ -389,13 +389,11 @@
                     $('#total').select()
                     $('#lunas').prop('readonly', false)
                     $('#lunas').select()
-                    console.log(harga)
-                    console.log(kurang)
                 } else {
                     $('#total').prop('readonly', true)
                     $('#lunas').prop('readonly', true)
                 }
-                console.log(via)
+                // console.log(via)
             })
 
             $('#btn-simpan').on('click', function(){
@@ -407,11 +405,6 @@
                     swal({title: "Nominal pembayaran masih kebanyakan bu!", icon: 'error'})
                 }else{
                     $('#btn-simpan').addClass("btn-loading")
-                    if($('#total').prop('readonly') == false) {
-                        console.log('ambil sini')
-                        console.log(harga)
-                    console.log(kurang)
-                    }
                     $.ajax({
                         type: "POST",
                         url: "{{ route('api.tagihan') }}/"+siswa_id,
@@ -425,7 +418,7 @@
                             via : via
                         },
                         success: function(data){
-                            console.log(data);
+                            // console.log(data);
                             swal({title: data.msg})
                             setTimeout(function(){
                                 window.location.reload()

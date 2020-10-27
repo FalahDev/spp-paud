@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Models\Kuitansi;
 
 class KuitansiController extends Controller
@@ -23,7 +24,7 @@ class KuitansiController extends Controller
                 $semua[$dat['num']] = ['nama' => $dat['value']];
             }
             if($dat['num'] == $lastnum){//1, 1,
-                $semua[$dat['num']] = array_add($semua[$dat['num']], $dat['key'], $dat['value']); 
+                $semua[$dat['num']] = Arr::add($semua[$dat['num']], $dat['key'], $dat['value']); 
             }
             $lastnum = $dat['num'];
         }

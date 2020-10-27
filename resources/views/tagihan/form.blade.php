@@ -72,7 +72,7 @@
                             <div class="form-group">
                                 <label class="form-label">Periode</label>
                                 <div class="form-check">
-                                    <input id="periode" type="checkbox" value="specific_periode" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id == null) ? 'checked="checked"' : '') : '' }}>
+                                    <input id="periode" type="checkbox" value="specific_periode" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'checked="checked"' : '') : '' }}>
                                     <label for="periode" class="form-check-label">Khusus periode tertentu</label>
                                 </div>
                             </div>
