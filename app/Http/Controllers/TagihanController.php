@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tagihan;
 use App\Models\Kelas;
 use App\Models\Siswa;
-use App\Models\Role;
+use App\Models\Periode;
 use Illuminate\Support\Facades\Redirect;
 
 class TagihanController extends Controller
@@ -30,10 +30,12 @@ class TagihanController extends Controller
     public function create()
     {
         $kelas = Kelas::all();
-        $siswa = Siswa::where('is_yatim','!=','1')->get();
+        $siswa = Siswa::where('is_lulus','!=','1')->get();
+        $periode = Periode::where('is_active', '1')->get();
         return view('tagihan.form',[
             'kelas' => $kelas,
-            'siswa' => $siswa
+            'siswa' => $siswa,
+            'periode' => $periode
         ]);
     }
 

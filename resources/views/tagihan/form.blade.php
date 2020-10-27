@@ -47,7 +47,7 @@
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Hanya Siswa</span>
                                 </label> --}}
-                            </div>
+                                </div>
                             </div>
                             <div class="form-group" style="display: {{ isset($tagihan) ? (($tagihan->kelas_id != null) ? 'block' : 'none') : 'none' }}" id="form-kelas">
                                 <label class="form-label">Kelas</label>
@@ -65,6 +65,23 @@
                                     @foreach($siswa as $item)
                                         <option value="{{ $item->id }}" {{ isset($tagihan) ? (($tagihan->wajib_semua == null && $tagihan->kelas_id == null) ? (in_array($item->id, $tagihan->siswa->pluck('id')->toArray()) ? 'selected' : '') : '') : '' }}>
                                             {{ $item->nama }} - {{ $item->kelas->nama }} {{ isset($item->kelas->periode) ? "(". $item->kelas->periode->nama .")" : ''}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Periode</label>
+                                <div class="form-check">
+                                    <input id="periode" type="checkbox" value="specific_periode" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id == null) ? 'checked="checked"' : '') : '' }}>
+                                    <label for="periode" class="form-check-label">Khusus periode tertentu</label>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'block' : 'none') : 'none' }}" id="form-periode">
+                                <label class="form-label">Periode</label>
+                                <select class="form-control" name="periode_id" id="hanya-periode">
+                                    @foreach($periode as $item)
+                                        <option value="{{ $item->id }}" {{ isset($tagihan) ? (($tagihan->periode_id == $item->id) ? 'selected' : '') : '' }}>
+                                            {{ $item->nama }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -105,6 +122,9 @@
         $('#hanya-siswa').select2({
             placeholder: "Pilih Siswa",
         });
+        $('#hanya-periode').select2({
+            placeholder: "Pilih Periode",
+        });
 
         $('.custom-switch-input').change(function(){
             if(this.value == 2){
@@ -125,6 +145,15 @@
 
                 $('#hanya-kelas').prop('required', false)
                 $('#hanya-siswa').prop('required', false)
+            }
+        })
+
+        $('#periode').change(function(event){
+
+            if($(this).prop('checked')) {
+                $('#form-periode').show()
+            } else {
+                $('#form-periode').hide()
             }
         })
     });

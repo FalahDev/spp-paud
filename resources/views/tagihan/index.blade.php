@@ -35,6 +35,7 @@
                             <th>Nama</th>
                             <th>Jumlah</th>
                             <th>Peserta</th>
+                            <th>Periode</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -58,6 +59,9 @@
                                             {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},
                                         @endforeach
                                     @endif
+                                </td>
+                                <td>
+                                    {{ isset($item->periode_id) ? $item->periode->nama : ''}}
                                 </td>
                                 <td class="text-center">
                                     <a class="icon" href="{{ route('tagihan.edit', $item->id) }}" title="edit item">

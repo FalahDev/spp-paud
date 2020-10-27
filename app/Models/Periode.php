@@ -21,4 +21,9 @@ class Periode extends Model
     public function kelas(){
         return $this->hasMany('App\Models\Kelas','periode_id','id');
     }
+
+    public function tagihan()
+    {
+        return $this->hasMany('App\Models\Tagihan', 'periode_id', 'id');
+    }
 }

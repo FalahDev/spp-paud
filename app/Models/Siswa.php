@@ -39,4 +39,8 @@ class Siswa extends Model
     public function tabungan(){
         return $this->hasMany('App\Models\Tabungan','siswa_id','id');
     }
+
+    public function kekurangan(){
+        return $this->hasMany('App\Models\Kekurangan','siswa_id','id');
+    }
 }
