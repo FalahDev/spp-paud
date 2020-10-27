@@ -24,6 +24,19 @@ class Siswa extends Model
         'is_yatim'
     ];
 
+    protected $visible = [
+        'kelas_id',
+        'nama',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'alamat',
+        'nama_wali',
+        'telp_wali',
+        'pekerjaan_wali',
+        'is_yatim'
+    ];
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }

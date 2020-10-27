@@ -20,6 +20,15 @@ class Transaksi extends Model
         'keterangan'
     ];
 
+    protected $visible = [
+        'siswa_id',
+        'tagihan_id',
+        'total',
+        'diskon',
+        'is_lunas',
+        'keterangan'
+    ];
+
     public function tagihan(){
         return $this->hasOne('App\Models\Tagihan','id','tagihan_id');
     }

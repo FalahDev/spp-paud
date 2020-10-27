@@ -20,6 +20,15 @@ class Keuangan extends Model
         'keterangan',
     ];
 
+    protected $visible = [
+        'tabungan_id',
+        'transaksi_id',
+        'tipe',
+        'jumlah',
+        'total_kas',
+        'keterangan',
+    ];
+
     public function tabungan(){
         return $this->hasOne('App\Models\Tabungan','id','tabungan_id');
     }

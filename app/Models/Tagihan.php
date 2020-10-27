@@ -19,6 +19,14 @@ class Tagihan extends Model
         'periode_id'
     ];
 
+    protected $visible = [
+        'nama',
+        'jumlah',
+        'wajib_semua',
+        'kelas_id',
+        'periode_id'
+    ];
+
     public function transaksi(){
         return $this->hasMany('App\Models\Transaksi','tagihan_id','id');
     }

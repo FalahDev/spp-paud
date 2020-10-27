@@ -21,6 +21,15 @@ class Kekurangan extends Model
         'keterangan'
     ];
 
+    protected $visible = [
+        'siswa_id',
+        'tagihan_id',
+        'transaksi_id',
+        'jumlah',
+        'dibayar',
+        'keterangan'
+    ];
+
     public function tagihan(){
         return $this->hasOne('App\Models\Tagihan','id','tagihan_id');
     }

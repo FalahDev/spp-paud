@@ -18,6 +18,13 @@ class Periode extends Model
         'is_active'
     ];
 
+    protected $visible = [
+        'nama',
+        'tgl_mulai',
+        'tgl_selesai',
+        'is_active'
+    ];
+
     public function kelas(){
         return $this->hasMany('App\Models\Kelas','periode_id','id');
     }

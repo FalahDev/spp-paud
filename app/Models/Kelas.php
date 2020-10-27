@@ -16,6 +16,11 @@ class Kelas extends Model
         'nama'
     ];
 
+    protected $visible = [
+        'periode_id',
+        'nama'
+    ];
+
     public function siswa(){
         return $this->hasMany('App\Models\Siswa','kelas_id','id');
     }
