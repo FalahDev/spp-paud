@@ -191,10 +191,12 @@ class TransaksiController extends Controller
     protected function getTagihan(Siswa $siswa)
     {
         //wajib semua
-        $tagihan_wajib = Tagihan::where('wajib_semua','1')->get()->toArray();
-
+        $tagihan_wajib = Tagihan::where('wajib_semua','1')
+            ->whereHas('periode', function($q) { $q->where('is_active',1); })->get()->toArray();
+        // Log::debug($tagihan_wajib);
         //kelas only
-        $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)->get()->toArray();
+        $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)
+            ->whereHas('periode', function($q) { $q->where('is_active',1); })->get()->toArray();
 
         //student only
         $tagihan_siswa = [];

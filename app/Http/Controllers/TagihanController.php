@@ -94,10 +94,12 @@ class TagihanController extends Controller
     public function edit(Tagihan $tagihan)
     {
         $kelas = Kelas::all();
+        $periode = Periode::where('is_active', '1')->get();
         $siswa = Siswa::where('is_yatim','!=','1')->get();
         return view('tagihan.form',[
             'kelas' => $kelas,
             'siswa' => $siswa,
+            'periode' => $periode,
             'tagihan' => $tagihan
         ]);
     }
