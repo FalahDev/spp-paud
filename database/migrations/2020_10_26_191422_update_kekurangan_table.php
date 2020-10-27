@@ -32,9 +32,9 @@ class UpdateKekuranganTable extends Migration
         Schema::table('kekurangan', function (Blueprint $table) {
             $table->dropForeign(['transaksi_id']);
         });
-        if (Schema::hasColumns('kekurangan', ['transaksi_id', 'dibayar'])) {
+        if (Schema::hasColumns('kekurangan', ['transaksi_id', 'dibayar', 'deleted_at'])) {
             Schema::table('kekurangan', function (Blueprint $table) {
-                $table->dropColumn(['transaksi_id', 'dibayar']);
+                $table->dropColumn(['transaksi_id', 'dibayar', 'deleted_at']);
             });
         }
     }
