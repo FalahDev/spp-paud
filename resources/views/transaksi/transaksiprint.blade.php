@@ -35,7 +35,7 @@
                                 <th>Tanggal</th>
                                 <th>Nama Siswa</th>
                                 <th>Nama Tagihan</th>
-                                <th>Diskon</th>
+                                <th>Kekurangan</th>
                                 <th>Dibayarkan</th>
                             </tr>
                             </thead>
@@ -45,8 +45,8 @@
                                     <td><input type="text" class="form-control" value="{{ $item->created_at->format('d-m-Y') }}"></td>
                                     <td><input type="text" class="form-control" id="jumlah-0" value="{{ $item->siswa->nama }}"></td>
                                     <td><input type="text" class="form-control" data-id="0" value="{{ ($item->tagihan->nama) }}"></td>
-                                    <td><input type="text" class="form-control" data-id="0" value="IDR. {{ format_idr($item->diskon) }}"></td>
-                                    <td><input type="text" class="form-control" data-id="0" value="IDR. {{ format_idr($item->keuangan->jumlah) }}"></td>
+                                    <td><input type="text" class="form-control" data-id="0" value="Rp{{ isset($item->kekurangan) ? format_idr($item->kekurangan->jumlah) : 0 }}"></td>
+                                    <td><input type="text" class="form-control" data-id="0" value="Rp{{ format_idr($item->keuangan->jumlah) }}"></td>
                                 </tr>
                                 @endforeach
                                 <tr id="newrow"></tr>
