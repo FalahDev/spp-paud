@@ -228,7 +228,7 @@ class SiswaController extends Controller
      */
     public function destroy(Siswa $siswa)
     {
-        if(($siswa->transaksi->count() == 0) && ($siswa->tabungan->count() == 0)){
+        if(($siswa->transaksi->count() == 0) && ($siswa->tabungan->count() == 0) && ($siswa->kekurangan->count() == 0)){
             if($siswa->delete()){
                 return redirect()->route('siswa.index')->with([
                     'type' => 'success',

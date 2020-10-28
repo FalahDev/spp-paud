@@ -40,6 +40,14 @@ class Siswa extends Model
         'nisn'
     ];
 
+    protected static function boot() {
+        parent::boot();
+    
+        static::deleted(function ($siswa) {
+          $siswa->wali()->delete();
+        });
+    }
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }
