@@ -21,7 +21,8 @@ class Siswa extends Model
         'nama_wali',
         'telp_wali',
         'pekerjaan_wali',
-        'is_yatim'
+        'is_yatim',
+        'is_lulus'
     ];
 
     protected $visible = [
@@ -34,7 +35,8 @@ class Siswa extends Model
         'nama_wali',
         'telp_wali',
         'pekerjaan_wali',
-        'is_yatim'
+        'is_yatim',
+        'is_lulus'
     ];
 
     public function kelas(){
@@ -59,6 +61,6 @@ class Siswa extends Model
 
     public function wali()
     {
-        return $this->belongsTo(\App\Models\WaliSiswa::class);
+        return $this->hasOne(\App\Models\WaliSiswa::class, 'id', 'siswa_id');
     }
 }

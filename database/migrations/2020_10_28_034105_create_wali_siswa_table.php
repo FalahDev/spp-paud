@@ -18,8 +18,11 @@ class CreateWaliSiswaTable extends Migration
             $table->string('nama');
             $table->string('ponsel')->unique()->nullable(false);
             $table->string('pekerjaan')->nullable();
+            $table->unsignedBigInteger('siswa_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('siswa_id')->references('id')->on('siswa')->onCascade('delete');
         });
     }
 

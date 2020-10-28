@@ -12,6 +12,7 @@ use App\Models\Kekurangan;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
 use App\Models\Tagihan;
+use App\Models\WaliSiswa;
 use Illuminate\Support\Facades\Log;
 
 class SiswaController extends Controller
@@ -63,6 +64,7 @@ class SiswaController extends Controller
             'nama_wali' => 'nullable|max:255',
             'telp_wali' => 'nullable|numeric',
             'is_yatim' => 'nullable|boolean',
+            'is_lulus' => 'nullable'
         ]);
 
         $siswa = Siswa::make($request->input());

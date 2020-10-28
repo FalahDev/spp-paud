@@ -29,12 +29,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $pengaturan = DB::table('pengaturan')->where('key','nama')->first();
-        if ($pengaturan) {
-            $nama = $pengaturan->value;
-        } else {
-            $nama = 'Sistem SPP';
+        if (Schema::hasTable('pengaturan')) {
+            $pengaturan = DB::table('pengaturan')->where('key','nama')->first();
+            if ($pengaturan) {
+                $nama = $pengaturan->value;
+            } else {
+                $nama = 'Sistem SPP';
+            }
+            View::share('sitename', $nama);
         }
-        View::share('sitename', $nama);
+        
     }
 }
