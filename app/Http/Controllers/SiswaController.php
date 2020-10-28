@@ -307,9 +307,9 @@ class SiswaController extends Controller
         }
     }
 
-    public function getKekurangan(Siswa $siswa)
+    public function getModifier(Siswa $siswa)
     {
-        $data = ['kurang' => '0'];
+        $data = ['kurang' => 0, 'lebih' => 0];
         if($siswa == null){
             $data['msg'] = 'siswa tidak ditemukan';
             return response()->json($data, 404);

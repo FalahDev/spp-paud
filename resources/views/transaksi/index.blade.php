@@ -68,12 +68,20 @@
                                 </div>
                                 <div class="form-group" style="display: none" id="form-total">
                                         <label class="form-label">Total Pembayaran</label>
-                                        <input type="text" name="pembayaran" class="form-control inputjumlah" id="total" readonly>
+                                        <div class="row gutters-xs">
+                                            <div class="col">
+                                                <input type="text" name="pembayaran" class="form-control inputjumlah" id="total" readonly>
+                                                <input type="text" name="pelunasan" class="form-control inputjumlah" id="lunas" readonly>
+                                            </div>
+                                            <div class="col" style="display: none;" id="kelebihan">
+                                                <input type="text" name="titipan" class="form-control inputjumlah" id="lebih" readonly>
+                                            </div>
+                                        </div>
                                 </div>
-                                <div class="form-group" style="display: none" id="form-lunas">
+                                {{-- <div class="form-group" style="display: none" id="form-lunas">
                                     <label class="form-label">Total Pembayaran</label>
                                     <input type="text" name="pelunasan" class="form-control inputjumlah" id="lunas" readonly>
-                                </div>
+                                </div> --}}
                                 <div class="form-group" style="display: none" id="form-pembayaran">
                                     <label class="form-label">Pembayaran</label>
                                     <div class="selectgroup w-100">
@@ -89,10 +97,10 @@
                                             <input type="radio" name="via" value="kredit" class="selectgroup-input">
                                             <span class="selectgroup-button">Angsuran</span>
                                         </label>
-                                        <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
+                                        {{-- <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
                                             <input type="radio" name="via" value="tabungan" class="selectgroup-input">
                                             <span class="selectgroup-button">Potong Tabungan</span>
-                                        </label>
+                                        </label> --}}
                                     </div>
                                 </div>
                                 <div class="form-group" style="display: none" id="form-keterangan">
@@ -186,7 +194,17 @@
             function formatNumber(num) {
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
-            
+            function toggleField(bool) {
+                $('#form-tagihan').toggle(bool)
+                $('#form-tagihan-2').toggle(bool)
+                $('#form-total').toggle(bool)
+                $('#form-pembayaran').toggle(bool)
+                $('#opsi-pelunasan').toggle(bool)
+                $('#opsi-tabungan').toggle(bool)
+                $('#form-keterangan').toggle(bool)
+                $('#btn-simpan').toggle(bool)
+                $('#infokurang').toggle(bool)
+            }
             $('#siswa').select2({
                 placeholder: "Pilih Siswa",
             });
@@ -203,74 +221,51 @@
             // memilih siswa
             $('#siswa').on('change',function(){
                 if(this.value == '#'){
-                    $('#saldo').text('0') 
-                    $('#form-tagihan').hide()
-                    $('#form-tagihan-2').hide()
-                    $('#form-total').hide()
-                    $('#form-lunas').hide()
-                    $('#form-pembayaran').hide()
-                    $('#opsi-pelunasan').hide()
-                    $('#opsi-tabungan').hide()
-                    $('#form-keterangan').hide()
-                    $('#btn-simpan').hide()
-                    $('#infokurang').hide();
+                    toggleField(false)
                     return;
                 }else{
                     siswa_id = this.value
                 }
                 
                 axios.interceptors.request.use(function(config) {
-                    // Do something before request is sent
-                    // console.log('Start Ajax Call');
-                    $('#saldo').text('tunggu, sedang mengambil kekurangan...') 
-                        $('#form-tagihan').hide()
-                        $('#form-tagihan-2').hide()
-                        $('#form-total').hide()
-                        $('#form-lunas').hide()
-                        $('#form-pembayaran').hide()
-                        $('#opsi-pelunasan').hide()
-                        $('#opsi-tabungan').hide()
-                        $('#form-keterangan').hide()
-                        $('#btn-simpan').hide()
-                        $('#infokurang').hide();
+                    toggleField(false)
                     return config;
                 }, function(error) {
-                    // Do something with request error
                     console.log('Error');
+                    swal({title: "Koneksi error atau ada masalah di server"});
                     return Promise.reject(error);
                 });
 
                 axios.all([
-                        axios.get(`{{ route("api.getkurang") }}/` + this.value),
+                        axios.get(`{{ route("api.getmodifier") }}/` + this.value),
                         axios.get(`{{ route("api.gettagihan") }}/` + this.value)
                     ])
-                    .then(axios.spread(function(getkurang, gettagihan) {
-                        console.log(getkurang.data)
-                        var result = getkurang.data
+                    .then(axios.spread(function(modifier, tagihan) {
+                        // console.log(getkurang.data)
+                        var result = modifier.data
                         // $('#saldo').text(result.kurang)
-                        $('#form-tagihan').show()
-                        $('#form-tagihan-2').show()
-                        $('#form-total').show()
-                        $('#form-pembayaran').show()
-                        $('#form-keterangan').show()
-                        $('#btn-simpan').show()
+                        toggleField(true)
                         $('.selectgroup-item:first').show()
                         $('.selectgroup-item:first > input')
                             .prop('checked',true).trigger('change');
                         kekurangan = result.kurang;
                         if ('msg' in result == false && result.kurang != 0) {
                             $('.selectgroup-item:first').hide();
-                            $('#form-total').hide();
-                            $('#form-lunas').show();
+                            $('#total').hide();
+                            $('#lunas').show();
                             $('#opsi-pelunasan').show();
                             $('#opsi-pelunasan > input')
                                 .prop('checked', true).trigger('change');
                             via =  $('#opsi-pelunasan > input').val();
+                        } else {
+                            $('#total').show();
+                            $('#lunas').hide();
+                            $('#opsi-pelunasan').hide();
                         }
-                        // console.log(kekurangan)
+                        console.log(kekurangan)
 
                         $("#tagihan").empty()
-                        result = gettagihan.data
+                        result = tagihan.data
                         if(result.length == 0){
                             // alert('tidak ada item tagihan yang tersedia')
                             swal({title:'tidak ada tagihan yang belum dibayar'})

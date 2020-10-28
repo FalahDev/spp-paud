@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('saldo/{siswa?}','SiswaController@getSaldo')->name('api.getsaldo');
-Route::get('kekurangan/{siswa?}','SiswaController@getKekurangan')->name('api.getkurang');
+Route::get('modifier/{siswa?}','SiswaController@getModifier')->name('api.getmodifier');
 Route::post('menabung/{siswa?}', 'TabunganController@menabung')->name('api.menabung');
 Route::get('tagihan/{siswa?}','TransaksiController@tagihan')->name('api.gettagihan');
 Route::post('transaksi-spp/{siswa?}','TransaksiController@store')->name('api.tagihan');
