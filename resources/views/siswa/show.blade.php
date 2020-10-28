@@ -51,10 +51,10 @@
                 </div>
                 <div class="card-body">
                     <!-- <p><b>Tagihan</b> : {{--$siswa->tagihan--}} </p> -->
-                    <p><b>Total Kekurangan</b> : Rp{{ $siswa->totalKurang() }} </p>
+                    <p><b>Total Kekurangan</b> : Rp{{ format_idr($siswa->totalKurang()) }} </p>
                     <ol>
                     @foreach ($siswa->kekurangan()->where('dibayar',0)->get() as $item)
-                        <li>{{ $item->tagihan->nama}}: Rp{{ $item->jumlah }}</li>
+                        <li>{{ $item->tagihan->nama}}: Rp{{ format_idr($item->jumlah) }}</li>
                     @endforeach
                     </ol>
                 </div>

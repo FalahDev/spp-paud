@@ -97,7 +97,11 @@
                         @foreach ($transaksi as $item)
                             <tr>
                                 <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                                <td>{{ $item->siswa->nama }}</td>
+                                <td>
+                                    <a href="{{ route('siswa.show', $item->siswa->id) }}" class="link-unmuted">
+                                        {{ $item->siswa->nama }}
+                                    </a>
+                                </td>
                                 <td>{{ $item->tagihan->nama }}</td>
                                 <td>IDR. {{ format_idr($item->keuangan->jumlah) }}</td>
                                 @php
