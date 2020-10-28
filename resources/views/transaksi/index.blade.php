@@ -87,7 +87,7 @@
                                         </label>
                                         <label class="selectgroup-item">
                                             <input type="radio" name="via" value="kredit" class="selectgroup-input">
-                                            <span class="selectgroup-button">Titip</span>
+                                            <span class="selectgroup-button">Angsuran</span>
                                         </label>
                                         <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
                                             <input type="radio" name="via" value="tabungan" class="selectgroup-input">

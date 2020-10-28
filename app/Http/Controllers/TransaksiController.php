@@ -27,7 +27,7 @@ class TransaksiController extends Controller
     }
 
     //pay tagihan
-    public function store(Request $request,Siswa $siswa)
+    public function store(Request $request, Siswa $siswa)
     {
         DB::beginTransaction();
         //mulai transaksi, membersihkan request->jumlah dari titik dan koma
@@ -64,8 +64,10 @@ class TransaksiController extends Controller
                 'tipe' => 'in',
                 'jumlah' => $jumlah,
                 'total_kas' => $total_kas,
-                'keterangan' => 'Pembayaran '. $transaksi->tagihan->nama.' oleh '.$transaksi->siswa->nama.' pada tanggal '.$transaksi->created_at.' dengan catatan : dibayarkan dengan '.$request->via.
-                                ', '.$request->keterangan . $additional_message
+                'keterangan' => $transaksi->siswa->nama.' membayar '.$transaksi->tagihan->nama.
+                    ' pada pukul '.$transaksi->created_at->format('H.i').
+                    ' dengan catatan : dibayarkan dengan '.$request->via.
+                    $additional_message . ', '.$request->keterangan
             ]);
         }
         // Log::debug($request);
@@ -80,17 +82,19 @@ class TransaksiController extends Controller
             ]);
             // Log::debug($kekurangan);
 
-            Kekurangan::where([
+            $kurang = Kekurangan::where([
                 ['id', '!=', $kekurangan->id],
                 ['siswa_id', '=', $siswa->id],
                 ['tagihan_id', '=', $request->tagihan_id],
                 ['dibayar', '=', '0']
-                ])
-                ->update(['dibayar' => 1]);
+            ]);
+            $kurang->delete();
+            $kurang->withTrashed()->update(['dibayar' => 1]);
 
         } else if($request->via == 'pelunasan') {
-            Kekurangan::where([['siswa_id', '=', $siswa->id], ['tagihan_id', '=', $request->tagihan_id], ['dibayar', '=', '0']])
-                ->update(['dibayar' => 1]);
+            $kekurangan = Kekurangan::where([['siswa_id', '=', $siswa->id], ['tagihan_id', '=', $request->tagihan_id], ['dibayar', '=', '0']]);
+            $kekurangan->delete();
+            $kekurangan->withTrashed()->update(['dibayar' => 1]);
 
             Transaksi::where([['siswa_id', '=', $siswa->id], ['tagihan_id', '=', $request->tagihan_id], ['is_lunas', '=', '0']])
                 ->update(['is_lunas' => 1]);
