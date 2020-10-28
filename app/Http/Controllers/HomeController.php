@@ -49,7 +49,7 @@ class HomeController extends Controller
         if($pengaturan == null){
             DB::table('pengaturan')->insert(
                 [
-                    'name' => 'nama',
+                    'name' => 'Nama',
                     'value' => 'Sistem Informasi',
                     'created_at' =>  \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now(),
