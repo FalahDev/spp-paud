@@ -291,9 +291,9 @@
                             if(tagihan_id in kekurangan) {
                                 harga = kekurangan[tagihan_id];
                                 $('#infokurang').show();
-                            } else {
-                                $('#infokurang').hide();
                             }
+                        } else {
+                            $('#infokurang').hide();
                         }
 
                         //menampilkan harga

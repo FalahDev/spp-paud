@@ -24,6 +24,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('kekurangan.index') }}" class="nav-link {{ set_active(['kekurangan.*'], 'active') }}">
+                            <i class="fe fe-repeat"></i> Kekurangan
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('tagihan.index') }}" class="nav-link {{ set_active(['tagihan.*'], 'active') }}">
                             <i class="fe fe-box"></i> Tagihan
                         </a>

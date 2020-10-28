@@ -82,6 +82,11 @@
         Route::get('keuangan', 'KeuanganController@index')->name('keuangan.index');
         Route::post('keuangan', 'KeuanganController@store')->name('keuangan.store');
         Route::get('export-keuangan', 'KeuanganController@export')->name('keuangan.export');
+
+        //Kekurangan 
+        Route::get('kekurangan', 'KekuranganController@index')->name('kekurangan.index');
+        // Route::post('kekurangan', 'KekuranganController@store')->name('kekurangan.store');
+        Route::get('export-kekurangan', 'KekuranganController@export')->name('kekurangan.export');
     
         //Pembayaran SPP
         Route::get('transaksi-spp','TransaksiController@index')->name('spp.index');
