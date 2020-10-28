@@ -291,9 +291,9 @@
                             if(tagihan_id in kekurangan) {
                                 harga = kekurangan[tagihan_id];
                                 $('#infokurang').show();
+                            } else {
+                                $('#infokurang').hide();
                             }
-                        } else {
-                            $('#infokurang').hide();
                         }
 
                         //menampilkan harga
@@ -327,12 +327,12 @@
 
                 if (kekurangan != 0) { 
                     if( tagihan_id in kekurangan) {
-                    harga = kekurangan[tagihan_id];
-                    $('#infokurang').show();
-                    console.log(kekurangan[tagihan_id])
+                        harga = kekurangan[tagihan_id];
+                        $('#infokurang').show();
+                        // console.log(kekurangan[tagihan_id])
+                    } else {
+                        $('#infokurang').hide();
                     }
-                } else {
-                    $('#infokurang').hide();
                 }
 
                 //jika diganti diskon kembali ke nol
