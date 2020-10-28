@@ -11,6 +11,7 @@ shim: {
 paths: {
 'core': 'assets/js/core',
 'jquery': 'assets/js/vendors/jquery-3.2.1.min',
+'axios': 'assets/js/vendors/axios.min',
 'bootstrap': 'assets/js/vendors/bootstrap.bundle.min',
 'sparkline': 'assets/js/vendors/jquery.sparkline.min',
 'selectize': 'assets/js/vendors/selectize.min',

@@ -180,94 +180,13 @@
 @endsection
 @section('js')
 <script>
-    require(['jquery','select2','sweetalert'], function ($, select2, sweetalert) {
+    require(['jquery','select2','sweetalert','axios'], function ($, select2, sweetalert, axios) {
         $(document).ready(function () {
             //format IDR
             function formatNumber(num) {
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
-            function getKekurangan(val){
-                //get kekurangan
-                return $.ajax({url: "{{ route('api.getkurang') }}/" + val,
-                    success: function(result){
-                        // $('#saldo').text(result.kurang)
-                        $('#form-tagihan').show()
-                        $('#form-tagihan-2').show()
-                        $('#form-total').show()
-                        $('#form-pembayaran').show()
-                        $('#form-keterangan').show()
-                        $('#btn-simpan').show()
-                        $('.selectgroup-item:first').show()
-                        $('.selectgroup-item:first > input')
-                            .prop('checked',true).trigger('change');
-                        kekurangan = result.kurang;
-                        if ('msg' in result == false && result.kurang != 0) {
-                            $('.selectgroup-item:first').hide();
-                            $('#form-total').hide();
-                            $('#form-lunas').show();
-                            $('#opsi-pelunasan').show();
-                            $('#opsi-pelunasan > input')
-                                .prop('checked', true).trigger('change');
-                            via =  $('#opsi-pelunasan > input').val();
-                        }
-                        // console.log(result)
-                    }, beforeSend: function(){ 
-                        $('#saldo').text('tunggu, sedang mengambil kekurangan...') 
-                        $('#form-tagihan').hide()
-                        $('#form-tagihan-2').hide()
-                        $('#form-total').hide()
-                        $('#form-lunas').hide()
-                        $('#form-pembayaran').hide()
-                        $('#opsi-pelunasan').hide()
-                        $('#opsi-tabungan').hide()
-                        $('#form-keterangan').hide()
-                        $('#btn-simpan').hide()
-                }})
-            }
-            function getTagihan(val){
-                //get tagihan
-                return $.ajax({url: "{{ route('api.gettagihan') }}/" + val,
-                    success: function(result){
-                    $("#tagihan").empty()
-                    if(result.length == 0){
-                        // alert('tidak ada item tagihan yang tersedia')
-                        swal({title:'tidak ada tagihan yang belum dibayar'})
-                        $('#btn-simpan').prop('disabled', true);
-                        return
-                    }
-                    for(i=0;i < result.length ;i++){
-                        $("#tagihan").append('<option value="'+ result[i].id +'" data-harga="'+ result[i].jumlah +'">'+ result[i].nama +'</option>');
-                    }
-                    //set harga dari data pertama
-                    tagihan_id = result[0].id
-                    harga = result[0].jumlah
-                    if(harga <= saldo){
-                        $('#opsi-tabungan').show()
-                    }else{
-                        $('#opsi-tabungan').hide()
-                    }
-                    if (kekurangan != 0) {
-                        if(tagihan_id in kekurangan) {
-                            harga = kekurangan[tagihan_id];
-                            $('#infokurang').show();
-                        }
-                    } else {
-                        $('#infokurang').hide();
-                    }
-                    console.log(result)
-
-                    //menampilkan harga
-                    $('#harga').text(formatNumber(harga));
-                    $('#lunas').val(formatNumber(harga));
-                    $('#total').val(formatNumber(harga - diskon));
-                    if (!harga) {
-                        $('#btn-simpan').prop('disabled', true);
-                    } else {
-                        $('#btn-simpan').prop('disabled', false);
-                    }
-                    
-                }})
-            }
+            
             $('#siswa').select2({
                 placeholder: "Pilih Siswa",
             });
@@ -300,14 +219,99 @@
                     siswa_id = this.value
                 }
                 
-                $.when(
-                    getKekurangan(this.value),
-                    getTagihan(this.value)
-                )
-                .done(function(satu, dua){
-                    console.log(harga)
-                    console.log(kekurangan)
+                axios.interceptors.request.use(function(config) {
+                    // Do something before request is sent
+                    // console.log('Start Ajax Call');
+                    $('#saldo').text('tunggu, sedang mengambil kekurangan...') 
+                        $('#form-tagihan').hide()
+                        $('#form-tagihan-2').hide()
+                        $('#form-total').hide()
+                        $('#form-lunas').hide()
+                        $('#form-pembayaran').hide()
+                        $('#opsi-pelunasan').hide()
+                        $('#opsi-tabungan').hide()
+                        $('#form-keterangan').hide()
+                        $('#btn-simpan').hide()
+                        $('#infokurang').hide();
+                    return config;
+                }, function(error) {
+                    // Do something with request error
+                    console.log('Error');
+                    return Promise.reject(error);
                 });
+
+                axios.all([
+                        axios.get(`{{ route("api.getkurang") }}/` + this.value),
+                        axios.get(`{{ route("api.gettagihan") }}/` + this.value)
+                    ])
+                    .then(axios.spread(function(getkurang, gettagihan) {
+                        console.log(getkurang.data)
+                        var result = getkurang.data
+                        // $('#saldo').text(result.kurang)
+                        $('#form-tagihan').show()
+                        $('#form-tagihan-2').show()
+                        $('#form-total').show()
+                        $('#form-pembayaran').show()
+                        $('#form-keterangan').show()
+                        $('#btn-simpan').show()
+                        $('.selectgroup-item:first').show()
+                        $('.selectgroup-item:first > input')
+                            .prop('checked',true).trigger('change');
+                        kekurangan = result.kurang;
+                        if ('msg' in result == false && result.kurang != 0) {
+                            $('.selectgroup-item:first').hide();
+                            $('#form-total').hide();
+                            $('#form-lunas').show();
+                            $('#opsi-pelunasan').show();
+                            $('#opsi-pelunasan > input')
+                                .prop('checked', true).trigger('change');
+                            via =  $('#opsi-pelunasan > input').val();
+                        }
+                        // console.log(kekurangan)
+
+                        $("#tagihan").empty()
+                        result = gettagihan.data
+                        if(result.length == 0){
+                            // alert('tidak ada item tagihan yang tersedia')
+                            swal({title:'tidak ada tagihan yang belum dibayar'})
+                            $('#btn-simpan').prop('disabled', true);
+                            return
+                        }
+                        for(i=0;i < result.length ;i++){
+                            $("#tagihan").append('<option value="'+ result[i].id +'" data-harga="'+ result[i].jumlah +'">'+ result[i].nama +'</option>');
+                        }
+                        //set harga dari data pertama
+                        tagihan_id = result[0].id
+                        harga = result[0].jumlah
+                        if(harga <= saldo){
+                            $('#opsi-tabungan').show()
+                        }else{
+                            $('#opsi-tabungan').hide()
+                        }
+                        if (kekurangan != 0) {
+                            if(tagihan_id in kekurangan) {
+                                harga = kekurangan[tagihan_id];
+                                $('#infokurang').show();
+                            }
+                        } else {
+                            $('#infokurang').hide();
+                        }
+
+                        //menampilkan harga
+                        $('#harga').text(formatNumber(harga));
+                        $('#lunas').val(formatNumber(harga));
+                        $('#total').val(formatNumber(harga - diskon));
+                        if (!harga) {
+                            $('#btn-simpan').prop('disabled', true);
+                        } else {
+                            $('#btn-simpan').prop('disabled', false);
+                        }
+                        // console.log(gettagihan.data)
+                    }))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+
             
             })
 
