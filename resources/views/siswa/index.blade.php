@@ -68,10 +68,10 @@
                                     {{ $item->jenis_kelamin }}
                                 </td>
                                 <td>
-                                    {{ $item->nama_wali }}
+                                    {{ $item->wali->nama }}
                                 </td>
                                 <td>
-                                    {{ $item->telp_wali }}
+                                    {{ $item->wali->ponsel }}
                                 </td>
                                 <td class="text-center">
                                     <a class="icon" href="{{ route('siswa.show', $item->id) }}" title="lihat detail">

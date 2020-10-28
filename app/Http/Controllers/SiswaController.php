@@ -26,9 +26,10 @@ class SiswaController extends Controller
     {
         $q = $request->get('q');
         if($q == null){
-            $siswa = Siswa::orderBy('created_at','desc')->paginate(15);
+            $siswa = Siswa::with('wali')->orderBy('created_at','desc')->paginate(15);
+            // Log::debug($siswa);
         }else{
-            $siswa = Siswa::where('nama','like','%'.$q.'%')->orderBy('created_at','desc')->paginate(15);
+            $siswa = Siswa::with('wali')->where('nama','like','%'.$q.'%')->orderBy('created_at','desc')->paginate(15);
         }
         return view('siswa.index', [
             'siswa' => $siswa->appends($request->except('page'))
@@ -61,13 +62,21 @@ class SiswaController extends Controller
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|in:L,P',
             'alamat' => 'nullable',
-            'nama_wali' => 'nullable|max:255',
-            'telp_wali' => 'nullable|numeric',
+            'nama_wali' => 'required|max:255',
+            'telp_wali' => 'required|numeric',
+            'pekerjaan_wali' => 'nullable|max:100',
             'is_yatim' => 'nullable|boolean',
             'is_lulus' => 'nullable'
         ]);
 
-        $siswa = Siswa::make($request->input());
+        $siswa = Siswa::make($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
+
+        $wali = WaliSiswa::make([
+            'nama' => $request->nama_wali,
+            'ponsel' => $request->telp_wali,
+            'pekerjaan' => $request->pekerjaan_wali
+        ]);
+
 
         if($request->is_yatim != null){
             $siswa->is_yatim = 1;
@@ -75,7 +84,15 @@ class SiswaController extends Controller
             $siswa->is_yatim = 0;
         }
 
+        if($request->is_lulus != null){
+            $siswa->is_lulus = 1;
+        }else{
+            $siswa->is_lulus = 0;
+        }
+
         if($siswa->save()){
+            // Log::debug($siswa);
+            $wali->siswa()->associate($siswa)->save();
             return redirect()->route('siswa.index')->with([
                 'type' => 'success',
                 'msg' => 'Siswa ditambahkan'

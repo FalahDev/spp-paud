@@ -28,9 +28,9 @@
                     <h3 class="card-title">Wali</h3>
                 </div>
                 <div class="card-body">
-                    <p><b>Nama Wali</b> : {{$siswa->nama_wali}} </p>
-                    <p><b>No. Telp Wali</b> : {{$siswa->telp_wali}} </p>
-                    <p><b>Pekerjaan Wali</b> : {{$siswa->pekerjaan_wali}} </p>
+                    <p><b>Nama Wali</b> : {{$siswa->wali->nama}} </p>
+                    <p><b>No. Telp Wali</b> : {{$siswa->wali->ponsel}} </p>
+                    <p><b>Pekerjaan Wali</b> : {{$siswa->wali->pekerjaan}} </p>
                 </div>
             </div>
             </div>

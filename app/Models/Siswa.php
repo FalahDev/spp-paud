@@ -18,9 +18,6 @@ class Siswa extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'alamat',
-        'nama_wali',
-        'telp_wali',
-        'pekerjaan_wali',
         'is_yatim',
         'is_lulus'
     ];
@@ -61,6 +58,6 @@ class Siswa extends Model
 
     public function wali()
     {
-        return $this->hasOne(\App\Models\WaliSiswa::class, 'id', 'siswa_id');
+        return $this->hasOne(\App\Models\WaliSiswa::class, 'siswa_id', 'id');
     }
 }

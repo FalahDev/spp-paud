@@ -31,7 +31,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama : old('nama') }}" required>
+                                <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama : old('nama') }}" required aria-required="true">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Tempat, Tanggal Lahir</label>
@@ -58,11 +58,11 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Nama Wali</label>
-                                <input type="text" class="form-control" name="nama_wali" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama_wali : old('nama_wali') }}">
+                                <input type="text" class="form-control" name="nama_wali" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama_wali : old('nama_wali') }}" required aria-required="true">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Telp. Wali</label>
-                                <input type="text" class="form-control" name="telp_wali" placeholder="Nomor Telp. Lengkap" value="{{ isset($siswa) ? $siswa->telp_wali : old('telp_wali') }}">
+                                <input type="text" class="form-control" name="telp_wali" placeholder="Nomor Telp. Lengkap" value="{{ isset($siswa) ? $siswa->telp_wali : old('telp_wali') }}" required aria-required="true">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Pekerjaan Wali</label>
@@ -76,6 +76,14 @@
                                 <span class="custom-switch-description">Anak Yatim Piatu</span>
                                 </label>
                             </div> --}}
+                            <div class="form-group">
+                                <div class="form-label">Status</div>
+                                <label class="custom-switch">
+                                <input type="checkbox" name="is_lulus" value="1" class="custom-switch-input" {{ isset($siswa) ? ($siswa->is_lulus ? 'checked' : '') : '' }}>
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">Lulus</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -11,8 +11,8 @@ class WaliSiswa extends Model
 
     protected $table = 'wali_siswa';
 
-    protected $fillable = ['nama', 'ponsel', 'pekerjaan'];
-    protected $visible = ['nama', 'ponsel', 'pekerjaan'];
+    protected $fillable = ['nama', 'ponsel', 'pekerjaan', 'siswa_id'];
+    protected $visible = ['nama', 'ponsel', 'pekerjaan', 'siswa_id'];
 
     public function siswa()
     {
