@@ -122,6 +122,6 @@ class TabunganController extends Controller
 
     public function siswaexport(Siswa $siswa)
     {
-        return Excel::download(new TabunganSiswaExport($siswa), 'tabungan_siswa-'.now().'.xlsx');
+        return Excel::download(new TabunganSiswaExport($siswa), 'titipan_siswa-'.now().'.xlsx');
     }
 }

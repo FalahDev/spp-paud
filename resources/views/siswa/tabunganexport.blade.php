@@ -12,7 +12,7 @@
     @foreach($tabungan as $item)
         <tr>
             <td>{{ $item->created_at->format('d-m-Y') }}</td>
-            <td>{{ ($item->tipe == 'in') ? 'Menabung' : 'Penarikan Uang' }}</td>
+            <td>{{ ($item->tipe == 'in') ? 'Titipan' : 'Dibayarkan' }}</td>
             <td>{{ $item->jumlah }}</td>
             <td>{{ $item->keperluan }}</td>
         </tr>

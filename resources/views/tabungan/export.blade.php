@@ -13,7 +13,7 @@
         <tr>
             <td>{{ $item->created_at->format('d-m-Y') }}</td>
             <td>{{ $item->siswa->nama."(".$item->siswa->kelas->nama.")" }}</td>
-            <td>{{ ($item->tipe == 'in') ? 'Menabung' : 'Penarikan Uang' }}</td>
+            <td>{{ ($item->tipe == 'in') ? 'Titipan' : 'Dibayarkan' }}</td>
             <td>{{ $item->jumlah }}</td>
             <td>{{ $item->keperluan }}</td>
         </tr>
