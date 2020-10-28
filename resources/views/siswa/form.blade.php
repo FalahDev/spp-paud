@@ -37,10 +37,10 @@
                                 <label class="form-label">Nomor Induk</label>
                                 <div class="row gutters-xs">
                                     <div class="col-6">
-                                        <input type="text" class="form-control" name="nis" placeholder="Nomor Induk Sekolah" value="{{ isset($siswa) ? $siswa->nis : old('nis') }}">
+                                        <input type="text" class="form-control" name="nis" placeholder="Nomor Induk Sekolah" value="{{ isset($siswa) ? $siswa->nis : old('nis') }}" {{ isset($siswa->nis) ? 'readonly' : ''}}>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" class="form-control" name="nisn" placeholder="Nomor Induk Siswa Nasional" value="{{ isset($siswa) ? $siswa->nisn : old('nisn') }}">
+                                        <input type="text" class="form-control" name="nisn" placeholder="Nomor Induk Siswa Nasional" value="{{ isset($siswa) ? $siswa->nisn : old('nisn') }}" {{ isset($siswa->nisn) ? 'readonly' : ''}}>
                                     </div>
                                 </div>
                                 

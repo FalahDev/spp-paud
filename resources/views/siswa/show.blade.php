@@ -11,16 +11,28 @@
                     <h3 class="card-title">@yield('page-name')</h3>
                 </div>
                 <div class="card-body">
-                    <p><b>Kelas</b> : {{$siswa->kelas->nama}} </p>
                     <p>
                         <b>Nama</b> : {{$siswa->nama}} 
                         @if($siswa->is_yatim)
                             <span class="tag tag-green">Yatim</span>
                         @endif
+                        @if($siswa->is_lulus)
+                            <span class="tag tag-green">Lulus</span>
+                        @endif
                     </p>
-                    <p><b>Tempat, Tanggal Lahir</b> : {{$siswa->tempat_lahir.', '.$siswa->tanggal_lahir}} </p>
+                    <p><b>TTL</b> : {{$siswa->tempat_lahir.', '.$siswa->tanggal_lahir}} </p>
                     <p><b>Alamat</b> : {{$siswa->alamat}} </p>
                     
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Info</h3>
+                </div>
+                <div class="card-body">
+                    <p><b>Kelas</b> : {{$siswa->kelas->nama}} </p>
+                    <p><b>NIS</b> : {{$siswa->nis}} </p>
+                    <p><b>NISN</b> : {{$siswa->nisn}} </p>
                 </div>
             </div>
             <div class="card">
@@ -31,6 +43,20 @@
                     <p><b>Nama Wali</b> : {{$siswa->wali->nama}} </p>
                     <p><b>No. Telp Wali</b> : {{$siswa->wali->ponsel}} </p>
                     <p><b>Pekerjaan Wali</b> : {{$siswa->wali->pekerjaan}} </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Rekap</h3>
+                </div>
+                <div class="card-body">
+                    <!-- <p><b>Tagihan</b> : {{--$siswa->tagihan--}} </p> -->
+                    <p><b>Total Kekurangan</b> : Rp{{ $siswa->totalKurang() }} </p>
+                    <ol>
+                    @foreach ($siswa->kekurangan()->where('dibayar',0)->get() as $item)
+                        <li>{{ $item->tagihan->nama}}: Rp{{ $item->jumlah }}</li>
+                    @endforeach
+                    </ol>
                 </div>
             </div>
             </div>

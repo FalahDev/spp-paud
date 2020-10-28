@@ -178,8 +178,8 @@ class SiswaController extends Controller
             'pekerjaan_wali' => 'nullable|max:100',
             'is_yatim' => 'nullable|boolean',
             'is_lulus' => 'nullable',
-            'nis' => 'nullable|unique:siswa|max:30',
-            'nisn' => 'nullable|unique:siswa|max:30'
+            'nis' => 'nullable|max:30',
+            'nisn' => 'nullable|max:30'
         ]);
 
         $wali = WaliSiswa::firstOrNew(

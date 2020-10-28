@@ -48,6 +48,11 @@ class Siswa extends Model
         });
     }
 
+    public function totalKurang()
+    {
+        return $this->kekurangan()->where('dibayar', 0)->sum('jumlah');
+    }
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }
