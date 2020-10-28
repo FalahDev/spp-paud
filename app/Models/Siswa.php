@@ -56,4 +56,9 @@ class Siswa extends Model
     public function kekurangan(){
         return $this->hasMany('App\Models\Kekurangan','siswa_id','id');
     }
+
+    public function wali()
+    {
+        return $this->belongsTo(\App\Models\WaliSiswa::class);
+    }
 }
