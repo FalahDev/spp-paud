@@ -63,10 +63,12 @@ class SiswaController extends Controller
             'jenis_kelamin' => 'nullable|in:L,P',
             'alamat' => 'nullable',
             'nama_wali' => 'required|max:255',
-            'telp_wali' => 'required|numeric',
+            'telp_wali' => 'required|unique:wali_siswa,ponsel|numeric',
             'pekerjaan_wali' => 'nullable|max:100',
             'is_yatim' => 'nullable|boolean',
-            'is_lulus' => 'nullable'
+            'is_lulus' => 'nullable',
+            'nis' => 'nullable|unique:siswa|max:30',
+            'nisn' => 'nullable|unique:siswa|max:30'
         ]);
 
         $siswa = Siswa::make($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
@@ -171,12 +173,25 @@ class SiswaController extends Controller
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|in:L,P',
             'alamat' => 'nullable',
-            'nama_wali' => 'nullable|max:255',
-            'telp_wali' => 'nullable|numeric',
+            'nama_wali' => 'required|max:255',
+            'telp_wali' => 'required|numeric',
+            'pekerjaan_wali' => 'nullable|max:100',
             'is_yatim' => 'nullable|boolean',
+            'is_lulus' => 'nullable',
+            'nis' => 'nullable|unique:siswa|max:30',
+            'nisn' => 'nullable|unique:siswa|max:30'
         ]);
 
-        $siswa = $siswa->fill($request->input());
+        $wali = WaliSiswa::firstOrNew(
+            ['siswa_id' => $siswa->id],
+            ['ponsel' => $request->telp_wali],
+            ['pekerjaan' => $request->pekerjaan_wali]
+        );
+        if (isset($wali->pekerjaan)) {
+            $wali->pekerjaan = $request->pekerjaan_wali;
+        }
+
+        $siswa = $siswa->fill($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
 
         if($request->is_yatim != null){
             $siswa->is_yatim = 1;
@@ -184,7 +199,15 @@ class SiswaController extends Controller
             $siswa->is_yatim = 0;
         }
 
-        if($siswa->save()){
+        if($request->is_lulus != null){
+            $siswa->is_lulus = 1;
+        }else{
+            $siswa->is_lulus = 0;
+        }
+
+        if($siswa->wali()->save($wali)){
+            // Log::debug($siswa);
+            $siswa->save();
             return redirect()->route('siswa.index')->with([
                 'type' => 'success',
                 'msg' => 'Siswa diubah'

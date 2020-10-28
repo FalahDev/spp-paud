@@ -19,7 +19,9 @@ class Siswa extends Model
         'jenis_kelamin',
         'alamat',
         'is_yatim',
-        'is_lulus'
+        'is_lulus',
+        'nis',
+        'nisn'
     ];
 
     protected $visible = [
@@ -33,7 +35,9 @@ class Siswa extends Model
         'telp_wali',
         'pekerjaan_wali',
         'is_yatim',
-        'is_lulus'
+        'is_lulus',
+        'nis',
+        'nisn'
     ];
 
     public function kelas(){

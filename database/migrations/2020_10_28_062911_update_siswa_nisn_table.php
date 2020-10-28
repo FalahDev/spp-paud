@@ -14,8 +14,8 @@ class UpdateSiswaNisnTable extends Migration
     public function up()
     {
         Schema::table('siswa', function (Blueprint $table) {
-            $table->string('nis')->nullable();
-            $table->string('nisn')->nullable();
+            $table->string('nis')->unique()->nullable();
+            $table->string('nisn')->unique()->nullable();
         });
     }
 
