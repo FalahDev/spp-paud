@@ -30,8 +30,20 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Nama</label>
+                                <label class="form-label">Nama *</label>
                                 <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama : old('nama') }}" required aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nomor Induk</label>
+                                <div class="row gutters-xs">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" name="nis" placeholder="Nomor Induk Sekolah" value="{{ isset($siswa) ? $siswa->nis : old('nis') }}">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" name="nisn" placeholder="Nomor Induk Siswa Nasional" value="{{ isset($siswa) ? $siswa->nisn : old('nisn') }}">
+                                    </div>
+                                </div>
+                                
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Tempat, Tanggal Lahir</label>
@@ -57,16 +69,16 @@
                                 <textarea class="form-control" name="alamat">{{ isset($siswa) ? $siswa->alamat : old('alamat') }}</textarea>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Nama Wali</label>
-                                <input type="text" class="form-control" name="nama_wali" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->nama_wali : old('nama_wali') }}" required aria-required="true">
+                                <label class="form-label">Nama Wali *</label>
+                                <input type="text" class="form-control" name="nama_wali" placeholder="Nama Lengkap" value="{{ isset($siswa) ? $siswa->wali->nama : old('nama_wali') }}" required aria-required="true">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Telp. Wali</label>
-                                <input type="text" class="form-control" name="telp_wali" placeholder="Nomor Telp. Lengkap" value="{{ isset($siswa) ? $siswa->telp_wali : old('telp_wali') }}" required aria-required="true">
+                                <label class="form-label">Telp. Wali *</label>
+                                <input type="text" class="form-control" name="telp_wali" placeholder="Nomor Telp. Lengkap, mis: 081234567890" value="{{ isset($siswa) ? $siswa->wali->ponsel : old('telp_wali') }}" required aria-required="true">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Pekerjaan Wali</label>
-                                <input type="text" class="form-control" name="pekerjaan_wali" placeholder="Pekerjaan Wali" value="{{ isset($siswa) ? $siswa->pekerjaan_wali : old('pekerjaan_wali') }}">
+                                <input type="text" class="form-control" name="pekerjaan_wali" placeholder="Pekerjaan Wali" value="{{ isset($siswa) ? $siswa->wali->pekerjaan : old('pekerjaan_wali') }}">
                             </div>
                             {{-- <div class="form-group">
                                 <div class="form-label">Status</div>
@@ -84,6 +96,9 @@
                                 <span class="custom-switch-description">Lulus</span>
                                 </label>
                             </div>
+                        </div>
+                        <div class="col-12">
+                            <p><em>Keterangan: * wajib diisi</em></p>
                         </div>
                     </div>
                 </div>
