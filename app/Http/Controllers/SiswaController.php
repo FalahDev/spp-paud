@@ -115,28 +115,28 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $tabungan = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc');
+        // $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
+        // $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
+        $tabungan = Tabungan::where('siswa_id', $siswa->id)->latest();
         
-        if($tabungan->count() != 0){
-            $verify = $tabungan->first()->saldo;
-        }else{
-            $verify = 0;
-        }
+        // if($tabungan->count() != 0){
+        //     $verify = $tabungan->first()->saldo;
+        // }else{
+        //     $verify = 0;
+        // }
         $tabungan = $tabungan->paginate(10, ['*'], 'tabungan');
         
-        if(($input - $output) == $verify){
-            $saldo = format_idr($input - $output);
-        }else{
-            $saldo = 'invalid'.format_idr($input - $output);
-        }
+        // if(($input - $output) == $verify){
+        //     $saldo = format_idr($input - $output);
+        // }else{
+        //     $saldo = 'invalid'.format_idr($input - $output);
+        // }
         
         $tagihan = $this->getTagihan($siswa);
 
         return view('siswa.show', [
             'siswa' => $siswa,
-            'saldo' => $saldo,
+            'saldo' => $siswa->totalTitipan(),
             'tabungan' => $tabungan,
             'tagihan' => $tagihan,
         ]);

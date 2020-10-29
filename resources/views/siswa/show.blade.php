@@ -61,11 +61,12 @@
             </div>
             </div>
         </div>
+        @if (!empty($saldo))
         <div class="col-12 col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Titipan Pembayaran</h3>
-                    @if($saldo != '0')
+                    @if(!empty($saldo))
                     <div class="card-options"> 
                         <a href="{{ route('tabungan.cetak', $siswa->id) }}" target="_blank" class="btn btn-primary mr-1">Cetak</a>
                         <a href="{{ route('tabungan.siswa.export', $siswa->id) }}" target="_blank" class="btn btn-primary">Export</a>
@@ -73,7 +74,7 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    <p><b>Saldo : </b>Rp{{$saldo}}</p>
+                    <p><b>Saldo : </b>Rp{{$saldo ?: '0'}}</p>
                     <table class="table card-table table-hover table-vcenter text-wrap">
                         <tr>
                             <th>Tanggal</th>
@@ -106,6 +107,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
     <div class="row pt-2 pb-2"></div>
     <div class="row">

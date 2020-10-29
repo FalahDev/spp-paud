@@ -53,6 +53,15 @@ class Siswa extends Model
         return $this->kekurangan()->where('dibayar', 0)->sum('jumlah');
     }
 
+    public function totalTitipan()
+    {
+        $tabungan = $this->tabungan()->latest()->first();
+        if($tabungan != null) {
+            $tabungan = $tabungan->saldo;
+        }
+        return $tabungan;
+    }
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }
