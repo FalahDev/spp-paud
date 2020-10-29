@@ -225,6 +225,7 @@
             var kurang = 0; //kekurangan
             var lebih = 0;
             var titipan = 0;
+            var ambiltitipan;
             var kekurangan;
             var via = 'tunai';  //pembayaran via 
             // memilih siswa
@@ -237,7 +238,9 @@
                 }
                 
                 axios.interceptors.request.use(function(config) {
-                    toggleField(false)
+                    // console.log(`${config.method} ${config.url}`);
+                    if(config.method == 'get')
+                        toggleField(false)
                     return config;
                 }, function(error) {
                     console.log('Error');
@@ -333,7 +336,10 @@
 
                 if(harga <= saldo){
                     $('#opsi-tabungan').show()
+                } else if(harga <= 0) {
+                    $('#btn-simpan').prop('disabled', true);
                 }else{
+                    $('#btn-simpan').prop('disabled', false);
                     $('#opsi-tabungan').hide()
                 }
 
@@ -359,14 +365,18 @@
 
             $('#ada-diskon').on('change', function(){
                 // $('#form-diskon').toggle();
-                console.log($(this).prop('checked'))
+                // console.log($(this).prop('checked'))
                 if ($(this).prop('checked')) {
                     harga -= titipan
-                    
+                    ambiltitipan = true;
+                    lebih = 0
+                    $('#kelebihan').val('').hide()
+                    $('.infolebih').hide()
                 } else {
                     harga += titipan
+                    ambiltitipan = false;
                 }
-                console.log(harga)
+                // console.log(harga)
                 $('#lunas').val(formatNumber(harga));
                 $('#total').val(formatNumber(harga - diskon));
             })
@@ -524,8 +534,11 @@
                     }
                 }
 
+                $('#btn-simpan').prop('disabled', false);
+
                 kurang = harga - input
 
+                // console.log(kurang)
                 // 4
                 $this.val( function() {
                     return ( input === 0 ) ? "" : input.toLocaleString( "id-ID" );
@@ -577,7 +590,7 @@
                         data.lebih = Math.abs(kurang);
                         data.kurang = 0
                     }
-                    if (titipan > 0) {
+                    if (titipan > 0 && ambiltitipan) {
                         data.titipan = titipan
                     }
                     // $.ajax({
@@ -602,14 +615,22 @@
                     // });
                     axios.post('{{ route('api.tagihan') }}/'+siswa_id, data)
                     .then(function(resp) {
-                        console.log(resp)
+                        $('#btn-simpan').removeClass("btn-loading")
+                        swal({title:'Berhasil disimpan', text:resp.data.msg, icon: 'success'})
+                        // console.log(resp)
+                        setTimeout(function(){
+                            window.location.reload()
+                        }, 2000)
                     }).catch(function(err){
                         console.log(err.response)
-                        var msg;
+                        var msg ='';
                         $.each(err.response.data.errors, function(k, m){
-                            msg = m
+                            if (Array.isArray(m)) {
+                                
+                                msg += k + ': ' + m[0] + ' '
+                            }
                         })
-                        swal({title:err.response.data.message, text:JSON.stringify(err.response.data.errors), icon: 'error'})
+                        swal({title:err.response.data.message, text:msg, icon: 'warning'})
                         $('#btn-simpan').removeClass("btn-loading")
                     })
                 }

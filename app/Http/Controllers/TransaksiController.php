@@ -32,10 +32,16 @@ class TransaksiController extends Controller
     //pay tagihan
     public function store(Request $request, Siswa $siswa)
     {
-        Log::debug($request);
+        // Log::debug($request);
 
         $request->validate([
-            'keterangan' => 'required_unless:lebih,0',
+            'tagihan_id' => 'required|integer|gt:0',
+            'siswa_id' => 'required|numeric|gt:0',
+            'keterangan' => 'sometimes|required_with:lebih|max:255',
+            'jumlah' => 'required|numeric|min:0',
+            'kurang' => 'sometimes|numeric|nullable',
+            'lebih' => 'sometimes|numeric|gt:0',
+            'via' => 'string|in:tunai,kredit,pelunasan',
         ]);
         // return response()->json($request);
 
