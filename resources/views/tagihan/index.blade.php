@@ -89,6 +89,76 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@yield('page-name') (Tidak Aktif)</h3>
+                </div>
+                <div class="table-responsive">
+                    
+                    <table class="table card-table table-hover table-vcenter text-wrap">
+                        <thead>
+                        <tr>
+                            <th class="w-1">No.</th>
+                            <th>Nama</th>
+                            <th>Jumlah</th>
+                            <th>Peserta</th>
+                            <th>Periode</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($tagihan_lama as $index => $item)
+                            <tr>
+                                <td><span class="text-muted">{{ $index+1 }}</span></td>
+                                <td>
+                                    {{ $item->nama }}
+                                </td>
+                                <td>
+                                    {{ $item->jumlah_idr }}
+                                </td>
+                                <td style="max-width: 150px">
+                                    @if($item->wajib_semua != null)
+                                        <p>Wajib Semua</p>
+                                    @elseif($item->kelas_id != null)
+                                        <p>{{ $item->kelas->nama }} {{ isset($item->kelas->periode) ? ' - '.$item->kelas->periode->nama : '' }}</p>
+                                    @elseif($item->wajib_semua == null && $item->kelas_id == null)
+                                        @foreach ($item->role as $role)
+                                            {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ isset($item->periode_id) ? $item->periode->nama : ''}}
+                                </td>
+                                <td class="text-center">
+                                    {{-- <a class="icon" href="{{ route('tagihan.edit', $item->id) }}" title="edit item">
+                                        <i class="fe fe-edit"></i>
+                                    </a>
+                                    <a class="icon btn-delete" href="#!" data-id="{{ $item->id }}" title="delete item">
+                                        <i class="fe fe-trash"></i>
+                                    </a>
+                                    <form action="{{ route('tagihan.destroy', $item->id) }}" method="POST" id="form-{{ $item->id }}">
+                                        @csrf 
+                                    </form> --}}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex">
+                        <div class="ml-auto mb-0">
+                            {{ $tagihan_lama->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
 <script>
