@@ -392,7 +392,7 @@
             //     }
             // })
 
-            $('.inputjumlah').on('keyup change', function(event){
+            $('.inputjumlah').on('keyup', function(event){
 
                 // 1.
                 var selection = window.getSelection().toString();
@@ -415,7 +415,73 @@
                 // 3
                 input = input ? parseInt( input, 10 ) : 0;
                 
+                // if (input > harga) {
+                //     setTimeout(3000)
+                //     swal({
+                //         title: "Nominal yang dimasukkan kebanyakan bu!",
+                //         icon: 'error'
+                //     }).then(function(val){
+                //         swal({
+                //             title: 'Ataukah Anda ingin memasukkan uang titipan?',
+                //             buttons: {
+                //                 ya: {
+                //                     text: 'Ya',
+                //                     value: true
+                //                 },
+                //                 no: {
+                //                     text: 'Tidak',
+                //                     value: false
+                //                 }
+                //             }
+                //         }).then(function(val){
+                //             // console.log(val)
+                //             if (val) {
+                //                 lebih = input - harga;
+                //                 $('#kelebihan').show();
+                //                 $('.infolebih').show();
+                //                 $('#lebih').val(formatNumber(lebih));
+                //                 $('#total').val(formatNumber(harga));
+                //                 $('#lunas').val(formatNumber(harga));
+                //             } else {
+                //                 $('.infolebih').hide();
+                //                 $('#total').val(harga).trigger('keyup');
+                //                 $('#lunas').val(harga).trigger('keyup');
+                //             }
+                //         })
+                //     })
+                //     // alert('nominal yang dimasukkan kebanyakan bu!')
+                // } else {
+                //     if (lebih > 0) {
+                //         lebih = 0;
+                //         $('#lebih').val(lebih);
+                //         $('.infolebih').hide();
+                //         $('#kelebihan').hide()
+                //     }
+                // }
+
+                kurang = harga - input
+
+                // 4
+                $this.val( function() {
+                    return ( input === 0 ) ? "" : input.toLocaleString( "id-ID" );
+                } );
+
+                // console.log(kurang)
+            })
+
+            $('.inputjumlah').on('blur change', function(event){
+                // 1
+                var $this = $( this );
+                var input = $this.val();
+                
+                // 2
+                var input = input.replace(/[\D\s\._\-]+/g, "");
+                
+                // 3
+                input = input ? parseInt( input, 10 ) : 0;
+                
                 if (input > harga) {
+                    setTimeout(3000)
                     swal({
                         title: "Nominal yang dimasukkan kebanyakan bu!",
                         icon: 'error'
@@ -464,8 +530,6 @@
                 $this.val( function() {
                     return ( input === 0 ) ? "" : input.toLocaleString( "id-ID" );
                 } );
-
-                // console.log(kurang)
             })
 
             //pembayaran via
@@ -516,24 +580,38 @@
                     if (titipan > 0) {
                         data.titipan = titipan
                     }
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('api.tagihan') }}/"+siswa_id,
-                        data: data,
-                        success: function(data){
-                            // console.log(data);
-                            swal({title: data.msg})
-                            setTimeout(function(){
-                                window.location.reload()
-                            }, 2000)
-                        },
-                        error: function(data){
-                            swal({title: "Terjadi kesalahan pada transaksi, Transaksi dibatalkan"})
-                            setTimeout(function(){
-                                window.location.reload()
-                            }, 2000)
-                        }
-                    });
+                    // $.ajax({
+                    //     type: "POST",
+                    //     url: "{{ route('api.tagihan') }}/"+siswa_id,
+                    //     data: data,
+                    //     success: function(data){
+                    //         // console.log(data);
+                    //         swal({title: data.msg})
+                    //         setTimeout(function(){
+                    //             window.location.reload()
+                    //         }, 2000)
+                    //     },
+                    //     error: function(data){
+                    //         // swal({title: "Terjadi kesalahan pada transaksi, Transaksi dibatalkan"})
+                    //         swal({title: data.responseJSON.message, text: data.responseJSON.errors})
+                    //         console.log(data.responseJSON.errors)
+                    //         setTimeout(function(){
+                    //             // window.location.reload()
+                    //         }, 2000)
+                    //     }
+                    // });
+                    axios.post('{{ route('api.tagihan') }}/'+siswa_id, data)
+                    .then(function(resp) {
+                        console.log(resp)
+                    }).catch(function(err){
+                        console.log(err.response)
+                        var msg;
+                        $.each(err.response.data.errors, function(k, m){
+                            msg = m
+                        })
+                        swal({title:err.response.data.message, text:JSON.stringify(err.response.data.errors), icon: 'error'})
+                        $('#btn-simpan').removeClass("btn-loading")
+                    })
                 }
                 
             })
