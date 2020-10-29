@@ -46,16 +46,16 @@
                                     </select><br>
                                     {{-- <p>Titipan: Rp<span id="saldo" class="saldotitipan">0</span></p> --}}
                                 </div>
-                                <div class="form-group" id="form-utama">
+                                <div class="form-group" id="form-utama" style="display: none;">
                                     <div class="row gutters-xs">
                                         <div class="col-md-6">
-                                            <div class="form-group" style="display: none" id="form-tagihan">
+                                            <div class="form-group" id="form-tagihan">
                                                 <label class="form-label" >Tagihan</label>
                                                 <select id="tagihan" class="form-control" name="tagihan_id">
                                                     
                                                 </select>
                                             </div>
-                                            <div class="form-group" style="display: none" id="form-tagihan-2">
+                                            <div class="form-group" id="form-tagihan-2">
                                                 <label class="form-label">Total Tagihan</label>
                                                 Rp<span id="harga">0</span>
                                                 <span id="infokurang" style="display: none;"><strong>(Kekurangan bayar)</strong></span>
@@ -66,7 +66,7 @@
                                                     Rp<span class="saldotitipan">0</span>
                                                 </label>
                                             </div>
-                                            <div class="form-group" style="display: none" id="form-total">
+                                            <div class="form-group" id="form-total">
                                                 <label class="form-label">Total Pembayaran <span class="small infolebih" style="display:none; float: right;">Titipan pembayaran</span></label>
                                                 <div class="row gutters-xs">
                                                     <div class="col">
@@ -81,11 +81,11 @@
                                             </div>
                                         </div>
                                         <div class="col -md-6">
-                                            <div class="form-group" style="display: none" id="form-keterangan">
+                                            <div class="form-group" id="form-keterangan">
                                                 <label class="form-label">Keterangan</label>
                                                 <textarea name="keterangan" id="keterangan" rows="3" class="form-control"></textarea>
                                             </div>
-                                            <div class="form-group" style="display: none; margin-top: 25px " id="form-pembayaran">
+                                            <div class="form-group" style="margin-top: 25px " id="form-pembayaran">
                                                 <label class="form-label">Pembayaran</label>
                                                 <div class="selectgroup w-100">
                                                     <label class="selectgroup-item">
@@ -197,13 +197,14 @@
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
             function toggleField(bool) {
-                $('#form-tagihan').toggle(bool)
-                $('#form-tagihan-2').toggle(bool)
-                $('#form-total').toggle(bool)
-                $('#form-pembayaran').toggle(bool)
-                $('#opsi-pelunasan').toggle(bool)
-                $('#opsi-tabungan').toggle(bool)
-                $('#form-keterangan').toggle(bool)
+                $('#form-utama').toggle(bool)
+                // $('#form-tagihan').toggle(bool)
+                // $('#form-tagihan-2').toggle(bool)
+                // $('#form-total').toggle(bool)
+                // $('#form-pembayaran').toggle(bool)
+                // $('#opsi-pelunasan').toggle(bool)
+                // $('#opsi-tabungan').toggle(bool)
+                // $('#form-keterangan').toggle(bool)
                 $('#btn-simpan').toggle(bool)
                 $('#infokurang').toggle(bool)
                 $('#kelebihan').toggle(false)
