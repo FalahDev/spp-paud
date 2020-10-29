@@ -44,7 +44,7 @@
                                             <option value="{{ $item->id }}"> {{ $item->nama.' - '.$item->kelas->nama.' - ' }} </option>
                                         @endforeach
                                     </select><br>
-                                    <p>Titipan: Rp<span id="saldo" class="saldotitipan">0</span></p>
+                                    {{-- <p>Titipan: Rp<span id="saldo" class="saldotitipan">0</span></p> --}}
                                 </div>
                                 <div class="form-group" style="display: none" id="form-tagihan">
                                     <label class="form-label" >Tagihan</label>
@@ -502,13 +502,7 @@
                     };
                     if (kurang < 0) {
                         data.lebih = Math.abs(kurang);
-                        // if (kekurangan != 0) {
-                        //     if(tagihan_id in kekurangan) {
-                        //         data.kurang = kekurangan[tagihan_id];
-                        //     }
-                        // } else {
-                            data.kurang = 0
-                        // }
+                        data.kurang = 0
                     }
                     if (titipan > 0) {
                         data.titipan = titipan

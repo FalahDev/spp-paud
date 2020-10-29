@@ -299,8 +299,8 @@ class SiswaController extends Controller
 
         $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
         $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $verify = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc')->first()->saldo;
-        if(($input - $output) == $verify){
+        $verify = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
+        if(!empty($verify) && ($input - $output) == $verify->saldo){
             return response()->json(['saldo' => $input - $output, 'sal' => format_idr($input - $output)]);
         }else{
             return response()->json(['saldo' => '0', 'sal' => 'invalid '.format_idr($input - $output)]);
@@ -328,8 +328,8 @@ class SiswaController extends Controller
 
         $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
         $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $verify = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc')->first()->saldo;
-        if(($input - $output) == $verify){
+        $verify = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
+        if(!empty($verify) && ($input - $output) == $verify->saldo){
             $data['lebih'] = $input - $output;
         }
 
