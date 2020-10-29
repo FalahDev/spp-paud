@@ -22,7 +22,7 @@ class CreateWaliSiswaTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('siswa_id')->references('id')->on('siswa')->onCascade('delete');
+            $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');
         });
     }
 
