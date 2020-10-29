@@ -46,64 +46,68 @@
                                     </select><br>
                                     {{-- <p>Titipan: Rp<span id="saldo" class="saldotitipan">0</span></p> --}}
                                 </div>
-                                <div class="form-group" style="display: none" id="form-tagihan">
-                                    <label class="form-label" >Tagihan</label>
-                                    <select id="tagihan" class="form-control" name="tagihan_id">
-                                        
-                                    </select>
-                                </div>
-                                <div class="form-group" style="display: none" id="form-tagihan-2">
-                                        <label class="form-label">Total Tagihan</label>
-                                        Rp<span id="harga">0</span>
-                                        <span id="infokurang" style="display: none;"><strong>(Kekurangan bayar)</strong></span>
-                                        <label class="custom-switch" id="checktitipan">
-                                            <input type="checkbox" class="custom-switch-input" id="ada-diskon">
-                                            <span class="custom-switch-indicator"></span>
-                                            <span class="custom-switch-description">Gunakan uang titipan: </span>
-                                            Rp<span class="saldotitipan">0</span>
-                                        </label>
-                                </div>
-                                {{-- <div class="form-group" style="display: none" id="form-diskon">
-                                        <label class="form-label">Diskon (IDR)</label>
-                                        <input type="text" name="diskon" id="diskon" class="form-control" placeholder="masukan angka dalam satuan mata uang, tanpa titik atau koma">
-                                </div> --}}
-                                <div class="form-group" style="display: none" id="form-total">
-                                        <label class="form-label">Total Pembayaran</label>
-                                        <div class="row gutters-xs">
-                                            <div class="col">
-                                                <input type="text" name="pembayaran" class="form-control inputjumlah" id="total" readonly>
-                                                <input type="text" name="pelunasan" class="form-control inputjumlah" id="lunas" readonly>
+                                <div class="form-group" id="form-utama">
+                                    <div class="row gutters-xs">
+                                        <div class="col-md-6">
+                                            <div class="form-group" style="display: none" id="form-tagihan">
+                                                <label class="form-label" >Tagihan</label>
+                                                <select id="tagihan" class="form-control" name="tagihan_id">
+                                                    
+                                                </select>
                                             </div>
-                                            <div class="col" style="display: none;" id="kelebihan">
-                                                <input type="text" name="titipan" class="form-control inputjumlah" id="lebih" readonly>
-                                                <span class="small">Titipan pembayaran</span>
+                                            <div class="form-group" style="display: none" id="form-tagihan-2">
+                                                <label class="form-label">Total Tagihan</label>
+                                                Rp<span id="harga">0</span>
+                                                <span id="infokurang" style="display: none;"><strong>(Kekurangan bayar)</strong></span>
+                                                <label class="custom-switch" id="checktitipan">
+                                                    <input type="checkbox" class="custom-switch-input" id="ada-diskon">
+                                                    <span class="custom-switch-indicator"></span>
+                                                    <span class="custom-switch-description">Gunakan uang titipan: </span>
+                                                    Rp<span class="saldotitipan">0</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group" style="display: none" id="form-total">
+                                                <label class="form-label">Total Pembayaran <span class="small infolebih" style="display:none; float: right;">Titipan pembayaran</span></label>
+                                                <div class="row gutters-xs">
+                                                    <div class="col">
+                                                        <input type="text" name="pembayaran" class="form-control inputjumlah" id="total" readonly>
+                                                        <input type="text" name="pelunasan" class="form-control inputjumlah" id="lunas" readonly>
+                                                    </div>
+                                                    <div class="col" style="display: none;" id="kelebihan">
+                                                        <input type="text" name="titipan" class="form-control" id="lebih" readonly>
+                                                        {{-- <span class="small">Titipan pembayaran</span> --}}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="form-group" style="display: none" id="form-pembayaran">
-                                    <label class="form-label">Pembayaran</label>
-                                    <div class="selectgroup w-100">
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="via" value="tunai" class="selectgroup-input" checked="checked">
-                                            <span class="selectgroup-button">Tunai</span>
-                                        </label>
-                                        <label class="selectgroup-item" style="display: none" id="opsi-pelunasan">
-                                            <input type="radio" name="via" value="pelunasan" class="selectgroup-input">
-                                            <span class="selectgroup-button">Pelunasan</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="via" value="kredit" class="selectgroup-input">
-                                            <span class="selectgroup-button">Titipan</span>
-                                        </label>
-                                        {{-- <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
-                                            <input type="radio" name="via" value="tabungan" class="selectgroup-input">
-                                            <span class="selectgroup-button">Potong Tabungan</span>
-                                        </label> --}}
+                                        <div class="col -md-6">
+                                            <div class="form-group" style="display: none" id="form-keterangan">
+                                                <label class="form-label">Keterangan</label>
+                                                <textarea name="keterangan" id="keterangan" rows="3" class="form-control"></textarea>
+                                            </div>
+                                            <div class="form-group" style="display: none; margin-top: 25px " id="form-pembayaran">
+                                                <label class="form-label">Pembayaran</label>
+                                                <div class="selectgroup w-100">
+                                                    <label class="selectgroup-item">
+                                                        <input type="radio" name="via" value="tunai" class="selectgroup-input" checked="checked">
+                                                        <span class="selectgroup-button">Tunai</span>
+                                                    </label>
+                                                    <label class="selectgroup-item" style="display: none" id="opsi-pelunasan">
+                                                        <input type="radio" name="via" value="pelunasan" class="selectgroup-input">
+                                                        <span class="selectgroup-button">Pelunasan</span>
+                                                    </label>
+                                                    <label class="selectgroup-item">
+                                                        <input type="radio" name="via" value="kredit" class="selectgroup-input">
+                                                        <span class="selectgroup-button">Titipan</span>
+                                                    </label>
+                                                    {{-- <label class="selectgroup-item" style="display: none" id="opsi-tabungan">
+                                                        <input type="radio" name="via" value="tabungan" class="selectgroup-input">
+                                                        <span class="selectgroup-button">Potong Tabungan</span>
+                                                    </label> --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group" style="display: none" id="form-keterangan">
-                                    <label class="form-label">Keterangan</label>
-                                    <textarea name="keterangan" id="keterangan" rows="3" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -346,9 +350,10 @@
                 // diskon = 0
                 // $('#diskon').val('');
                 //menampilkan harga
+                $('#ada-diskon').prop('checked',false)
                 $('#harga').text(formatNumber(harga));
-                $('#lunas').val(formatNumber(harga));
-                $('#total').val(formatNumber(harga - diskon));
+                $('#lunas').val(formatNumber(harga)).trigger('change');
+                $('#total').val(formatNumber(harga - diskon)).trigger('change');
             })
 
             $('#ada-diskon').on('change', function(){
@@ -386,7 +391,7 @@
             //     }
             // })
 
-            $('.inputjumlah').keyup(function(event){
+            $('.inputjumlah').on('keyup change', function(event){
 
                 // 1.
                 var selection = window.getSelection().toString();
@@ -431,12 +436,14 @@
                             if (val) {
                                 lebih = input - harga;
                                 $('#kelebihan').show();
-                                $('#lebih').val(lebih);
-                                $('#total').val(harga);
-                                $('#lunas').val(harga);
+                                $('.infolebih').show();
+                                $('#lebih').val(formatNumber(lebih));
+                                $('#total').val(formatNumber(harga));
+                                $('#lunas').val(formatNumber(harga));
                             } else {
-                                $('#total').val(harga);
-                                $('#lunas').val(harga);
+                                $('.infolebih').hide();
+                                $('#total').val(harga).trigger('keyup');
+                                $('#lunas').val(harga).trigger('keyup');
                             }
                         })
                     })
@@ -445,6 +452,7 @@
                     if (lebih > 0) {
                         lebih = 0;
                         $('#lebih').val(lebih);
+                        $('.infolebih').hide();
                         $('#kelebihan').hide()
                     }
                 }
@@ -468,9 +476,9 @@
                     $('#lunas').prop('readonly', false)
                     $('#lunas').select()
                 } else {
-                    $('#total').val(harga)
+                    $('#total').val(harga).trigger('keyup')
                     $('#total').prop('readonly', true)
-                    $('#lunas').val(harga)
+                    $('#lunas').val(harga).trigger('keyup')
                     $('#lunas').prop('readonly', true)
                     lebih = 0;
                     $('#lebih').val(lebih);
