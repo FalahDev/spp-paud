@@ -44,7 +44,7 @@
                                             <option value="{{ $item->id }}"> {{ $item->nama.' - '.$item->kelas->nama.' - ' }} </option>
                                         @endforeach
                                     </select><br>
-                                    {{-- Saldo: IDR. <span id="saldo">0</span> --}}
+                                    <p>Titipan: Rp<span id="saldo" class="saldotitipan">0</span></p>
                                 </div>
                                 <div class="form-group" style="display: none" id="form-tagihan">
                                     <label class="form-label" >Tagihan</label>
@@ -56,16 +56,17 @@
                                         <label class="form-label">Total Tagihan</label>
                                         Rp<span id="harga">0</span>
                                         <span id="infokurang" style="display: none;"><strong>(Kekurangan bayar)</strong></span>
-                                        {{-- <label class="custom-switch">
+                                        <label class="custom-switch" id="checktitipan">
                                             <input type="checkbox" class="custom-switch-input" id="ada-diskon">
                                             <span class="custom-switch-indicator"></span>
-                                            <span class="custom-switch-description">Ada diskon? </span>
-                                        </label> --}}
+                                            <span class="custom-switch-description">Gunakan uang titipan: </span>
+                                            Rp<span class="saldotitipan">0</span>
+                                        </label>
                                 </div>
-                                <div class="form-group" style="display: none" id="form-diskon">
+                                {{-- <div class="form-group" style="display: none" id="form-diskon">
                                         <label class="form-label">Diskon (IDR)</label>
                                         <input type="text" name="diskon" id="diskon" class="form-control" placeholder="masukan angka dalam satuan mata uang, tanpa titik atau koma">
-                                </div>
+                                </div> --}}
                                 <div class="form-group" style="display: none" id="form-total">
                                         <label class="form-label">Total Pembayaran</label>
                                         <div class="row gutters-xs">
@@ -79,10 +80,6 @@
                                             </div>
                                         </div>
                                 </div>
-                                {{-- <div class="form-group" style="display: none" id="form-lunas">
-                                    <label class="form-label">Total Pembayaran</label>
-                                    <input type="text" name="pelunasan" class="form-control inputjumlah" id="lunas" readonly>
-                                </div> --}}
                                 <div class="form-group" style="display: none" id="form-pembayaran">
                                     <label class="form-label">Pembayaran</label>
                                     <div class="selectgroup w-100">
@@ -206,6 +203,8 @@
                 $('#btn-simpan').toggle(bool)
                 $('#infokurang').toggle(bool)
                 $('#kelebihan').toggle(false)
+                $('#checktitipan').toggle(false)
+                $('#ada-diskon').prop('checked',false)
                 $('#lebih').val('')
             }
             $('#siswa').select2({
@@ -220,6 +219,7 @@
             var diskon = 0; //diskon
             var kurang = 0; //kekurangan
             var lebih = 0;
+            var titipan = 0;
             var kekurangan;
             var via = 'tunai';  //pembayaran via 
             // memilih siswa
@@ -245,10 +245,16 @@
                         axios.get(`{{ route("api.gettagihan") }}/` + this.value)
                     ])
                     .then(axios.spread(function(modifier, tagihan) {
-                        // console.log(getkurang.data)
+                        console.log(modifier.data)
                         var result = modifier.data
-                        // $('#saldo').text(result.kurang)
+                        titipan = result.lebih
+                        
                         toggleField(true)
+
+                        if (titipan) {
+                            $('.saldotitipan').text(titipan)
+                            $('#checktitipan').toggle(true)
+                        }
                         $('.selectgroup-item:first').show()
                         $('.selectgroup-item:first > input')
                             .prop('checked',true).trigger('change');
@@ -266,14 +272,15 @@
                             $('#lunas').hide();
                             $('#opsi-pelunasan').hide();
                         }
-                        console.log(kekurangan)
+                        // console.log(kekurangan)
 
                         $("#tagihan").empty()
                         result = tagihan.data
                         if(result.length == 0){
                             // alert('tidak ada item tagihan yang tersedia')
                             swal({title:'tidak ada tagihan yang belum dibayar'})
-                            $('#btn-simpan').prop('disabled', true);
+                            // $('#btn-simpan').prop('disabled', true);
+                            toggleField(false)
                             return
                         }
                         for(i=0;i < result.length ;i++){
@@ -344,9 +351,19 @@
                 $('#total').val(formatNumber(harga - diskon));
             })
 
-            // $('#ada-diskon').on('change', function(){
-            //     $('#form-diskon').toggle();
-            // })
+            $('#ada-diskon').on('change', function(){
+                // $('#form-diskon').toggle();
+                console.log($(this).prop('checked'))
+                if ($(this).prop('checked')) {
+                    harga -= titipan
+                    
+                } else {
+                    harga += titipan
+                }
+                console.log(harga)
+                $('#lunas').val(formatNumber(harga));
+                $('#total').val(formatNumber(harga - diskon));
+            })
 
             // $('#diskon').keyup(function(){
             //     if(this.value <= 0){
@@ -361,6 +378,7 @@
             //         $('#diskon').val('')
             //     }
             //     $('#total').val(formatNumber(harga - diskon));
+            //     $('#lunas').val(formatNumber(harga - diskon));
             //     if((harga - diskon) <= saldo){
             //         $('#opsi-tabungan').show()
             //     }else{
@@ -457,7 +475,7 @@
                     lebih = 0;
                     $('#lebih').val(lebih);
                     $('#kelebihan').hide();
-                    if (kekurangan != 0) {
+                    if (kekurangan != 0 && kurang < 0) {
                         kurang = 0
                     }
                 }
@@ -491,6 +509,9 @@
                         // } else {
                             data.kurang = 0
                         // }
+                    }
+                    if (titipan > 0) {
+                        data.titipan = titipan
                     }
                     $.ajax({
                         type: "POST",

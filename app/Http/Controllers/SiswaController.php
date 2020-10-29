@@ -325,6 +325,14 @@ class SiswaController extends Controller
             $data['kurang'] = [];
             $data['kurang'][$kurang->tagihan_id] = $kurang->jumlah;
         }
+
+        $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
+        $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
+        $verify = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc')->first()->saldo;
+        if(($input - $output) == $verify){
+            $data['lebih'] = $input - $output;
+        }
+
         // Log::debug($data);
         return response()->json($data);
     }

@@ -73,7 +73,7 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    <p><b>Saldo : </b>IDR. {{$saldo}}</p>
+                    <p><b>Saldo : </b>Rp{{$saldo}}</p>
                     <table class="table card-table table-hover table-vcenter text-wrap">
                         <tr>
                             <th>Tanggal</th>

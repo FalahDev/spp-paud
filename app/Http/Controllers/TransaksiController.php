@@ -29,12 +29,13 @@ class TransaksiController extends Controller
     //pay tagihan
     public function store(Request $request, Siswa $siswa)
     {
-        // Log::debug($request);
+        Log::debug($request);
         // return response()->json($request);
         DB::beginTransaction();
         //mulai transaksi, membersihkan request->jumlah dari titik dan koma
         $kurang = $request->kurang;
         $lebih  = $request->lebih;
+        $titip  = $request->titipan;
         $jumlah = preg_replace("/[,.]/", "", $request->jumlah);
         $jumlah = $jumlah - $request->diskon;
         $message = 'dibayarkan secara tunai';
@@ -77,7 +78,7 @@ class TransaksiController extends Controller
                     $additional_message . ', '.$request->keterangan
             ]);
         }
-        // Log::debug($request);
+
         // jika pembayaran dilakukan melalui tabungan
         if ($request->via == 'pelunasan') {
             $kekurangan = Kekurangan::where([
@@ -169,6 +170,51 @@ class TransaksiController extends Controller
             ]);
         }
 
+        //ambil titipan
+        if($titip > 0) {
+            $tabungan = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
+            if(!empty($tabungan)) {
+                $saldo = $tabungan->saldo;
+            } else {
+                $saldo = 0;
+            }
+            $saldo -= $titip;
+            $menabung = Tabungan::create([
+                'siswa_id' => $siswa->id,
+                'tipe' => 'out',
+                'jumlah' => $titip,
+                'saldo' => $saldo,
+                'keperluan' => 'Dibayarkan ke tagihan',
+            ]);
+
+            Tabungan::where('siswa_id', $siswa->id)->delete();
+
+            if ($saldo > 0) {
+                Tabungan::create([
+                    'siswa_id' => $siswa->id,
+                    'tipe' => 'in',
+                    'jumlah' => $saldo,
+                    'saldo' => $saldo,
+                    'keperluan' => 'Titipan pembayaran',
+                ]);
+            }
+            //tambahkan tabungan ke keuangan
+            $keuangan = Keuangan::latest()->first();
+            if($keuangan != null){
+                $jumlah = $keuangan->total_kas + $menabung->jumlah;
+            }else{
+                $jumlah = 0;
+            }
+            $keuangan = Keuangan::create([
+                'tabungan_id' => $menabung->id,
+                'tipe' => $menabung->tipe,
+                'jumlah' => $menabung->jumlah,
+                'total_kas' => $jumlah,
+                'keterangan' => $menabung->siswa->nama."(".$menabung->siswa->kelas->nama.")".
+                                        ' mengambil titipan sebesar '. $menabung->jumlah
+                                        .' untuk pembayaran pada '.$menabung->created_at->format('H:i:s').', total titipan '.$menabung->saldo
+            ]);
+        }
 
         if(isset($keuangan) || isset($kekurangan)){
             DB::commit();
