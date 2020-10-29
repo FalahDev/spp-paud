@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException as ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'message' => 'Data yang dikirimkan salah!',
+                'errors' => $exception->validator->getMessageBag()
+            ], 422);
+        }
         return parent::render($request, $exception);
     }
 }
