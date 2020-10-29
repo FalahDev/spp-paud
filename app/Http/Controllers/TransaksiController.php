@@ -2,26 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Transaksi;
+use App\Exports\SppExport;
+use App\Exports\SppSiswaExport;
+use App\Models\Keuangan;
 use App\Models\Siswa;
 use App\Models\Tagihan;
-use Illuminate\Support\Facades\DB;
-use App\Models\Keuangan;
-use App\Models\Kekurangan;
-use App\Models\Tabungan;
-use App\Exports\SppSiswaExport;
-use App\Exports\SppExport;
+use App\Models\Transaksi;
+use App\TransaksiOperator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TransaksiController extends Controller
 {
+    public function __construct(TransaksiOperator $transaksi)
+    {
+        $this->transaksi = $transaksi;
+    }
+
     public function index()
     {
-        $siswa = Siswa::where('is_lulus','0')->orderBy('created_at','desc')->get();
-        $transaksi = Transaksi::orderBy('created_at','desc')->paginate(10);
+        $siswa     = Siswa::where('is_lulus', '0')->orderBy('created_at', 'desc')->get();
+        $transaksi = Transaksi::orderBy('created_at', 'desc')->paginate(10);
         return view('transaksi.index', [
-            'siswa' => $siswa,
+            'siswa'     => $siswa,
             'transaksi' => $transaksi,
         ]);
     }
@@ -30,220 +33,40 @@ class TransaksiController extends Controller
     public function store(Request $request, Siswa $siswa)
     {
         Log::debug($request);
-        // return response()->json($request);
-        DB::beginTransaction();
-        //mulai transaksi, membersihkan request->jumlah dari titik dan koma
-        $kurang = $request->kurang;
-        $lebih  = $request->lebih;
-        $titip  = $request->titipan;
-        $jumlah = preg_replace("/[,.]/", "", $request->jumlah);
-        $jumlah = $jumlah - $request->diskon;
-        $message = 'dibayarkan secara tunai';
-        //cek pembayaran via apa
-        if (($request->via == 'kredit' && empty($lebih)) || $kurang > 0) {
-            $message = 'dibayarkan secara angsur';
-            $jumlah = $jumlah - $kurang;
-        }
 
-        //membuat transaksi baru
-        $transaksi = Transaksi::make([
-            'siswa_id' => $siswa->id,
-            'tagihan_id' => $request->tagihan_id,
-            'diskon' => $request->diskon,
-            'is_lunas' => empty($kurang) ? 1 : 0,
-            'keterangan' => $message.', '.$request->keterangan,
+        $request->validate([
+            'keterangan' => 'required_unless:lebih,0',
         ]);
-        
-        //menyimpan transaksi
-        if($transaksi->save()){
-            //tambahkan transaksi ke keuangan
-            $keuangan = Keuangan::orderBy('created_at','desc')->first();
-            $additional_message = empty($kurang) ? '' : ', kurang Rp' .format_idr($kurang);
-            $additional_message .= empty($lebih) ? '' : ', menitipkan Rp' .format_idr($lebih);
-            if($keuangan != null){
-                $total_kas = $keuangan->total_kas + $jumlah;
-            }else{
-                $total_kas = $jumlah;
-            }
-            $cara_bayar = ($lebih > 0) ? 'tunai' : $request->via;
-            $keuangan = Keuangan::create([
-                'transaksi_id' => $transaksi->id,
-                'tipe' => 'in',
-                'jumlah' => $jumlah,
-                'total_kas' => $total_kas,
-                'keterangan' => $transaksi->siswa->nama.
-                    ' ('.$transaksi->siswa->kelas->nama.') membayar '.$transaksi->tagihan->nama.
-                    ' pada pukul '.$transaksi->created_at->format('H:i:s').
-                    ', catatan : dibayarkan dengan '. $cara_bayar .
-                    $additional_message . ', '.$request->keterangan
-            ]);
-        }
+        // return response()->json($request);
 
-        // jika pembayaran dilakukan melalui tabungan
-        if ($request->via == 'pelunasan') {
-            $kekurangan = Kekurangan::where([
-                ['siswa_id', '=', $siswa->id],
-                ['tagihan_id', '=', $request->tagihan_id],
-                ['dibayar', '=', '0']
-            ]);
-            $kekurangan->delete();
-            $kekurangan->withTrashed()->update(['dibayar' => 1]);
+        $transaksi = $this->transaksi->createTransaction($request, $siswa);
 
-            Transaksi::where([
-                ['siswa_id', '=', $siswa->id],
-                ['tagihan_id', '=', $request->tagihan_id],
-                ['is_lunas', '=', '0']
-            ])->update(['is_lunas' => 1]);
-            
-            // $jumlah = $jumlah - $kurang;
-
-        } else if ($request->via == 'kredit') {
-            $create = [
-                'siswa_id' => $siswa->id,
-                'tagihan_id' => $request->tagihan_id,
-                'transaksi_id' => $transaksi->id,
-                'jumlah' => $request->kurang,
-                'keterangan' => $request->keterangan
-            ];
-            if ($lebih > 0) {
-                $create['dibayar'] = 1;
-
-                Transaksi::where([
-                    ['siswa_id', '=', $siswa->id],
-                    ['tagihan_id', '=', $request->tagihan_id],
-                    ['is_lunas', '=', '0']
-                ])->update(['is_lunas' => 1]);
-            }
-            $kekurangan = Kekurangan::create($create);
-            // Log::debug($kekurangan);
-            $query = [
-                ['id', '!=', $kekurangan->id],
-                ['siswa_id', '=', $siswa->id],
-                ['tagihan_id', '=', $request->tagihan_id],
-                ['dibayar', '=', '0']
-            ];
-            
-            if($lebih > 0) {
-                $query = [
-                    ['siswa_id', '=', $siswa->id],
-                    ['tagihan_id', '=', $request->tagihan_id],
-                    ['dibayar', '=', '0']
-                ];
-            }
-
-            $delKurang = Kekurangan::where($query);
-            $delKurang->delete();
-            $delKurang->withTrashed()->update(['dibayar' => 1]);
-
-        }
-        
-        if($lebih > 0){
-            $tabungan = Tabungan::where('siswa_id', $siswa->id)->orderBy('created_at','desc')->first();
-            if(!empty($tabungan)) {
-                $saldo = $tabungan->saldo;
-            } else {
-                $saldo = 0;
-            }
-            $menabung = Tabungan::create([
-                'siswa_id' => $siswa->id,
-                'tipe' => 'in',
-                'jumlah' => $lebih,
-                'saldo' => $saldo + $lebih,
-                'keperluan' => 'Titipan pembayaran',
-            ]);
-
-            //tambahkan tabungan ke keuangan
-            $keuangan = Keuangan::orderBy('created_at','desc')->first();
-            if($keuangan != null){
-                $jumlah = $keuangan->total_kas + $menabung->jumlah;
-            }else{
-                $jumlah = $menabung->jumlah;
-            }
-            $keuangan = Keuangan::create([
-                'tabungan_id' => $menabung->id,
-                'tipe' => $menabung->tipe,
-                'jumlah' => $menabung->jumlah,
-                'total_kas' => $jumlah,
-                'keterangan' => $menabung->siswa->nama."(".$menabung->siswa->kelas->nama.")".
-                                        ' menitipkan pembayaran sebesar '. $menabung->jumlah
-                                        .' pada '.$menabung->created_at->format('H:i:s').', total titipan '.$menabung->saldo
-            ]);
-        }
-
-        //ambil titipan
-        if($titip > 0) {
-            $tabungan = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
-            if(!empty($tabungan)) {
-                $saldo = $tabungan->saldo;
-            } else {
-                $saldo = 0;
-            }
-            $saldo -= $titip;
-            $menabung = Tabungan::create([
-                'siswa_id' => $siswa->id,
-                'tipe' => 'out',
-                'jumlah' => $titip,
-                'saldo' => $saldo,
-                'keperluan' => 'Dibayarkan ke tagihan',
-            ]);
-
-            Tabungan::where('siswa_id', $siswa->id)->delete();
-
-            if ($saldo > 0) {
-                Tabungan::create([
-                    'siswa_id' => $siswa->id,
-                    'tipe' => 'in',
-                    'jumlah' => $saldo,
-                    'saldo' => $saldo,
-                    'keperluan' => 'Titipan pembayaran',
-                ]);
-            }
-            //tambahkan tabungan ke keuangan
-            $keuangan = Keuangan::latest()->first();
-            if($keuangan != null){
-                $jumlah = $keuangan->total_kas + $menabung->jumlah;
-            }else{
-                $jumlah = 0;
-            }
-            $keuangan = Keuangan::create([
-                'tabungan_id' => $menabung->id,
-                'tipe' => $menabung->tipe,
-                'jumlah' => $menabung->jumlah,
-                'total_kas' => $jumlah,
-                'keterangan' => $menabung->siswa->nama."(".$menabung->siswa->kelas->nama.")".
-                                        ' mengambil titipan sebesar '. $menabung->jumlah
-                                        .' untuk pembayaran pada '.$menabung->created_at->format('H:i:s').', total titipan '.$menabung->saldo
-            ]);
-        }
-
-        if(isset($keuangan) || isset($kekurangan)){
-            DB::commit();
+        if ($transaksi) {
             return response()->json(['msg' => 'transaksi berhasil dilakukan']);
-        }else{
-            DB::rollBack();
+        } else {
             return redirect()->route('spp.index')->with([
                 'type' => 'danger',
-                'msg' => 'terjadi kesalahan'
+                'msg'  => 'terjadi kesalahan',
             ]);
         }
-        
+
     }
 
     public function transaksiExport()
     {
-        return \Excel::download(new SppExport, 'histori_spp-'.now().'.xlsx');
+        return \Excel::download(new SppExport, 'histori_spp-' . now() . '.xlsx');
     }
 
     public function transaksiPrint(Request $request)
     {
-        $ids = explode(',',$request->ids);
-        $total = 0;
+        $ids       = explode(',', $request->ids);
+        $total     = 0;
         $transaksi = Transaksi::whereIn('id', $ids)->get();
-        foreach($transaksi as $trans){
+        foreach ($transaksi as $trans) {
             $total += $trans->keuangan->jumlah;
         }
 
-        return view('transaksi.transaksiprint',[
+        return view('transaksi.transaksiprint', [
             'items' => $transaksi,
             'total' => $total,
         ]);
@@ -256,59 +79,102 @@ class TransaksiController extends Controller
         return response()->json($tagihan);
     }
 
-    public function print(Request $request, Siswa $siswa)
-    {
+    function print(Request $request, Siswa $siswa) {
         $beweendate = [];
-        $dates = explode('-',$request->dates);
-        
-        foreach($dates as $index => $date){
-            if($index == 0){
+        $dates      = explode('-', $request->dates);
+
+        foreach ($dates as $index => $date) {
+            if ($index == 0) {
                 $date .= ' 00:00:00';
-            }else{
+            } else {
                 $date .= ' 23:59:59';
             }
             $beweendate[] = \Carbon\Carbon::create($date)->format('Y-m-d H:i:s');
         }
         $transaksi = Transaksi::where('siswa_id', $siswa->id)->whereBetween('created_at', [$beweendate[0], $beweendate[1]])->get();
 
-        return view('transaksi.print',[
-            'siswa' => $siswa,
-            'tanggal' => $request->dates,
-            'transaksi' => $transaksi
+        return view('transaksi.print', [
+            'siswa'     => $siswa,
+            'tanggal'   => $request->dates,
+            'transaksi' => $transaksi,
         ]);
     }
 
     protected function getTagihan(Siswa $siswa)
     {
-        //wajib semua
-        $tagihan_wajib = Tagihan::where('wajib_semua','1')
-            ->whereHas('periode', function($q) { $q->where('is_active',1); })->get()->toArray();
+        // wajib semua
+        $tagihan_wajib = Tagihan::where('wajib_semua', '1')
+            ->whereHas('periode', function ($q) {$q->where('is_active', 1);
+            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get()->toArray();
         // Log::debug($tagihan_wajib);
         //kelas only
         $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)
-            ->whereHas('periode', function($q) { $q->where('is_active',1); })->get()->toArray();
+            ->whereHas('periode', function ($q) {$q->where('is_active', 1);
+            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get()->toArray();
 
         //student only
-        $tagihan_siswa = [];
+        $tagihan_siswa     = [];
         $tagihan_rolesiswa = $siswa->role;
-        foreach($tagihan_rolesiswa as $tag_siswa){
+        foreach ($tagihan_rolesiswa as $tag_siswa) {
             $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
         }
 
         $tagihan = array_merge($tagihan_wajib, $tagihan_kelas, $tagihan_siswa);
 
         return $tagihan;
+
+        $tagihan_periode = Tagihan::where('wajib_semua', 1)
+            ->where(function ($qu) {
+                $qu->whereHas('periode', function ($q) {
+                    $q->where('is_active', 1);
+                })->orWhereHas('periode', function ($q) {$q;}, '<', 1);
+                // })->orWhere( function($kls) use ($siswa) {
+                //     $kls->where('kelas_id', $siswa->kelas->id);
+            })->where(function ($tr) use ($siswa) {
+            $tr->whereHas('transaksi', function ($q) use ($siswa) {
+                $q->where('is_lunas', 0)->where('siswa_id', $siswa->id);
+            })->orWhereHas('transaksi', function ($q) {$q;}, '<', 1);
+        }); //->orWhere('kelas_id', $siswa->kelas->id)->orWhere('wajib_semua', '1')
+        // ->get();
+        //wajib semua
+        // $tagihan_wajib = Tagihan::where('wajib_semua','1')
+        // ->whereHas('periode', function($q) { $q->where('is_active',1); })->get()->toArray();
+
+        //kelas only
+        $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)
+            ->where(function ($tr) {
+                $tr->whereHas('transaksi', function ($q) {
+                    $q->where('is_lunas', 0);
+                })->orWhereHas('transaksi', function ($q) {$q;}, '<', 1);
+            })->where(function ($qu) {
+            $qu->whereHas('periode', function ($q) {
+                $q->where('is_active', 1);
+            })->orWhereHas('periode', function ($q) {$q;}, '<', 1);
+        })->get()->toArray();
+
+        // Log::debug($tagihan_periode->toSql());
+        // return $tagihan_kelas;
+        //student only
+        // $tagihan_siswa = [];
+        // $tagihan_rolesiswa = $siswa->role;
+        // foreach($tagihan_rolesiswa as $tag_siswa){
+        //     $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
+        // }
+
+        // $tagihan = array_merge($tagihan_wajib, $tagihan_kelas, $tagihan_siswa);
+
+        return $tagihan_periode->get()->toArray();
     }
 
     public function export(Request $request, Siswa $siswa)
     {
         $beweendate = [];
-        $dates = explode('-',$request->dates);
-        
-        foreach($dates as $index => $date){
-            if($index == 0){
+        $dates      = explode('-', $request->dates);
+
+        foreach ($dates as $index => $date) {
+            if ($index == 0) {
                 $date .= ' 00:00:00';
-            }else{
+            } else {
                 $date .= ' 23:59:59';
             }
             $beweendate[] = \Carbon\Carbon::create($date)->format('Y-m-d H:i:s');
@@ -316,6 +182,6 @@ class TransaksiController extends Controller
 
         $transaksi = Transaksi::where('siswa_id', $siswa->id)->whereBetween('created_at', [$beweendate[0], $beweendate[1]])->get();
 
-        return \Excel::download(new SppSiswaExport($siswa, $transaksi, $request->dates), 'spp_siswa-'.now().'.xlsx');
+        return \Excel::download(new SppSiswaExport($siswa, $transaksi, $request->dates), 'spp_siswa-' . now() . '.xlsx');
     }
 }

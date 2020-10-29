@@ -19,8 +19,15 @@ class TagihanController extends Controller
      */
     public function index()
     {
-        $tagihan = Tagihan::orderBy('created_at','desc')->paginate(10);
-        return view('tagihan.index', ['tagihan' => $tagihan]);
+        $tagihan = Tagihan::whereHas('periode', function($q){
+            $q->where('is_active', 1);
+        })->orWhereHas('periode', function($q){ $q;}, '<', 1)
+        ->orderBy('created_at','desc')->paginate(10);
+        $tagihanLama = Tagihan::whereHas('periode', function($q){
+            $q->where('is_active', 0);
+        })
+        ->orderBy('created_at','desc')->paginate(10);
+        return view('tagihan.index', ['tagihan' => $tagihan, 'tagihan_lama' => $tagihanLama]);
     }
 
     /**
