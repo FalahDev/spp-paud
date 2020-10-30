@@ -15,6 +15,7 @@
                 <div class="card-header">
                     <h3 class="card-title">@yield('page-name')</h3>
                     <a href="{{ route('tagihan.create') }}" class="btn btn-outline-primary btn-sm ml-5">Tambah Tagihan</a>
+                    <a href="{{ route('pembelian.index') }}" class="btn btn-outline-primary btn-sm ml-5">Kelola Item Tagihan</a>
                 </div>
                 @if(session()->has('msg'))
                 <div class="card-alert alert alert-{{ session()->get('type') }}" id="message" style="border-radius: 0px !important">
@@ -34,6 +35,7 @@
                             <th class="w-1">No.</th>
                             <th>Nama</th>
                             <th>Jumlah</th>
+                            <th>Item</th>
                             <th>Peserta</th>
                             <th>Periode</th>
                             <th></th>
@@ -49,6 +51,13 @@
                                 <td>
                                     {{ $item->jumlah_idr }}
                                 </td>
+                                <td>
+                                    @if(isset($item->has_item) && $item->has_item)
+                                    @foreach ($item->barangjasa as $barang)
+                                        {{ $barang->nama }}<br>
+                                    @endforeach
+                                    @endif
+                                </td>
                                 <td style="max-width: 150px">
                                     @if($item->wajib_semua != null)
                                         <p>Wajib Semua</p>
@@ -56,7 +65,7 @@
                                         <p>{{ $item->kelas->nama }} {{ isset($item->kelas->periode) ? ' - '.$item->kelas->periode->nama : '' }}</p>
                                     @elseif($item->wajib_semua == null && $item->kelas_id == null)
                                         @foreach ($item->role as $role)
-                                            {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},
+                                            {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},<br>
                                         @endforeach
                                     @endif
                                 </td>
@@ -64,6 +73,11 @@
                                     {{ isset($item->periode_id) ? $item->periode->nama : ''}}
                                 </td>
                                 <td class="text-center">
+                                    @if ($item->has_item)
+                                    <a class="icon" href="{{ route('pembelian.index', $item->id) }}" title="edit barang jasa">
+                                        <i class="fe fe-box"></i>
+                                    </a>
+                                    @endif
                                     <a class="icon" href="{{ route('tagihan.edit', $item->id) }}" title="edit item">
                                         <i class="fe fe-edit"></i>
                                     </a>
@@ -104,6 +118,7 @@
                             <th class="w-1">No.</th>
                             <th>Nama</th>
                             <th>Jumlah</th>
+                            <th>Item</th>
                             <th>Peserta</th>
                             <th>Periode</th>
                             <th></th>
@@ -118,6 +133,13 @@
                                 </td>
                                 <td>
                                     {{ $item->jumlah_idr }}
+                                </td>
+                                <td>
+                                    @if(isset($item->has_item) && $item->has_item)
+                                    @foreach ($item->barangjasa as $barang)
+                                        {{ $barang->nama }}<br>
+                                    @endforeach
+                                    @endif
                                 </td>
                                 <td style="max-width: 150px">
                                     @if($item->wajib_semua != null)
