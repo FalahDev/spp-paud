@@ -146,7 +146,7 @@
             placeholder: "Pilih Item",
         });
         $('#simpan').click(function(event){
-            if($('#item-tagihan').select2('data').length == 0){
+            if($('#item-tagihan').select2('data').length == 0 && $('#has-item').prop('checked')){
                 swal({title:"Item belum diisi bu!", icon:'warning'})
                 event.preventDefault()
             }
