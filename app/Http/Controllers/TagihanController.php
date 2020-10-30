@@ -130,13 +130,14 @@ class TagihanController extends Controller
      */
     public function update(Request $request, Tagihan $tagihan)
     {
+        Log::debug($request);
         $request->validate([
             'nama' => 'required|max:255',
             'jumlah' => 'required|numeric',
             'peserta' => 'required|numeric'
         ]);
         // Log::debug($request);
-        $tagihan->fill($request->except(['kelas_id','periode','periode_id']));
+        $tagihan->fill($request->except(['kelas_id','periode','periode_id', 'has_item']));
         
         //remove all related
         $tagihan->siswa()->detach();
@@ -159,7 +160,20 @@ class TagihanController extends Controller
                 return Redirect::back()->withErrors(['Peserta Wajib diisi']);
         }
 
-        if (isset($request->periode)) {
+        if(isset($request->has_item) && $request->has_item == 'on'){
+            foreach($request->items as $item){
+                $tagihan->barangjasa()->save(BarangJasa::find($item));
+            }
+            $tagihan->has_item = true;
+        } else {
+            foreach ($request->items as  $item) {
+                $barangjasa = BarangJasa::find($item)->tagihan()->dissociate();
+                $barangjasa->save();
+            }
+            $tagihan->has_item = false;
+        }
+
+        if (isset($request->periode) && $request->periode == 'on') {
             $tagihan->periode_id = $request->periode_id;
         } else {
             $tagihan->periode_id = null;

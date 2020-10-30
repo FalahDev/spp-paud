@@ -41,7 +41,7 @@ class Tagihan extends Model
 
     public function barangjasa()
     {
-        return $this->hasMany(\App\Models\BarangJasa::class);
+        return $this->hasMany(\App\Models\BarangJasa::class, 'tagihan_id');
     }
 
     public function transaksi(){

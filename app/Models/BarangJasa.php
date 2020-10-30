@@ -28,6 +28,6 @@ class BarangJasa extends Model
 
     public function tagihan()
     {
-        return $this->belongsToMany(\App\Models\Tagihan::class);
+        return $this->belongsTo(\App\Models\Tagihan::class);
     }
 }

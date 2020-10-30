@@ -32,7 +32,7 @@
                             <div class="form-group">
                                 <label class="form-label">Tidak ada jumlah tertentu</label>
                                 <div class="form-check">
-                                    <input type="checkbox" id="has-item" class="form-check-input" name="has_item" {{ isset($tagihan) ? ($tagihan->has_item ? 'checked' : '' ) : old('has_item') }} required>
+                                    <input type="checkbox" id="has-item" class="form-check-input" name="has_item" {{ isset($tagihan) ? ($tagihan->has_item ? 'checked' : '' ) : old('has_item') }}>
                                     <label for="has-item">Ada item tagihan</label>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 <label class="form-label">Periode Khusus</label>
                                 <div class="form-check">
-                                    <input id="periode" name="periode" type="checkbox" value="" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'checked' : '') : '' }}>
+                                    <input id="periode" name="periode" type="checkbox" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'checked' : '') : '' }}>
                                     <label for="periode" class="form-check-label">Khusus periode tertentu</label>
                                 </div>
                             </div>
