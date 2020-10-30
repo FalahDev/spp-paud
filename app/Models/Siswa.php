@@ -62,6 +62,11 @@ class Siswa extends Model
         return $tabungan;
     }
 
+    public function beli()
+    {
+        return $this->hasMany(\App\Models\Pembelian::class);
+    }
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }

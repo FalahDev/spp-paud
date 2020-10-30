@@ -28,4 +28,9 @@ class Kelas extends Model
     public function periode(){
         return $this->hasOne('App\Models\Periode','id','periode_id');
     }
+
+    public function beli()
+    {
+        return $this->hasMany(\App\Models\Pembelian::class);
+    }
 }
