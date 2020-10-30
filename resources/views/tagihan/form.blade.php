@@ -170,7 +170,7 @@
 
         $('#has-item').change(function(event){
             var checked = $(this).prop('checked')
-
+            $('#form-jumlah > input').val(0);
             $('#form-jumlah').toggle(!checked)
             $('#form-item').toggle(checked)
         })

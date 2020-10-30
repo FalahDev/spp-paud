@@ -41,10 +41,12 @@ class TagihanController extends Controller
         $kelas = Kelas::all();
         $siswa = Siswa::where('is_lulus','!=','1')->get();
         $periode = Periode::where('is_active', '1')->get();
+        $barangjasa = BarangJasa::all();
         return view('tagihan.form',[
             'kelas' => $kelas,
             'siswa' => $siswa,
-            'periode' => $periode
+            'periode' => $periode,
+            'items' => $barangjasa,
         ]);
     }
 
@@ -63,6 +65,7 @@ class TagihanController extends Controller
         ]);
 
         $tagihan = Tagihan::make($request->except(['kelas_id','periode','periode_id']));
+        $saveSiswaOnly = $saveItems = false;
 
         switch($request->peserta){
             case 1: // semua
@@ -72,22 +75,36 @@ class TagihanController extends Controller
                 $tagihan->kelas_id = $request->kelas_id;
                 break;
             case 3: // siswa , make role
-                $tagihan->save();
-                foreach($request->siswa_id as $siswa_id){
-                    $tagihan->siswa()->save(Siswa::find($siswa_id));
-                }
+                $saveSiswaOnly = true;
                 break;
             default:
                 return Redirect::back()->withErrors(['Peserta Wajib diisi']);
         }
 
-        if (isset($request->periode)) {
+        if(isset($request->has_item) && $request->has_item == 'on' && !empty($request->items)){
+            $saveItems = true;
+            $tagihan->has_item = true;
+        } else {
+            $tagihan->has_item = false;
+        }
+
+        if (isset($request->periode) && $request->periode == 'on') {
             $tagihan->periode_id = $request->periode_id;
         } else {
             $tagihan->periode_id = null;
         }
 
         if($tagihan->save()){
+            if ($saveSiswaOnly) {
+                foreach($request->siswa_id as $siswa_id){
+                    $tagihan->siswa()->save(Siswa::find($siswa_id));
+                }
+            }
+            if ($saveItems) {
+                foreach($request->items as $item){
+                    $tagihan->barangjasa()->save(BarangJasa::find($item));
+                }
+            }
             return redirect()->route('tagihan.index')->with([
                 'type' => 'success',
                 'msg' => 'Item Tagihan ditambahkan'
@@ -130,7 +147,7 @@ class TagihanController extends Controller
      */
     public function update(Request $request, Tagihan $tagihan)
     {
-        Log::debug($request);
+        // Log::debug($request);
         $request->validate([
             'nama' => 'required|max:255',
             'jumlah' => 'required|numeric',
@@ -160,15 +177,23 @@ class TagihanController extends Controller
                 return Redirect::back()->withErrors(['Peserta Wajib diisi']);
         }
 
-        if(isset($request->has_item) && $request->has_item == 'on'){
+        if(isset($request->has_item) && $request->has_item == 'on' && !empty($request->items)){
             foreach($request->items as $item){
                 $tagihan->barangjasa()->save(BarangJasa::find($item));
             }
             $tagihan->has_item = true;
         } else {
-            foreach ($request->items as  $item) {
-                $barangjasa = BarangJasa::find($item)->tagihan()->dissociate();
-                $barangjasa->save();
+            if (empty($request->items)) {
+                $barangjasa = BarangJasa::where('tagihan_id', $tagihan->id)->get();
+                foreach ($barangjasa as $item) {
+                    $item->tagihan()->dissociate();
+                    $item->save();
+                }
+            } else {
+                foreach ($request->items as  $item) {
+                    $barangjasa = BarangJasa::find($item)->tagihan()->dissociate();
+                    $barangjasa->save();
+                }
             }
             $tagihan->has_item = false;
         }
