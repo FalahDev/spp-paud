@@ -18,7 +18,8 @@ class CreatePembelianTable extends Migration
             $table->unsignedBigInteger('bj_id');
             $table->unsignedBigInteger('kelas_id')->nullable();
             $table->unsignedBigInteger('siswa_id');
-            $table->unsignedInteger('qty');
+            $table->unsignedInteger('qty')->default(1);
+            $table->double('harga')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
