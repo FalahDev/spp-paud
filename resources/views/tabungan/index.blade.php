@@ -103,7 +103,7 @@
                                 <td><span class="text-muted">{{ $index+1 }}</span></td>
                                 <td>{{ $item->created_at->format('d-m-Y') }}</td>
                                 <td>
-                                    <a href="{{ route('siswa.show', $item->siswa->id) }}" target="_blank">
+                                    <a href="{{ route('siswa.show', $item->siswa->id) }}">
                                         {{ $item->siswa->nama }} -
                                         {{ $item->siswa->kelas->nama }} -
                                         {{ isset($item->siswa->kelas->periode) ? $item->siswa->kelas->periode->nama : '' }}

@@ -34,7 +34,7 @@
                             <tr>
                                 <td><span class="text-muted">{{ $index+1 }}</span></td>
                                 <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                                <td><a href="{{ route('siswa.show', $item->siswa->id) }}" target="_blank">
+                                <td><a href="{{ route('siswa.show', $item->siswa->id) }}">
                                     {{ $item->siswa->nama.'('.$item->siswa->kelas->nama.')' }}
                                 </a></td>
                                 <td>{{ $item->tagihan->nama }}</td>
