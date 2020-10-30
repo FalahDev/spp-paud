@@ -28,11 +28,20 @@ class Tagihan extends Model
         'periode_id'
     ];
 
+    protected $casts = [
+        'has_item' => 'boolean',
+    ];
+
     protected $appends = ['tagihan_id'];
 
     public function getTagihanIdAttribute()
     {
         return $this->attributes['id'];
+    }
+
+    public function barangjasa()
+    {
+        return $this->hasMany(\App\Models\BarangJasa::class);
     }
 
     public function transaksi(){

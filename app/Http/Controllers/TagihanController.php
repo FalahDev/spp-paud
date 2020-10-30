@@ -7,6 +7,7 @@ use App\Models\Tagihan;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Periode;
+use App\Models\BarangJasa;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
 
@@ -110,11 +111,13 @@ class TagihanController extends Controller
         $kelas = Kelas::all();
         $periode = Periode::where('is_active', '1')->get();
         $siswa = Siswa::where('is_yatim','!=','1')->get();
+        $barangjasa = BarangJasa::all();
         return view('tagihan.form',[
             'kelas' => $kelas,
             'siswa' => $siswa,
             'periode' => $periode,
-            'tagihan' => $tagihan
+            'tagihan' => $tagihan,
+            'items' => $barangjasa
         ]);
     }
 

@@ -25,4 +25,9 @@ class BarangJasa extends Model
     {
         return $this->belongsToMany(\App\Models\Kelas::class, 'pembelian', 'bj_id');
     }
+
+    public function tagihan()
+    {
+        return $this->belongsToMany(\App\Models\Tagihan::class);
+    }
 }

@@ -25,9 +25,26 @@
                                 <label class="form-label">Nama</label>
                                 <input type="text" class="form-control" name="nama" placeholder="Nama" value="{{ isset($tagihan) ? $tagihan->nama : old('nama') }}" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: {{ isset($tagihan) ? ($tagihan->has_item ? 'none' : 'block') : 'block' }}" id="form-jumlah">
                                 <label class="form-label">Jumlah</label>
                                 <input type="number" class="form-control" name="jumlah" value="{{ isset($tagihan) ? $tagihan->jumlah : old('jumlah') }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tidak ada jumlah tertentu</label>
+                                <div class="form-check">
+                                    <input type="checkbox" id="has-item" class="form-check-input" name="has_item" {{ isset($tagihan) ? ($tagihan->has_item ? 'checked' : '' ) : old('has_item') }} required>
+                                    <label for="has-item">Ada item tagihan</label>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: {{ isset($tagihan) ? ($tagihan->has_item ? 'block' : 'none') : 'none' }}" id="form-item">
+                                <label class="form-label">Item tagihan</label>
+                                <select class="form-control" name="items[]" id="item-tagihan" multiple>
+                                    @foreach($items as $item)
+                                        <option value="{{ $item->id }}" {{ isset($tagihan) ? ($tagihan->has_item ? (in_array($item->id, $tagihan->barangjasa->pluck('id')->toArray()) ? 'selected' : '') : '') : '' }}>
+                                            {{ $item->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <div class="form-label">Peserta</div>
@@ -42,11 +59,11 @@
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Hanya Kelas</span>
                                 </label>
-                                {{-- <label class="custom-switch">
+                                <label class="custom-switch">
                                 <input type="radio" name="peserta" value="3" class="custom-switch-input" {{ isset($tagihan) ? (($tagihan->kelas_id == null && $tagihan->wajib_semua == null) ? 'checked' : '') : '' }}>
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Hanya Siswa</span>
-                                </label> --}}
+                                </label>
                                 </div>
                             </div>
                             <div class="form-group" style="display: {{ isset($tagihan) ? (($tagihan->kelas_id != null) ? 'block' : 'none') : 'none' }}" id="form-kelas">
@@ -70,9 +87,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Periode</label>
+                                <label class="form-label">Periode Khusus</label>
                                 <div class="form-check">
-                                    <input id="periode" name="periode" type="checkbox" value="specific_periode" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'checked' : '') : '' }}>
+                                    <input id="periode" name="periode" type="checkbox" value="" class="form-check-input" {{ isset($tagihan) ? (($tagihan->periode_id != null) ? 'checked' : '') : '' }}>
                                     <label for="periode" class="form-check-label">Khusus periode tertentu</label>
                                 </div>
                             </div>
@@ -125,6 +142,9 @@
         $('#hanya-periode').select2({
             placeholder: "Pilih Periode",
         });
+        $('#item-tagihan').select2({
+            placeholder: "Pilih Item",
+        });
 
         $('.custom-switch-input').change(function(){
             if(this.value == 2){
@@ -146,6 +166,13 @@
                 $('#hanya-kelas').prop('required', false)
                 $('#hanya-siswa').prop('required', false)
             }
+        })
+
+        $('#has-item').change(function(event){
+            var checked = $(this).prop('checked')
+
+            $('#form-jumlah').toggle(!checked)
+            $('#form-item').toggle(checked)
         })
 
         $('#periode').change(function(event){
