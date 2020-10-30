@@ -17,7 +17,7 @@ class CreatePembelianTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bj_id');
             $table->unsignedBigInteger('kelas_id')->nullable();
-            $table->unsignedBigInteger('siswa_id')->nullable();
+            $table->unsignedBigInteger('siswa_id');
             $table->unsignedInteger('qty');
             $table->timestamps();
             $table->softDeletes();
