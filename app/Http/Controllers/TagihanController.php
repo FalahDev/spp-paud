@@ -9,6 +9,7 @@ use App\Models\Siswa;
 use App\Models\Periode;
 use App\Models\BarangJasa;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
 class TagihanController extends Controller
@@ -58,12 +59,16 @@ class TagihanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|max:255',
-            'jumlah' => 'required|numeric',
-            'peserta' => 'required|numeric'
+            'jumlah' => 'required|numeric|min:0',
+            'peserta' => 'required|numeric',
+            'siswa_id' => 'array|required_if:peserta,3',
+            'items' => 'array|required_with:has_item'
         ]);
-
+        if($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
+        }
         $tagihan = Tagihan::make($request->except(['kelas_id','periode','periode_id']));
         $saveSiswaOnly = $saveItems = false;
 
@@ -78,7 +83,7 @@ class TagihanController extends Controller
                 $saveSiswaOnly = true;
                 break;
             default:
-                return Redirect::back()->withErrors(['Peserta Wajib diisi']);
+                return Redirect::back()->withErrors(['msg'=>'Peserta Wajib diisi']);
         }
 
         if(isset($request->has_item) && $request->has_item == 'on' && !empty($request->items)){
@@ -128,7 +133,7 @@ class TagihanController extends Controller
         $kelas = Kelas::all();
         $periode = Periode::where('is_active', '1')->get();
         $siswa = Siswa::where('is_yatim','!=','1')->get();
-        $barangjasa = BarangJasa::all();
+        $barangjasa = BarangJasa::whereNull('tagihan_id')->get();
         return view('tagihan.form',[
             'kelas' => $kelas,
             'siswa' => $siswa,
@@ -148,12 +153,17 @@ class TagihanController extends Controller
     public function update(Request $request, Tagihan $tagihan)
     {
         // Log::debug($request);
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|max:255',
-            'jumlah' => 'required|numeric',
-            'peserta' => 'required|numeric'
+            'jumlah' => 'required|numeric|min:0',
+            'peserta' => 'required|numeric',
+            'siswa_id' => 'array|required_if:peserta,3',
+            'items' => 'array|required_with:has_item'
         ]);
         // Log::debug($request);
+        if($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
+        }
         $tagihan->fill($request->except(['kelas_id','periode','periode_id', 'has_item']));
         
         //remove all related
@@ -174,7 +184,7 @@ class TagihanController extends Controller
                 }
                 break;
             default:
-                return Redirect::back()->withErrors(['Peserta Wajib diisi']);
+                return Redirect::back()->withErrors(['msg'=>'Peserta Wajib diisi']);
         }
 
         if(isset($request->has_item) && $request->has_item == 'on' && !empty($request->items)){

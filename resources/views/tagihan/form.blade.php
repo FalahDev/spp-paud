@@ -109,7 +109,7 @@
                 <div class="card-footer text-right">
                     <div class="d-flex">
                         <a href="{{ url()->previous() }}" class="btn btn-link">Batal</a>
-                        <button type="submit" class="btn btn-primary ml-auto">Simpan</button>
+                        <button type="submit" class="btn btn-primary ml-auto" id="simpan">Simpan</button>
                     </div>
                 </div>
             </form>
@@ -129,7 +129,7 @@
 @endsection
 @section('js')
 <script>
-    require(['jquery', 'selectize','select2'], function ($, selectize) {
+    require(['jquery', 'selectize','select2', 'sweetalert'], function ($, selectize, select2, swal) {
         $(document).ready(function () {
             $('#select-beast').selectize({});
         });
@@ -145,7 +145,12 @@
         $('#item-tagihan').select2({
             placeholder: "Pilih Item",
         });
-
+        $('#simpan').click(function(event){
+            if($('#item-tagihan').select2('data').length == 0){
+                swal({title:"Item belum diisi bu!", icon:'warning'})
+                event.preventDefault()
+            }
+        })
         $('.custom-switch-input').change(function(){
             if(this.value == 2){
                 $('#form-kelas').show()
@@ -173,6 +178,7 @@
             $('#form-jumlah > input').val(0);
             $('#form-jumlah').toggle(!checked)
             $('#form-item').toggle(checked)
+            $('#item-tagihan').prop('required', checked)
         })
 
         $('#periode').change(function(event){
