@@ -16,7 +16,7 @@
 	<link rel="icon" href="{{ asset('favicon.ico')}} " type="image/x-icon" />
 	<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 	<!-- Generated: 2018-04-16 09:29:05 +0200 -->
-	<title>Selamat Datang | Masuk</title>
+	<title>{{ $sitename }}</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -33,8 +33,8 @@
 	<link href="{{ asset('assets/plugins/charts-c3/plugin.css')}}" rel="stylesheet" />
 	<script src="{{ asset('assets/plugins/charts-c3/plugin.js')}}"></script>
 	<!-- Google Maps Plugin -->
-	<link href="{{ asset('assets/plugins/maps-google/plugin.css')}}" rel="stylesheet" />
-	<script src="{{ asset('assets/plugins/maps-google/plugin.js')}}"></script>
+	{{-- <link href="{{ asset('assets/plugins/maps-google/plugin.css')}}" rel="stylesheet" />
+	<script src="{{ asset('assets/plugins/maps-google/plugin.js')}}"></script> --}}
 	<!-- Input Mask Plugin -->
 	<script src="{{ asset('assets/plugins/input-mask/plugin.js')}}"></script>
 	<!-- Custom CSS -->
@@ -50,29 +50,12 @@
                         <div class="text-center mb-6">
                             {{-- <img src="{{ asset('img/logo.jpg')}}" class="h-6" alt=""> --}}
                         </div>
-                        <form class="card" action="{{ route('login') }}" method="post">
-                            @csrf
-                            <div class="card-body p-6">
-                                <div class="card-title"><h3>Masuk</h3></div>
-                                <div class="form-group">
-                                    <label class="form-label">Email</label>
-									<input type="email" name="email" class="form-control {{ ($errors->has('email')) ? 'is-invalid' : '' }}" placeholder="Masukan email" value="{{ old('email') }}">
-                                    @if($errors->has('email'))
-                                        <small class="form-text invalid-feedback" style="display: block !important">{{ $errors->first('email') }}</small>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control {{ ($errors->has('password')) ? 'is-invalid' : '' }}" id="exampleInputPassword1" placeholder="Password">
-                                    @if($errors->has('password'))
-                                            <small class="form-text invalid-feedback">{{ $errors->first('password') }}</small>
-                                    @endif
-                                </div>
-                                <div class="form-footer">
-                                    <button type="submit" class="btn btn-primary btn-block">Masuk</button>
-                                </div>
+                        <div class="card-body p-6">
+                            <div class="card-title text-center"><h3>Offline</h3></div>
+                            <div class="card-body text-center">
+                                <p class="">Anda tidak terkoneksi ke server</p>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
