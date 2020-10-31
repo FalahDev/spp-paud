@@ -16,7 +16,7 @@
 	<link rel="icon" href="{{ asset('favicon.ico')}} " type="image/x-icon" />
 	<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 	<!-- Generated: 2018-04-16 09:29:05 +0200 -->
-	<title>{{ $sitename }}</title>
+	<title>{{ $sitename }} @yield('page-name')</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -44,11 +44,11 @@
 <body class="">
     <div class="page">
         <div class="page-single">
-            <div class="container">
+            {{-- <div class="container">
                 <div class="row">
                     <div class="col col-login mx-auto">
                         <div class="text-center mb-6">
-                            {{-- <img src="{{ asset('img/logo.jpg')}}" class="h-6" alt=""> --}}
+                            <img src="{{ asset('img/logo.jpg')}}" class="h-6" alt="">
                         </div>
                         <div class="card-body p-6">
                             <div class="card-title text-center"><h3>Offline</h3></div>
@@ -58,7 +58,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+			</div> --}}
+			@yield('content')
         </div>
     </div>
 </body>

@@ -15,6 +15,11 @@ use App\Models\Kelas;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:web');
+    }
+
     public function index(){
         $total_uang = Keuangan::where('tipe','in')->sum('jumlah') - Keuangan::where('tipe','out')->sum('jumlah');
         $total_uang_tabungan = Keuangan::where('tipe','in')->where('tabungan_id','!=','null')->sum('jumlah') - Keuangan::where('tipe','out')->where('tabungan_id','!=','null')->sum('jumlah');

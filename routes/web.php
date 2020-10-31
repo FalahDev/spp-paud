@@ -12,7 +12,25 @@
 */
 
 // Route::prefix('spp')->group(function(){
-    Auth::routes();
+    // Auth::routes();
+    // Authentication Routes...
+    Route::get('admin', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('admin', 'Auth\LoginController@login');
+    Route::post('adminlogout', 'Auth\LoginController@logout')->name('logout');
+
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
+    Route::get('login', ['as' => 'wali.loginform', 'uses' => 'Auth\WaliLoginController@showLoginForm']);
+    Route::post('login', ['as' => 'wali.login', 'uses' => 'Auth\WaliLoginController@login']);
+    Route::post('logout', ['as' => 'dasborwali.logout', 'uses' => 'Auth\WaliLoginController@logout']);
+
+    Route::middleware(['auth:wali'])->group(function(){
+        Route::get('/info', 'DashboardController@index')->name('dasborwali.index');
+        Route::get('/info/siswa', 'DashboardController@show')->name('dasborwali.info');
+    });
 
     Route::middleware(['auth:web'])->group(function(){
         Route::get('/', 'HomeController@index')->name('web.index');

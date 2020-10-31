@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'wali',
         'passwords' => 'users',
     ],
 
@@ -36,6 +36,11 @@ return [
     */
 
     'guards' => [
+        'wali' => [
+            'driver' => 'session',
+            'provider' => 'wali',
+        ],
+
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -69,6 +74,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+        ],
+
+        'wali' => [
+            'driver' => 'wali',
+            'model' => App\Models\WaliSiswa::class,
         ],
 
         // 'users' => [

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Providers\WaliLoginProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +26,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        $this->app->auth->provider('wali', function ($app, $config) {
+            return new WaliLoginProvider($app['hash'], $config['model']);
+        });
     }
 }
