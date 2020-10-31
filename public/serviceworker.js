@@ -3,6 +3,7 @@ var filesToCache = [
     '/offline',
     '/css/dashboard.css',
     '/css/app.css',
+    '/img/logo.png',
     '/js/app.js',
     '/assets/js/core.js',
     '/assets/js/dashboard.js',

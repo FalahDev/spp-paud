@@ -17,7 +17,6 @@
 	<meta name="csrf-token" content="{{ Auth::user()->api_token }}">
 	<link rel="icon" href="{{ asset('favicon.ico')}} " type="image/x-icon" />
 	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico')}}" />
-	<!-- Generated: 2018-04-16 09:29:05 +0200 -->
 	<title>{{ $sitename }} | @yield('page-name')</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet"
@@ -48,9 +47,10 @@
 				<div class="container">
 					<div class="d-flex">
 						<a class="header-brand" href="{{ route('web.index') }}">
-							<h3 class="mt-2" style="margin-bottom: 10px !important">{{ $sitename }}</h3>
-							{{-- <img src="{{ asset('img/logo.jpg')}}" class="header-brand-img" alt="tabler logo"> --}}
+							<img src="{{ asset('img/logo.png')}}" class="header-brand-img" alt="tabler logo">
 						</a>
+						<h3 class="mt-2" style="margin-bottom: 10px !important">{{ $sitename }}</h3>
+
 						<div class="d-flex order-lg-2 ml-auto">
 							<div class="dropdown">
 								<a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">

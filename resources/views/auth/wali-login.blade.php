@@ -16,8 +16,7 @@
     <meta name="MobileOptimized" content="320">
 	<link rel="icon" href="{{ asset('favicon.ico')}} " type="image/x-icon" />
 	<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-	<!-- Generated: 2018-04-16 09:29:05 +0200 -->
-	<title>Selamat Datang | Masuk</title>
+	<title>Selamat Datang | {{ $sitename }}</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -55,7 +54,9 @@
                 <div class="row">
                     <div class="col col-login mx-auto">
                         <div class="text-center mb-6">
-                            {{-- <img src="{{ asset('img/logo.jpg')}}" class="h-6" alt=""> --}}
+                        <a href="{{ route('login')}}">
+                            <img src="{{ asset('img/logo.png')}}" class="h-6" alt="">
+                        </a>
                         </div>
                         <div class="card-body">
                             @if($errors->any())
@@ -69,7 +70,7 @@
                         <form class="card" action="{{ route('wali.login') }}" method="post">
                             @csrf
                             <div class="card-body p-6">
-                                <div class="card-title"><h3>Masuk</h3></div>
+                                <div class="card-title"><h3>Silakan Masuk</h3></div>
                                 <div class="form-group">
                                     <label class="form-label">No. Ponsel</label>
 									<input type="text" name="ponsel" class="form-control {{ ($errors->has('ponsel')) ? 'is-invalid' : '' }}" placeholder="081123456789" value="{{ old('ponsel') }}" required>
