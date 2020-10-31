@@ -44,4 +44,9 @@ class Transaksi extends Model
     public function kekurangan(){
         return $this->hasOne('App\Models\Kekurangan','transaksi_id','id');
     }
+
+    public function infaq()
+    {
+        return $this->hasOne(\App\Models\InfaqShadaqah::class);
+    }
 }

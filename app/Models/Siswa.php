@@ -67,6 +67,11 @@ class Siswa extends Model
         return $this->hasMany(\App\Models\Pembelian::class);
     }
 
+    public function infaq()
+    {
+        return $this->hasMany(\App\Models\InfaqShadaqah::class);
+    }
+
     public function kelas(){
         return $this->hasOne('App\Models\Kelas','id','kelas_id');
     }

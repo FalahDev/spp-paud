@@ -16,7 +16,7 @@ class CreateInfaqShadaqahTable extends Migration
         Schema::create('infaq_shadaqah', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('siswa_id');
-            $table->unsignedBigInteger('transaksi_id'); //tipe
+            $table->unsignedBigInteger('transaksi_id')->unique();
             $table->double('jumlah');
             $table->text('keterangan')->nullable();
             $table->timestamps();
