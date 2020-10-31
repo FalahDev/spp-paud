@@ -29,11 +29,13 @@ class Keuangan extends Model
         'keterangan',
     ];
 
-    public function tabungan(){
-        return $this->hasOne('App\Models\Tabungan','id','tabungan_id');
+    public function tabungan()
+    {
+        return $this->hasOne(\App\Models\Tabungan::class, 'id', 'tabungan_id');
     }
 
-    public function transaksi(){
-        return $this->hasOne('App\Models\Transaksi','id','transaksi_id');
+    public function transaksi()
+    {
+        return $this->hasOne(\App\Models\Transaksi::class, 'id', 'transaksi_id');
     }
 }

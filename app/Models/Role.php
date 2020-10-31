@@ -13,14 +13,16 @@ class Role extends Model
 
     protected $fillable = [
         'tagihan_id',
-        'siswa_id'
+        'siswa_id',
     ];
 
-    public function siswa(){
-        return $this->hasOne('App\Models\Siswa','id','siswa_id');
+    public function siswa()
+    {
+        return $this->hasOne(\App\Models\Siswa::class, 'id', 'siswa_id');
     }
 
-    public function tagihan(){
-        return $this->hasOne('App\Models\Tagihan','id','tagihan_id');
+    public function tagihan()
+    {
+        return $this->hasOne(\App\Models\Tagihan::class, 'id', 'tagihan_id');
     }
 }

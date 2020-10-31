@@ -21,7 +21,7 @@ class Siswa extends Model
         'is_yatim',
         'is_lulus',
         'nis',
-        'nisn'
+        'nisn',
     ];
 
     protected $visible = [
@@ -37,14 +37,15 @@ class Siswa extends Model
         'is_yatim',
         'is_lulus',
         'nis',
-        'nisn'
+        'nisn',
     ];
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
-    
+
         static::deleted(function ($siswa) {
-          $siswa->wali()->delete();
+            $siswa->wali()->delete();
         });
     }
 
@@ -56,7 +57,7 @@ class Siswa extends Model
     public function totalTitipan()
     {
         $tabungan = $this->tabungan()->latest()->first();
-        if($tabungan != null) {
+        if ($tabungan != null) {
             $tabungan = $tabungan->saldo;
         }
         return $tabungan;
@@ -72,24 +73,29 @@ class Siswa extends Model
         return $this->hasMany(\App\Models\InfaqShadaqah::class);
     }
 
-    public function kelas(){
-        return $this->hasOne('App\Models\Kelas','id','kelas_id');
+    public function kelas()
+    {
+        return $this->hasOne(\App\Models\Kelas::class, 'id', 'kelas_id');
     }
 
-    public function transaksi(){
-        return $this->hasMany('App\Models\Transaksi','siswa_id','id');
+    public function transaksi()
+    {
+        return $this->hasMany(\App\Models\Transaksi::class, 'siswa_id', 'id');
     }
 
-    public function role(){
-        return $this->hasMany('App\Models\Role','siswa_id','id');
+    public function role()
+    {
+        return $this->hasMany(\App\Models\Role::class, 'siswa_id', 'id');
     }
 
-    public function tabungan(){
-        return $this->hasMany('App\Models\Tabungan','siswa_id','id');
+    public function tabungan()
+    {
+        return $this->hasMany(\App\Models\Tabungan::class, 'siswa_id', 'id');
     }
 
-    public function kekurangan(){
-        return $this->hasMany('App\Models\Kekurangan','siswa_id','id');
+    public function kekurangan()
+    {
+        return $this->hasMany(\App\Models\Kekurangan::class, 'siswa_id', 'id');
     }
 
     public function wali()

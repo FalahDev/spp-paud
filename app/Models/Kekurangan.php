@@ -31,14 +31,14 @@ class Kekurangan extends Model
     ];
 
     public function tagihan(){
-        return $this->hasOne('App\Models\Tagihan','id','tagihan_id');
+        return $this->hasOne(\App\Models\Tagihan::class, 'id','tagihan_id');
     }
 
     public function siswa(){
-        return $this->hasOne('App\Models\Siswa','id','siswa_id');
+        return $this->hasOne(\App\Models\Siswa::class, 'id','siswa_id');
     }
 
     public function transaksi(){
-        return $this->hasOne('App\Models\Transaksi','id','transaksi_id');
+        return $this->hasOne(\App\Models\Transaksi::class, 'id','transaksi_id');
     }
 }

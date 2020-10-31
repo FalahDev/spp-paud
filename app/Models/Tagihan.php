@@ -16,7 +16,7 @@ class Tagihan extends Model
         'jumlah',
         'wajib_semua',
         'kelas_id',
-        'periode_id'
+        'periode_id',
     ];
 
     protected $visible = [
@@ -25,7 +25,7 @@ class Tagihan extends Model
         'jumlah',
         'wajib_semua',
         'kelas_id',
-        'periode_id'
+        'periode_id',
     ];
 
     protected $casts = [
@@ -44,35 +44,43 @@ class Tagihan extends Model
         return $this->hasMany(\App\Models\BarangJasa::class, 'tagihan_id');
     }
 
-    public function transaksi(){
-        return $this->hasMany('App\Models\Transaksi','tagihan_id','id');
+    public function transaksi()
+    {
+        return $this->hasMany(\App\Models\Transaksi::class, 'tagihan_id', 'id');
     }
 
-    public function transaksiToday(){
+    public function transaksiToday()
+    {
         return $this->transaksi()->whereDate('created_at', now()->today());
     }
 
-    public function role(){
-        return $this->hasMany('App\Models\Role','tagihan_id','id');
+    public function role()
+    {
+        return $this->hasMany(\App\Models\Role::class, 'tagihan_id', 'id');
     }
 
-    public function siswa(){
-        return $this->belongsToMany('App\Models\Siswa','role');
+    public function siswa()
+    {
+        return $this->belongsToMany(\App\Models\Siswa::class, 'role');
     }
 
-    public function kelas(){
-        return $this->hasOne('App\Models\Kelas','id','kelas_id');
+    public function kelas()
+    {
+        return $this->hasOne(\App\Models\Kelas::class, 'id', 'kelas_id');
     }
 
-    public function kekurangan(){
-        return $this->hasMany('App\Models\Kekurangan','tagihan_id', 'id');
+    public function kekurangan()
+    {
+        return $this->hasMany(\App\Models\Kekurangan::class, 'tagihan_id', 'id');
     }
 
-    public function periode(){
-        return $this->belongsTo('App\Models\Periode');
+    public function periode()
+    {
+        return $this->belongsTo(\App\Models\Periode::class);
     }
 
-    public function getJumlahIdrAttribute(){
-        return "IDR. ".format_idr($this->jumlah);
+    public function getJumlahIdrAttribute()
+    {
+        return "Rp" . format_idr($this->jumlah);
     }
 }

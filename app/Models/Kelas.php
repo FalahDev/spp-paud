@@ -13,20 +13,22 @@ class Kelas extends Model
 
     protected $fillable = [
         'periode_id',
-        'nama'
+        'nama',
     ];
 
     protected $visible = [
         'periode_id',
-        'nama'
+        'nama',
     ];
 
-    public function siswa(){
-        return $this->hasMany('App\Models\Siswa','kelas_id','id');
+    public function siswa()
+    {
+        return $this->hasMany(\App\Models\Siswa::class, 'kelas_id', 'id');
     }
 
-    public function periode(){
-        return $this->hasOne('App\Models\Periode','id','periode_id');
+    public function periode()
+    {
+        return $this->hasOne(\App\Models\Periode::class, 'id', 'periode_id');
     }
 
     public function beli()

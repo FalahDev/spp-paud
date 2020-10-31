@@ -17,7 +17,7 @@ class Transaksi extends Model
         'total',
         'diskon',
         'is_lunas',
-        'keterangan'
+        'keterangan',
     ];
 
     protected $visible = [
@@ -26,23 +26,27 @@ class Transaksi extends Model
         'total',
         'diskon',
         'is_lunas',
-        'keterangan'
+        'keterangan',
     ];
 
-    public function tagihan(){
-        return $this->hasOne('App\Models\Tagihan','id','tagihan_id');
+    public function tagihan()
+    {
+        return $this->hasOne(\App\Models\Tagihan::class, 'id', 'tagihan_id');
     }
 
-    public function siswa(){
-        return $this->hasOne('App\Models\Siswa','id','siswa_id');
+    public function siswa()
+    {
+        return $this->hasOne(\App\Models\Siswa::class, 'id', 'siswa_id');
     }
 
-    public function keuangan(){
-        return $this->hasOne('App\Models\Keuangan','transaksi_id','id');
+    public function keuangan()
+    {
+        return $this->hasOne(\App\Models\Keuangan::class, 'transaksi_id', 'id');
     }
 
-    public function kekurangan(){
-        return $this->hasOne('App\Models\Kekurangan','transaksi_id','id');
+    public function kekurangan()
+    {
+        return $this->hasOne(\App\Models\Kekurangan::class, 'transaksi_id', 'id');
     }
 
     public function infaq()

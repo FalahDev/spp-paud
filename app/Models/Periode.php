@@ -15,22 +15,23 @@ class Periode extends Model
         'nama',
         'tgl_mulai',
         'tgl_selesai',
-        'is_active'
+        'is_active',
     ];
 
     protected $visible = [
         'nama',
         'tgl_mulai',
         'tgl_selesai',
-        'is_active'
+        'is_active',
     ];
 
-    public function kelas(){
-        return $this->hasMany('App\Models\Kelas','periode_id','id');
+    public function kelas()
+    {
+        return $this->hasMany(\App\Models\Kelas::class, 'periode_id', 'id');
     }
 
     public function tagihan()
     {
-        return $this->hasMany('App\Models\Tagihan', 'periode_id', 'id');
+        return $this->hasMany(\App\Models\Tagihan::class, 'periode_id', 'id');
     }
 }

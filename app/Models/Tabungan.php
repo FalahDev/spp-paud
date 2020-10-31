@@ -16,14 +16,16 @@ class Tabungan extends Model
         'tipe',
         'jumlah',
         'saldo',
-        'keperluan'
+        'keperluan',
     ];
 
-    public function siswa(){
-        return $this->belongsTo('App\Models\Siswa','siswa_id','id');
+    public function siswa()
+    {
+        return $this->belongsTo(\App\Models\Siswa::class, 'siswa_id', 'id');
     }
 
-    public function keuangan(){
-        return $this->hasOne('App\Models\Keuangan','tabungan_id','id');
+    public function keuangan()
+    {
+        return $this->hasOne(\App\Models\Keuangan::class, 'tabungan_id', 'id');
     }
 }
