@@ -39,6 +39,15 @@ class Tagihan extends Model
         return $this->attributes['id'];
     }
 
+    public function getJumlahAttribute()
+    {
+        if ($this->attributes['jumlah'] == 0 && $this->attributes['has_item']) {
+            return $this->barangjasa->sum('harga_jual');
+        } else {
+            return $this->attributes['jumlah'];
+        }
+    }
+
     public function barangjasa()
     {
         return $this->hasMany(\App\Models\BarangJasa::class, 'tagihan_id');
