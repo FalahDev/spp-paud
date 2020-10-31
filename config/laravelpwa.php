@@ -1,13 +1,14 @@
 <?php
 
 return [
-    'name' => 'LaravelPWA',
+    'name' => 'SDIT AR-ROUDLOH',
     'manifest' => [
         'name' => env('APP_NAME', 'My PWA App'),
-        'short_name' => 'PWA',
+        'short_name' => 'SDIT',
+        'description' => 'Sistem Informasi Pembayaran SPP SDIT ArRoudloh Batang',
         'start_url' => '/',
-        'background_color' => '#ffffff',
-        'theme_color' => '#000000',
+        'background_color' => '#d5ffd5',
+        'theme_color' => '#00aa44',
         'display' => 'standalone',
         'orientation'=> 'any',
         'status_bar'=> 'black',
@@ -59,18 +60,20 @@ return [
         ],
         'shortcuts' => [
             [
-                'name' => 'Shortcut Link 1',
-                'description' => 'Shortcut Link 1 Description',
-                'url' => '/shortcutlink1',
+                'short_name' => 'Info',
+                'name' => 'Info Pembayaran Siswa',
+                'description' => 'Login wali siswa untuk mengetahui rekap pembayaran SPP dan iuran lainnya',
+                'url' => '/info',
                 'icons' => [
                     "src" => "/images/icons/icon-72x72.png",
                     "purpose" => "any"
                 ]
             ],
             [
-                'name' => 'Shortcut Link 2',
-                'description' => 'Shortcut Link 2 Description',
-                'url' => '/shortcutlink2'
+                'short_name' => 'Admin',
+                'name' => 'Admin SDIT',
+                'description' => 'Login admin untuk input data pembayaran siswa',
+                'url' => '/admin'
             ]
         ],
         'custom' => []

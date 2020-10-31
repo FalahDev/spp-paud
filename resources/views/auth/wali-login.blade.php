@@ -24,7 +24,7 @@
 	<script src="{{ asset('assets/js/require.min.js')}}"></script>
 	<script>
 		requirejs.config({
-			baseUrl: '{{ route('dasborwali.index') }}'
+			baseUrl: '{{ route('web.index') }}'
 		});
 	</script>
 	<!-- Dashboard Core -->
