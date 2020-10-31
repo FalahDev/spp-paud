@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'wali',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
