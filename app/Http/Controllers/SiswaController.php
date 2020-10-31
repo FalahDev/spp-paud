@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Log;
 
 class SiswaController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:web');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -307,35 +311,35 @@ class SiswaController extends Controller
         }
     }
 
-    public function getModifier(Siswa $siswa)
-    {
-        $data = ['kurang' => 0, 'lebih' => 0];
-        if($siswa == null){
-            $data['msg'] = 'siswa tidak ditemukan';
-            return response()->json($data, 404);
-        }
-        if($siswa->kekurangan->count() == 0){
-            return response()->json($data);
-        }
-        // Log::debug(var_export($siswa->id, true));
+    // public function getModifier(Siswa $siswa)
+    // {
+    //     $data = ['kurang' => 0, 'lebih' => 0];
+    //     if($siswa == null){
+    //         $data['msg'] = 'siswa tidak ditemukan';
+    //         return response()->json($data, 404);
+    //     }
+    //     if($siswa->kekurangan->count() == 0){
+    //         return response()->json($data);
+    //     }
+    //     // Log::debug(var_export($siswa->id, true));
 
-        $kekurangan = Kekurangan::where('siswa_id', $siswa->id)->where('dibayar',0)->get();
+    //     $kekurangan = Kekurangan::where('siswa_id', $siswa->id)->where('dibayar',0)->get();
         
-        foreach ($kekurangan as $key => $kurang) {
-            $data['kurang'] = [];
-            $data['kurang'][$kurang->tagihan_id] = $kurang->jumlah;
-        }
+    //     foreach ($kekurangan as $key => $kurang) {
+    //         $data['kurang'] = [];
+    //         $data['kurang'][$kurang->tagihan_id] = $kurang->jumlah;
+    //     }
 
-        $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
-        $verify = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
-        if(!empty($verify) && ($input - $output) == $verify->saldo){
-            $data['lebih'] = $input - $output;
-        }
+    //     $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
+    //     $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
+    //     $verify = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
+    //     if(!empty($verify) && ($input - $output) == $verify->saldo){
+    //         $data['lebih'] = $input - $output;
+    //     }
 
-        // Log::debug($data);
-        return response()->json($data);
-    }
+    //     // Log::debug($data);
+    //     return response()->json($data);
+    // }
 
     protected function getTagihan(Siswa $siswa)
     {

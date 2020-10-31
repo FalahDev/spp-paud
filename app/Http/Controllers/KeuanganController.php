@@ -9,6 +9,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class KeuanganController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:web');
+    }
+
     public function index()
     {
         $keuangan = Keuangan::orderBy('created_at','desc')->paginate(10);

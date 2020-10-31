@@ -13,12 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::get('saldo/{siswa?}','SiswaController@getSaldo')->name('api.getsaldo');
-Route::get('modifier/{siswa?}','SiswaController@getModifier')->name('api.getmodifier');
 Route::post('menabung/{siswa?}', 'TabunganController@menabung')->name('api.menabung');
-Route::get('tagihan/{siswa?}','TransaksiController@tagihan')->name('api.gettagihan');
-Route::post('transaksi-spp/{siswa?}','TransaksiController@store')->name('api.tagihan');
+Route::get('modifier/{siswa?}','ApiController@getModifier')->name('api.getmodifier');
+Route::get('tagihan/{siswa?}','ApiController@tagihan')->name('api.gettagihan');
+Route::post('transaksi-spp/{siswa?}','ApiController@store')->name('api.tagihan');

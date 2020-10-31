@@ -13,6 +13,10 @@ use App\Exports\TabunganSiswaExport;
 
 class TabunganController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:web');
+    }
+
     public function index()
     {
         $siswa = Siswa::orderBy('created_at','desc')->get();

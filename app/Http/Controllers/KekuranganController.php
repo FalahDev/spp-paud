@@ -7,6 +7,10 @@ use App\Models\Kekurangan;
 
 class KekuranganController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:web');
+    }
+
     public function index()
     {
         $kekurangan = Kekurangan::where('dibayar', 0)->orderBy('created_at','desc')->paginate(10);

@@ -196,6 +196,7 @@
             function formatNumber(num) {
                 return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
+            var tok = $('meta[name="csrf-token"]').prop('content');
             function toggleField(bool) {
                 $('#form-utama').toggle(bool)
                 // $('#form-tagihan').toggle(bool)
@@ -249,8 +250,8 @@
                 });
 
                 axios.all([
-                        axios.get(`{{ route("api.getmodifier") }}/` + this.value),
-                        axios.get(`{{ route("api.gettagihan") }}/` + this.value)
+                        axios.get(`{{ route("api.getmodifier") }}/` + this.value, {headers: {'Authorization': 'Bearer '+ tok}}),
+                        axios.get(`{{ route("api.gettagihan") }}/` + this.value, {headers: {'Authorization': 'Bearer '+ tok}})
                     ])
                     .then(axios.spread(function(modifier, tagihan) {
                         console.log(modifier.data)
@@ -323,7 +324,8 @@
                         // console.log(gettagihan.data)
                     }))
                     .catch(function(error) {
-                        console.log(error)
+                        console.log(error.response)
+                        swal({title:error.response.status, text:error.response.statusText})
                     });
 
             
@@ -613,7 +615,7 @@
                     //         }, 2000)
                     //     }
                     // });
-                    axios.post('{{ route('api.tagihan') }}/'+siswa_id, data)
+                    axios.post('{{ route('api.tagihan') }}/'+siswa_id, data, {headers: {'Authorization': 'Bearer ' + tok}})
                     .then(function(resp) {
                         $('#btn-simpan').removeClass("btn-loading")
                         swal({title:'Berhasil disimpan', text:resp.data.msg, icon: 'success'})
@@ -630,7 +632,10 @@
                                 msg += k + ': ' + m[0] + ' '
                             }
                         })
-                        swal({title:err.response.data.message, text:msg, icon: 'warning'})
+                        if(!msg) {
+                            msg = err.response.statusText
+                        }
+                        swal({title:msg, text:err.response.data.message, icon: 'warning'})
                         $('#btn-simpan').removeClass("btn-loading")
                     })
                 }

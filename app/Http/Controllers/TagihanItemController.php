@@ -7,6 +7,10 @@ use App\Models\BarangJasa;
 
 class TagihanItemController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:web');
+    }
+
     public function index($tagihanId = null)
     {
         if($tagihanId) {
