@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">@yield('page-name')</h3>
-                    <a href="{{ route('pembelian.create') }}" class="btn btn-outline-primary btn-sm ml-5">Tambah Item Tagihan</a>
+                    <a href="{{ route('itemtagihan.create') }}" class="btn btn-outline-primary btn-sm ml-5">Tambah Item Tagihan</a>
                 </div>
                 @if(session()->has('msg'))
                 <div class="card-alert alert alert-{{ session()->get('type') }}" id="message" style="border-radius: 0px !important">
@@ -33,49 +33,47 @@
                         <tr>
                             <th class="w-1">No.</th>
                             <th>Nama</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Total Bayar</th>
-                            <th>Tanggal</th>
-                            <th>Keterangan</th>
+                            <th>Jenis</th>
+                            <th>Harga Beli</th>
+                            <th>Harga Jual</th>
+                            <th>Stok</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($transaksi as $index => $item)
+                        @foreach ($barangjasa as $index => $item)
                             <tr>
                                 <td><span class="text-muted">{{ $index+1 }}</span></td>
                                 <td>
-                                    {{ $item->siswa->nama }}
+                                    {{ $item->nama }}
                                 </td>
                                 <td>
-                                    {{ $item->qty }}
+                                    {{ $item->tipe }}
                                 </td>
                                 <td>
-                                    {{ $item->harga }}
+                                    {{ $item->harga_beli }}
                                 </td>
                                 <td>
-                                    {{ $item->qty * $item->harga }}
+                                    @if (empty($item->harga_jual))
+                                        {{ $item->beli->first()->harga }}
+                                    @endif
                                 </td>
                                 <td>
-                                    {{ $item->created_at }}
-                                </td>
-                                <td>
-                                    {{ $item->keterangan }}
+                                    {{ $item->stok }}
                                 </td>
                                 <td class="text-center">
-                                    {{-- <a class="icon" href="{{ route('pembelian.show', $item->id) }}" title="detail item">
+                                    <a class="icon" href="{{ route('itemtagihan.show', $item->id) }}" title="detail item">
                                         <i class="fe fe-box"></i>
                                     </a>
-                                    <a class="icon" href="{{ route('pembelian.edit', $item->id) }}" title="edit item">
+                                    <a class="icon" href="{{ route('itemtagihan.edit', $item->id) }}" title="edit item">
                                         <i class="fe fe-edit"></i>
                                     </a>
                                     <a class="icon btn-delete" href="#!" data-id="{{ $item->id }}" title="delete item">
                                         <i class="fe fe-trash"></i>
                                     </a>
-                                    <form action="{{ route('pembelian.destroy', $item->id) }}" method="POST" id="form-{{ $item->id }}">
+                                    <form action="{{ route('itemtagihan.destroy', $item->id) }}" method="POST" id="form-{{ $item->id }}">
                                         @csrf 
-                                    </form> --}}
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -85,7 +83,7 @@
                 <div class="card-footer">
                     <div class="d-flex">
                         <div class="ml-auto mb-0">
-                            {{ $transaksi->links() }}
+                            {{ $barangjasa->links() }}
                         </div>
                     </div>
                 </div>

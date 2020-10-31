@@ -63,13 +63,20 @@
         Route::post('tagihan/{tagihan}/hapus', 'TagihanController@destroy')->name('tagihan.destroy');
     
         //Pembelian
-        Route::get('tagihan-item/{item?}', 'PembelianController@index')->name('pembelian.index');
-        Route::get('tambah-item/', 'PembelianController@create')->name('pembelian.create');
-        Route::post('tambah-item', 'PembelianController@store')->name('pembelian.store');
-        Route::get('tagihan-item/{item}/ubah', 'PembelianController@edit')->name('pembelian.edit');
-        Route::get('tagihan-item/{item}/detail', 'PembelianController@show')->name('pembelian.show');
-        Route::post('tagihan-item/{item}/ubah','PembelianController@update')->name('pembelian.update');
-        Route::post('tagihan-item/{item}/hapus', 'PembelianController@destroy')->name('pembelian.destroy');
+        Route::get('tagihan-item/{item?}', 'TagihanItemController@index')->name('itemtagihan.index');
+        Route::get('tambah-item', 'TagihanItemController@create')->name('itemtagihan.create');
+        Route::post('simpan-item', 'TagihanItemController@store')->name('itemtagihan.store');
+        Route::get('tagihan-item/{item}/ubah', 'TagihanItemController@edit')->name('itemtagihan.edit');
+        Route::get('tagihan-item/{item}/detail', 'TagihanItemController@show')->name('itemtagihan.show');
+        Route::post('tagihan-item/{item}/ubah','TagihanItemController@update')->name('itemtagihan.update');
+        Route::post('tagihan-item/{item}/hapus', 'TagihanItemController@destroy')->name('itemtagihan.destroy');
+        Route::get('pembelian-siswa', 'PembelianController@index')->name('pembelian.index');
+        Route::get('tambah-pembelian', 'PembelianController@create')->name('pembelian.create');
+        // Route::post('simpan-pembelian', 'PembelianController@store')->name('pembelian.store');
+        Route::get('pembelian-item/{item}/ubah', 'PembelianController@edit')->name('pembelian.edit');
+        Route::get('pembelian-item/{item}/detail', 'PembelianController@show')->name('pembelian.show');
+        Route::post('pembelian-item/{item}/ubah','PembelianController@update')->name('pembelian.update');
+        Route::post('pembelian-item/{item}/hapus', 'PembelianController@destroy')->name('pembelian.destroy');
 
         //Users
         Route::get('user','UserController@index')->name('user.index');

@@ -15,7 +15,7 @@
                 <div class="card-header">
                     <h3 class="card-title">@yield('page-name')</h3>
                     <a href="{{ route('tagihan.create') }}" class="btn btn-outline-primary btn-sm ml-5">Tambah Tagihan</a>
-                    <a href="{{ route('pembelian.index') }}" class="btn btn-outline-primary btn-sm ml-5">Kelola Item Tagihan</a>
+                    <a href="{{ route('itemtagihan.index') }}" class="btn btn-outline-primary btn-sm ml-5">Kelola Item Tagihan</a>
                 </div>
                 @if(session()->has('msg'))
                 <div class="card-alert alert alert-{{ session()->get('type') }}" id="message" style="border-radius: 0px !important">
@@ -74,7 +74,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($item->has_item)
-                                    <a class="icon" href="{{ route('pembelian.index', $item->id) }}" title="edit barang jasa">
+                                    <a class="icon" href="{{ route('itemtagihan.index', $item->id) }}" title="edit barang jasa">
                                         <i class="fe fe-box"></i>
                                     </a>
                                     @endif

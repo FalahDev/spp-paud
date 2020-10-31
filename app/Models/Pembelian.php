@@ -13,16 +13,16 @@ class Pembelian extends Model
 
     public function siswa()
     {
-        return $this->hasOne(\App\Models\Siswa::class);
+        return $this->belongsTo(\App\Models\Siswa::class);
     }
 
     public function kelas()
     {
-        return $this->hasOne(\App\Models\Kelas::class);
+        return $this->belongsTo(\App\Models\Kelas::class);
     }
 
     public function barangjasa()
     {
-        return $this->hasOne(\App\Models\BarangJasa::class, 'id', 'bj_id');
+        return $this->belongsTo(\App\Models\BarangJasa::class, 'bj_id');
     }
 }

@@ -6,7 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-8">
-            <form action="{{ (isset($item) ? route('pembelian.update', $item->id) : route('pembelian.store')) }}" method="post" class="card">
+            <form action="{{ (isset($item) ? route('itemtagihan.update', $item->id) : route('itemtagihan.store')) }}" method="post" class="card">
                 <div class="card-header">
                     <h3 class="card-title">@yield('page-name')</h3>
                 </div>
