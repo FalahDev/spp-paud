@@ -37,6 +37,10 @@ return [
                 'path' => '/images/icons/icon-192x192.png',
                 'purpose' => 'any'
             ],
+            '196x196' => [
+                'path' => '/images/icons/maskable_icon.png',
+                'purpose' => 'maskable'
+            ],
             '384x384' => [
                 'path' => '/images/icons/icon-384x384.png',
                 'purpose' => 'any'
@@ -65,15 +69,35 @@ return [
                 'description' => 'Login wali siswa untuk mengetahui rekap pembayaran SPP dan iuran lainnya',
                 'url' => '/info',
                 'icons' => [
+                    [
                     "src" => "/images/icons/icon-72x72.png",
-                    "purpose" => "any"
+                    "sizes" => "72x72",
+                    "purpose" => "any",
+                    ],
+                    [
+                        "src" => "/images/icons/icon-96x96.png",
+                        "sizes" => "96x96",
+                        "purpose" => "any",
+                    ],
                 ]
             ],
             [
                 'short_name' => 'Admin',
                 'name' => 'Admin SDIT',
                 'description' => 'Login admin untuk input data pembayaran siswa',
-                'url' => '/admin'
+                'url' => '/admin',
+                'icons' => [
+                    [
+                        "src" => "/images/icons/icon-72x72.png",
+                        "sizes" => "72x72",
+                        "purpose" => "any",
+                    ],
+                    [
+                        "src" => "/images/icons/icon-96x96.png",
+                        "sizes" => "96x96",
+                        "purpose" => "any",
+                    ],
+                ],
             ]
         ],
         'custom' => []

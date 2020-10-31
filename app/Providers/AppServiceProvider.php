@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
+
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        // $this->app->singleton(
+        $loader->alias(
+            'LaravelPWA\Services\ManifestService',
+            'App\Providers\MyPwaServiceProvider'
+        );
     }
 
     /**
