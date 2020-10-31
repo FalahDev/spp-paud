@@ -16,14 +16,14 @@ class CreateInfaqShadaqahTable extends Migration
         Schema::create('infaq_shadaqah', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('siswa_id');
-            $table->unsignedBigInteger('tagihan_id'); //tipe
+            $table->unsignedBigInteger('transaksi_id'); //tipe
             $table->double('jumlah');
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');
-            $table->foreign('tagihan_id')->references('id')->on('tagihan')->onDelete('cascade');
+            $table->foreign('transaksi_id')->references('id')->on('transaksi')->onDelete('cascade');
         });
     }
 
