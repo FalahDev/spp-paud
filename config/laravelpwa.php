@@ -14,11 +14,11 @@ return [
         'status_bar'=> 'black',
         'icons' => [
             '72x72' => [
-                'path' => '/images/icons/icon-72x72.png',
+                'path' => '/images/icons/icon-72.png',
                 'purpose' => 'any'
             ],
             '96x96' => [
-                'path' => '/images/icons/icon-96x96.png',
+                'path' => '/images/icons/icon-96.png',
                 'purpose' => 'any'
             ],
             '128x128' => [
@@ -70,12 +70,12 @@ return [
                 'url' => '/info',
                 'icons' => [
                     [
-                    "src" => "/images/icons/icon-72x72.png",
+                    "src" => "/images/icons/icon-72.png",
                     "sizes" => "72x72",
                     "purpose" => "any",
                     ],
                     [
-                        "src" => "/images/icons/icon-96x96.png",
+                        "src" => "/images/icons/icon-96.png",
                         "sizes" => "96x96",
                         "purpose" => "any",
                     ],
@@ -88,12 +88,12 @@ return [
                 'url' => '/admin',
                 'icons' => [
                     [
-                        "src" => "/images/icons/icon-72x72.png",
+                        "src" => "/images/icons/icon-72.png",
                         "sizes" => "72x72",
                         "purpose" => "any",
                     ],
                     [
-                        "src" => "/images/icons/icon-96x96.png",
+                        "src" => "/images/icons/icon-96.png",
                         "sizes" => "96x96",
                         "purpose" => "any",
                     ],
