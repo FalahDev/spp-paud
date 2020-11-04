@@ -22,6 +22,7 @@ class Siswa extends Model
         'is_lulus',
         'nis',
         'nisn',
+        'wali_id',
     ];
 
     protected $visible = [
@@ -38,15 +39,16 @@ class Siswa extends Model
         'is_lulus',
         'nis',
         'nisn',
+        'wali_id',
     ];
 
     protected static function boot()
     {
         parent::boot();
 
-        static::deleted(function ($siswa) {
-            $siswa->wali()->delete();
-        });
+        // static::deleted(function ($siswa) {
+        //     $siswa->wali()->dissociate();
+        // });
     }
 
     public function totalKurang()
@@ -100,6 +102,6 @@ class Siswa extends Model
 
     public function wali()
     {
-        return $this->hasOne(\App\Models\WaliSiswa::class, 'siswa_id', 'id');
+        return $this->belongsTo(\App\Models\WaliSiswa::class, 'wali_id', 'id');
     }
 }

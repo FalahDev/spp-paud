@@ -13,16 +13,16 @@ class WaliSiswa extends Authenticatable
 
     protected $table = 'wali_siswa';
 
-    protected $fillable = ['nama', 'ponsel', 'pekerjaan', 'siswa_id'];
-    protected $visible = ['nama', 'ponsel', 'pekerjaan', 'siswa_id'];
+    protected $fillable = ['nama', 'ponsel', 'pekerjaan', 'password'];
+    protected $visible = ['nama', 'ponsel', 'pekerjaan'];
 
-    public function getAuthPassword()
+    public function setPasswordAttribute($value)
     {
-        return $this->siswa->nis ?? $this->siswa->nisn;
+        $this->attributes['password'] = bcrypt($value);
     }
 
     public function siswa()
     {
-        return $this->belongsTo(\App\Models\Siswa::class);
+        return $this->hasMany(\App\Models\Siswa::class, 'id', 'wali_id');
     }
 }
