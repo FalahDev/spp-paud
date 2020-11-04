@@ -14,7 +14,7 @@ class UpdateWaliSiswaTable extends Migration
     public function up()
     {
         Schema::table('wali_siswa', function (Blueprint $table) {
-            $table->unique('siswa_id')->change();
+            //$table->unique('siswa_id')->change();
         });
     }
 
