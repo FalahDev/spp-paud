@@ -287,7 +287,7 @@
                         result = tagihan.data
                         if(result.length == 0){
                             // alert('tidak ada item tagihan yang tersedia')
-                            swal({title:'tidak ada tagihan yang belum dibayar'})
+                            swal({title:'Tidak ada tagihan yang belum dibayar', icon: 'success'})
                             // $('#btn-simpan').prop('disabled', true);
                             toggleField(false)
                             return
