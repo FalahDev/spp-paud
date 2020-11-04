@@ -102,6 +102,6 @@ class Siswa extends Model
 
     public function wali()
     {
-        return $this->belongsTo(\App\Models\WaliSiswa::class, 'wali_id', 'id');
+        return $this->belongsTo(\App\Models\WaliSiswa::class, 'wali_id');
     }
 }

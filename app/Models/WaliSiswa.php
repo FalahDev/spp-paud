@@ -23,6 +23,6 @@ class WaliSiswa extends Authenticatable
 
     public function siswa()
     {
-        return $this->hasMany(\App\Models\Siswa::class, 'id', 'wali_id');
+        return $this->hasMany(\App\Models\Siswa::class, 'wali_id', 'id');
     }
 }

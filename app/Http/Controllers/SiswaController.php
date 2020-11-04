@@ -72,16 +72,17 @@ class SiswaController extends Controller
             'is_yatim' => 'nullable|boolean',
             'is_lulus' => 'nullable',
             'nis' => 'nullable|unique:siswa|max:30',
-            'nisn' => 'nullable|unique:siswa|max:30'
+            'nisn' => 'required|unique:siswa|max:30'
         ]);
 
         $siswa = Siswa::make($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
 
-        $wali = WaliSiswa::make([
-            'nama' => $request->nama_wali,
+        $wali = WaliSiswa::firstOrNew([
             'ponsel' => $request->telp_wali,
+            'nama' => $request->nama_wali,
             'pekerjaan' => $request->pekerjaan_wali
         ]);
+        $wali->password = $request->nisn;
 
 
         if($request->is_yatim != null){
@@ -96,9 +97,9 @@ class SiswaController extends Controller
             $siswa->is_lulus = 0;
         }
 
-        if($siswa->save()){
+        if($wali->save()){
             // Log::debug($siswa);
-            $wali->siswa()->associate($siswa)->save();
+            $siswa->wali()->associate($wali)->save();
             return redirect()->route('siswa.index')->with([
                 'type' => 'success',
                 'msg' => 'Siswa ditambahkan'
@@ -183,25 +184,44 @@ class SiswaController extends Controller
             'is_yatim' => 'nullable|boolean',
             'is_lulus' => 'nullable',
             'nis' => 'nullable|max:30',
-            'nisn' => 'nullable|max:30'
+            'nisn' => 'required|max:30'
         ]);
 
         $wali = WaliSiswa::firstOrNew(
-            ['siswa_id' => $siswa->id],
             ['ponsel' => $request->telp_wali],
-            ['pekerjaan' => $request->pekerjaan_wali]
+            // ['pekerjaan' => $request->pekerjaan_wali]
         );
         if (isset($wali->pekerjaan)) {
             $wali->pekerjaan = $request->pekerjaan_wali;
         }
 
-        $siswa = $siswa->fill($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
+        // $siswa = $siswa->fill($request->except(['nama_wali', 'telp_wali', 'pekerjaan_wali']));
+        $siswa = Siswa::updateOrCreate(
+            ['nisn' => $request->nisn],
+            // ['nama' => $request->nama],
+            // ['alamat' => $request->alamat],
+            // ['jenis_kelaim' => $request->jenis_kelamin],
+            // ['nis' => $request->nis],
+            // ['tempat_lahir' => $request->tempat_lahir],
+            // ['tanggal_lahir' => $request->tanggal_lahir],
+            // ['kelas_id' => $request->kelas_id],
+            // ['wali_id' => $request->wali_id],
 
-        if($request->is_yatim != null){
-            $siswa->is_yatim = 1;
-        }else{
-            $siswa->is_yatim = 0;
-        }
+        );
+        // Log::debug($siswa);
+        $siswa->nama = $request->nama;
+        $siswa->alamat = $request->alamat;
+        $siswa->jenis_kelamin = $request->jenis_kelamin;
+        $siswa->nis = $request->nis;
+        $siswa->tempat_lahir = $request->tempat_lahir;
+        $siswa->tanggal_lahir = $request->tanggal_lahir;
+        $siswa->kelas_id = $request->kelas_id;
+
+        // if($request->is_yatim != null){
+        //     $siswa->is_yatim = 1;
+        // }else{
+        //     $siswa->is_yatim = 0;
+        // }
 
         if($request->is_lulus != null){
             $siswa->is_lulus = 1;
@@ -209,9 +229,9 @@ class SiswaController extends Controller
             $siswa->is_lulus = 0;
         }
 
-        if($siswa->wali()->save($wali)){
+        if($wali->siswa()->save($siswa)){
             // Log::debug($siswa);
-            $siswa->save();
+            $wali->save();
             return redirect()->route('siswa.index')->with([
                 'type' => 'success',
                 'msg' => 'Siswa diubah'
@@ -311,35 +331,6 @@ class SiswaController extends Controller
         }
     }
 
-    // public function getModifier(Siswa $siswa)
-    // {
-    //     $data = ['kurang' => 0, 'lebih' => 0];
-    //     if($siswa == null){
-    //         $data['msg'] = 'siswa tidak ditemukan';
-    //         return response()->json($data, 404);
-    //     }
-    //     if($siswa->kekurangan->count() == 0){
-    //         return response()->json($data);
-    //     }
-    //     // Log::debug(var_export($siswa->id, true));
-
-    //     $kekurangan = Kekurangan::where('siswa_id', $siswa->id)->where('dibayar',0)->get();
-        
-    //     foreach ($kekurangan as $key => $kurang) {
-    //         $data['kurang'] = [];
-    //         $data['kurang'][$kurang->tagihan_id] = $kurang->jumlah;
-    //     }
-
-    //     $input = Tabungan::where('tipe','in')->where('siswa_id',$siswa->id)->sum('jumlah');
-    //     $output = Tabungan::where('tipe','out')->where('siswa_id',$siswa->id)->sum('jumlah');
-    //     $verify = Tabungan::where('siswa_id', $siswa->id)->latest()->first();
-    //     if(!empty($verify) && ($input - $output) == $verify->saldo){
-    //         $data['lebih'] = $input - $output;
-    //     }
-
-    //     // Log::debug($data);
-    //     return response()->json($data);
-    // }
 
     protected function getTagihan(Siswa $siswa)
     {
