@@ -38,7 +38,7 @@ class SiswaImport implements ToCollection
                 ]);
 
                 $wali = WaliSiswa::firstOrNew(
-                    ['ponsel' => $row[9]],
+                    ['ponsel' => $row[9]]
                 );
                 $wali->nama = $row[8];
                 $wali->pekerjaan = $row[10];
