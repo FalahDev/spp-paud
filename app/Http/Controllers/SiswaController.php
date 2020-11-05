@@ -187,18 +187,19 @@ class SiswaController extends Controller
             'nisn' => 'required|max:30'
         ]);
 
-        $wali = WaliSiswa::firstOrNew(
-            ['ponsel' => $request->telp_wali]
-        );
-        if (isset($wali->pekerjaan)) {
-            $wali->pekerjaan = $request->pekerjaan_wali;
-        }
+        $updateWali = [
+            'nama' => $request->nama_wali,
+            'pekerjaan' => $request->pekerjaan_wali,
+            'ponsel' => $request->telp_wali
+        ];
+        $wali = $siswa->wali->fill($updateWali);
+
 
         $siswa = Siswa::updateOrCreate(
             ['nisn' => $request->nisn]
 
         );
-        // Log::debug($siswa);
+
         $siswa->nama = $request->nama;
         $siswa->alamat = $request->alamat;
         $siswa->jenis_kelamin = $request->jenis_kelamin;
@@ -220,7 +221,7 @@ class SiswaController extends Controller
         }
 
         if($wali->siswa()->save($siswa)){
-            // Log::debug($siswa);
+
             $wali->save();
             return redirect()->route('siswa.index')->with([
                 'type' => 'success',
