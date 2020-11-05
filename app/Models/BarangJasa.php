@@ -11,6 +11,23 @@ class BarangJasa extends Model
 
     protected $table = 'barang_jasa';
 
+    protected $fillable = [
+        'nama',
+        'harga_beli',
+        'harga_jual',
+        'stok',
+        'tipe',
+        'tagihan_id',
+    ];
+    protected $visible = [
+        'nama',
+        'harga_beli',
+        'harga_jual',
+        'stok',
+        'tipe',
+        'tagihan_id',
+    ];
+
     public function beli()
     {
         return $this->hasMany(\App\Models\Pembelian::class, 'bj_id', 'id');

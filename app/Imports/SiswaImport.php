@@ -42,7 +42,7 @@ class SiswaImport implements ToCollection
                 );
                 $wali->nama = $row[8];
                 $wali->pekerjaan = $row[10];
-                $wali->password = $row[7];
+                $wali->password = $row[7]; // password default adalah nisn
                 $wali->save();
 
                 $siswa->wali()->associate($wali)->save();
