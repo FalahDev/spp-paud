@@ -55,7 +55,7 @@
                                 </td>
                                 <td>
                                     @if (empty($item->harga_jual))
-                                        {{ $item->beli->first()->harga }}
+                                        {{-- $item->beli->first()->harga --}}
                                     @else
                                         {{ $item->harga_jual }}
                                     @endif
