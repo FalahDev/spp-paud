@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BarangJasa;
+use App\Models\Kelas;
+use App\Models\Siswa;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
 
 class TagihanItemController extends Controller
 {
@@ -19,7 +22,10 @@ class TagihanItemController extends Controller
         } else {
             $barangjasa = BarangJasa::paginate(10);
         }
-        return view('barangjasa.index', ['barangjasa' => $barangjasa]);
+        
+        return view('barangjasa.index', [
+            'barangjasa' => $barangjasa,
+            ]);
     }
 
     public function show(BarangJasa $item)
@@ -54,8 +60,19 @@ class TagihanItemController extends Controller
 
     public function edit(BarangJasa $item)
     {
+
+        $siswadata = Siswa::with('kelas')->where('is_lulus', '0')->orderBy('nama', 'asc')->get();
+        $kelasdata = Kelas::all();
+        $siswa = [];
+        foreach ($siswadata as $data) {
+            $siswa[$data->kelas->nama][$data->id] = $data->nama;
+        }
         // $barangjasa = BarangJasa::find($item->id)->get();
-        return view('barangjasa.form', [ 'item' => $item ]);
+        return view('barangjasa.form', [ 
+            'item' => $item,
+            'siswa' => $siswa,
+            'kelas' => $kelasdata, 
+        ]);
     }
 
     /**
@@ -71,6 +88,7 @@ class TagihanItemController extends Controller
             'nama' => 'required|max:255',
             'harga_jual' => 'required|numeric',
         ]);
+        Log::debug($request);
         $barangjasa = $item->fill($request->except('_token'));
         if($barangjasa->save()){
             return Redirect::route('itemtagihan.index')->with(['type' => 'success', 'msg' => 'Berhasil disimpan: ' . $barangjasa->nama]);

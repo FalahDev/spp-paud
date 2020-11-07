@@ -51,6 +51,11 @@ class Siswa extends Model
         // });
     }
 
+    public function getNamaAttribute($nama)
+    {
+        return strtoupper($nama);
+    }
+
     public function totalKurang()
     {
         return $this->kekurangan()->where('dibayar', 0)->sum('jumlah');

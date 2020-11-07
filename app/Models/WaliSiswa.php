@@ -21,6 +21,11 @@ class WaliSiswa extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function getNamaAttribute($nama)
+    {
+        return strtoupper($nama);
+    }
+
     public function siswa()
     {
         return $this->hasMany(\App\Models\Siswa::class, 'wali_id', 'id');

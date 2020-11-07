@@ -23,6 +23,7 @@ var filesToCache = [
     '/assets/plugins/charts-c3/plugin.css',
     '/assets/plugins/datepicker/datepicker.css',
     '/assets/plugins/select2/select2.min.css',
+    '/assets/plugins/select2/select2-bootstrap4.min.css',
     '/images/icons/icon-72x72.png',
     '/images/icons/icon-96x96.png',
     '/images/icons/icon-128x128.png',
