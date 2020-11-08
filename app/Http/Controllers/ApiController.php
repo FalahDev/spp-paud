@@ -119,7 +119,7 @@ class ApiController extends Controller
 
         //student only
         $tagihan_siswa     = [];
-        $tagihan_rolesiswa = $siswa->role;
+        $tagihan_rolesiswa = $siswa->bayar;
         foreach ($tagihan_rolesiswa as $tag_siswa) {
             $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
         }
@@ -161,7 +161,7 @@ class ApiController extends Controller
         // return $tagihan_kelas;
         //student only
         // $tagihan_siswa = [];
-        // $tagihan_rolesiswa = $siswa->role;
+        // $tagihan_rolesiswa = $siswa->bayar;
         // foreach($tagihan_rolesiswa as $tag_siswa){
         //     $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
         // }

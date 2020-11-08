@@ -63,9 +63,9 @@ class Tagihan extends Model
         return $this->transaksi()->whereDate('created_at', now()->today());
     }
 
-    public function role()
+    public function bayar()
     {
-        return $this->hasMany(\App\Models\Role::class, 'tagihan_id', 'id');
+        return $this->hasMany(\App\Models\Pembayaran::class, 'tagihan_id', 'id');
     }
 
     public function siswa()

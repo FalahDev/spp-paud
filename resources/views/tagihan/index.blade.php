@@ -64,7 +64,7 @@
                                     @elseif($item->kelas_id != null)
                                         <p>{{ $item->kelas->nama }} {{ isset($item->kelas->periode) ? ' - '.$item->kelas->periode->nama : '' }}</p>
                                     @elseif($item->wajib_semua == null && $item->kelas_id == null)
-                                        @foreach ($item->role as $role)
+                                        @foreach ($item->bayar as $role)
                                             {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},<br>
                                         @endforeach
                                     @endif
@@ -147,7 +147,7 @@
                                     @elseif($item->kelas_id != null)
                                         <p>{{ $item->kelas->nama }} {{ isset($item->kelas->periode) ? ' - '.$item->kelas->periode->nama : '' }}</p>
                                     @elseif($item->wajib_semua == null && $item->kelas_id == null)
-                                        @foreach ($item->role as $role)
+                                        @foreach ($item->bayar as $role)
                                             {{ $role->siswa->nama }}{{ " (".$role->siswa->kelas->nama.")" }},
                                         @endforeach
                                     @endif

@@ -136,7 +136,7 @@ class TagihanController extends Controller
     {
         $kelas = Kelas::all();
         $periode = Periode::where('is_active', '1')->get();
-        $siswa = Siswa::where('is_yatim','!=','1')->get();
+        $siswa = Siswa::where('is_lulus','!=','1')->get();
         $barangjasa = BarangJasa::where('tagihan_id', $tagihan->id)->orWhereNull('tagihan_id')->get();
         return view('tagihan.form',[
             'kelas' => $kelas,

@@ -334,7 +334,7 @@ class SiswaController extends Controller
         $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)->get()->toArray();
         //student only
         $tagihan_siswa = [];
-        $tagihan_rolesiswa = $siswa->role;
+        $tagihan_rolesiswa = $siswa->bayar;
         foreach($tagihan_rolesiswa as $tag_siswa){
             $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
         }

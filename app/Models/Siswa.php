@@ -90,9 +90,9 @@ class Siswa extends Model
         return $this->hasMany(\App\Models\Transaksi::class, 'siswa_id', 'id');
     }
 
-    public function role()
+    public function bayar()
     {
-        return $this->hasMany(\App\Models\Role::class, 'siswa_id', 'id');
+        return $this->hasMany(\App\Models\Pembayaran::class, 'siswa_id', 'id');
     }
 
     public function tabungan()
