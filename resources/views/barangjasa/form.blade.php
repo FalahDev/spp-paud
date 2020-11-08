@@ -38,8 +38,8 @@ if (isset($item)){
                             <div class="form-group">
                                 <label class="form-label">Jenis</label>
                                 <select class="form-control" id="tipe" name="tipe" required>
-                                    <option value="barang" {{ (isset($item->tipe) && $item->tipe == 'barang') ? 'selected' : ''}}>Barang</option>
-                                    <option value="jasa" {{ (isset($item->tipe) && $item->tipe == 'jasa') ? 'selected' : ''}}>Jasa</option>
+                                    <option value="barang" {{ (isset($item->tipe) && $item->tipe == 'Barang') ? 'selected' : ''}}>Barang</option>
+                                    <option value="jasa" {{ (isset($item->tipe) && $item->tipe == 'Jasa') ? 'selected' : ''}}>Jasa</option>
                                 </select>
                             </div>
                             <div class="form-group" id="form-harga-jual">
@@ -50,11 +50,11 @@ if (isset($item)){
                                     <label class="form-check-label" for="pembelian">Harga per siswa</label>
                                 </div>
                             </div>
-                            <div class="form-group" id="form-harga-beli" {!! (isset($item) && $item->tipe == 'jasa') ? 'style="display:none"' : '' !!}>
+                            <div class="form-group" id="form-harga-beli" {!! (isset($item) && $item->tipe == 'Jasa') ? 'style="display:none"' : '' !!}>
                                 <label class="form-label">Harga Beli</label>
                                 <input type="number" class="form-control" name="harga_beli" value="{{ isset($item) ? $item->harga_beli : old('harga_beli') }}">
                             </div>
-                            <div class="form-group" id="form-stok" {!! (isset($item) && $item->tipe == 'jasa') ? 'style="display:none"' : '' !!}>
+                            <div class="form-group" id="form-stok" {!! (isset($item) && $item->tipe == 'Jasa') ? 'style="display:none"' : '' !!}>
                                 <label class="form-label">Stok</label>
                                 <input type="number" class="form-control" name="stok" value="{{ isset($item) ? $item->stok : old('stok') }}">
                             </div>
@@ -72,11 +72,12 @@ if (isset($item)){
                             </div>
 
                             <div id="form-subitem" class="form-group subitem">
+                            @isset($item)
                             @if ($item->siswa->count() > 0 )
-                                @foreach ($item->siswa as $si)
+                                @foreach ($item->siswa as $sid => $si)
                                 <div class="form-row">
                                     <div class="form-group col kelas_id" style="display: none;">
-                                        <select name="pembelian[0][kelas_id]" class="form-control" placeholder="Kelas">
+                                        <select name="pembelian[{{ $sid }}][kelas_id]" class="form-control" placeholder="Kelas">
                                         <option value="">-- Pilih Kelas --</option>
                                         @foreach($kelas as $item)
                                         <option value="{{ $item->id }}" {{ ($item->id == $si->pivot->kelas_id) ? 'selected' : ''}}>{{ $item->nama }} - {{ isset($item->periode) ? $item->periode->nama : '' }}</option>
@@ -84,7 +85,7 @@ if (isset($item)){
                                         </select>
                                     </div>
                                     <div class="form-group col siswa_id">
-                                        <select name="pembelian[0][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>
+                                        <select name="pembelian[{{ $sid }}][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>
                                             <option value="">-- Pilih Siswa --</option>
                                             @foreach($siswa as $key => $item)
                                             <optgroup label="{{ $key }}">
@@ -96,17 +97,21 @@ if (isset($item)){
                                         </select>
                                     </div>
                                     <div class="form-group col">
-                                        <input type="number" min="1" max="100" value="{{ $si->pivot->qty }}" name="pembelian[0][qty]" class="form-control" placeholder="Jumlah item" required>
+                                        <input type="number" min="1" max="100" value="{{ $si->pivot->qty }}" name="pembelian[{{ $sid }}][qty]" class="form-control" placeholder="Jumlah item" required>
                                     </div>
                                     <div class="form-group col">
-                                        <input type="text" value="{{ $si->pivot->harga }}" name="pembelian[0][harga]" class="form-control" placeholder="Harga satuan" required>
+                                        <input type="text" value="{{ $si->pivot->harga }}" name="pembelian[{{ $sid }}][harga]" class="form-control" placeholder="Harga satuan" required>
                                     </div>
                                     <div class="form-group col">
-                                        <input type="text" value="{{ $si->pivot->keterangan }}" name="pembelian[0][keterangan]" class="form-control" placeholder="Keterangan">
+                                        <input type="text" value="{{ $si->pivot->keterangan }}" name="pembelian[{{ $sid }}][keterangan]" class="form-control" placeholder="Keterangan">
                                     </div>
                                     <div class="form-group col-auto">
                                         {{-- <input type="button" class="btn btn-primary addrow" value="+"> --}}
+                                        @if ($sid > 0)
+                                        <input type="button" class="btn btn-danger delrow" value="-">
+                                        @else
                                         <input type="button" class="btn btn-secondary" disabled value="-">
+                                        @endif
                                     </div>
                                 </div>
                                 @endforeach
@@ -147,7 +152,7 @@ if (isset($item)){
                                     </div>
                                 </div>
                             @endif
-                                
+                            @endisset
                             </div>
                             <div class="form-group subitem">
                                 <input type="button" id="addrow" class="btn btn-secondary btn-block" value="Tambah baris">
@@ -191,7 +196,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
         $('.selectsiswa').select2({
             theme: 'bootstrap4',
             dropdownAutoWidth: false,
-            width: 'auto',
+            // width: 'auto',
             placeholder: "-- Pilih siswa --",
         });
 

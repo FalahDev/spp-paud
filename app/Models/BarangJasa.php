@@ -28,6 +28,11 @@ class BarangJasa extends Model
         'tagihan_id',
     ];
 
+    public function getTipeAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
     public function beli()
     {
         return $this->hasMany(\App\Models\Pembelian::class, 'bj_id', 'id');
