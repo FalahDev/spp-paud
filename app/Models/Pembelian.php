@@ -11,6 +11,17 @@ class Pembelian extends Model
 
     protected $table = 'pembelian';
 
+    public function getHargaAttribute($value)
+    {
+        return 'Rp' . number_format($value, 0, ',', '.');
+    }
+
+    public function getTotalHargaAttribute()
+    {
+        $total = $this->attributes['qty'] * $this->attributes['harga'];
+        return 'Rp' . number_format($total, 0, ',', '.');
+    }
+
     public function siswa()
     {
         return $this->belongsTo(\App\Models\Siswa::class);

@@ -32,11 +32,11 @@
                         <thead>
                         <tr>
                             <th class="w-1">No.</th>
-                            <th>Nama</th>
+                            <th>Siswa</th>
+                            <th>Nama Item</th>
                             <th>Jumlah</th>
                             <th>Harga</th>
                             <th>Total Bayar</th>
-                            <th>Tanggal</th>
                             <th>Keterangan</th>
                             <th></th>
                         </tr>
@@ -49,16 +49,16 @@
                                     {{ $item->siswa->nama }}
                                 </td>
                                 <td>
+                                    {{ $item->barangjasa->nama }}
+                                </td>
+                                <td>
                                     {{ $item->qty }}
                                 </td>
                                 <td>
                                     {{ $item->harga }}
                                 </td>
                                 <td>
-                                    {{ $item->qty * $item->harga }}
-                                </td>
-                                <td>
-                                    {{ $item->created_at }}
+                                    {{ $item->total_harga }}
                                 </td>
                                 <td>
                                     {{ $item->keterangan }}
