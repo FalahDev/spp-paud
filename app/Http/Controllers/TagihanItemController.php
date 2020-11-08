@@ -60,6 +60,26 @@ class TagihanItemController extends Controller
         ]);
         $barangjasa = BarangJasa::make($request->except('_token'));
         if($barangjasa->save()){
+            if(isset($request->pembelian)) {
+                foreach ($request->pembelian as $key => $pembelian) {
+                    if(!empty($pembelian['siswa_id'])) {
+                        $barangjasa->siswa()->attach(
+                            $pembelian['siswa_id'], [
+                                'qty' => $pembelian['qty'],
+                                'harga' => $pembelian['harga'],
+                                'keterangan' => $pembelian['keterangan'],
+                            ]);
+                    } elseif(!empty($pembelian['kelas_id'])) {
+                        $barangjasa->kelas()->attach(
+                            $pembelian['kelas_id'], [
+                                'qty' => $pembelian['qty'],
+                                'harga' => $pembelian['harga'],
+                                'keterangan' => $pembelian['keterangan'],
+                            ]
+                        );
+                    }
+                }
+            }
             return Redirect::route('itemtagihan.index')->with(['type' => 'success', 'msg' => 'Berhasil ditambahkan: ' . $barangjasa->nama]);
         } else {
             return Redirect::route('itemtagihan.index')->with(['type' => 'danger', 'msg' => 'Ada kesalahan']);
@@ -97,9 +117,44 @@ class TagihanItemController extends Controller
             'nama' => 'required|max:255',
             'harga_jual' => 'required|numeric',
         ]);
-        Log::debug($request);
+        // Log::debug($request);
         $barangjasa = $item->fill($request->except('_token'));
         if($barangjasa->save()){
+            if(isset($request->pembelian)) {
+                $ids = array_column($request->pembelian, 'siswa_id');
+                // $oldIds = $barangjasa->siswa()->whereIn('siswa.id', $ids)
+                //     ->pluck('siswa.id')->toArray();
+                $oldIds = $barangjasa->siswa()->allRelatedIds()->toArray();
+                $newIds = array_merge(array_diff($ids, $oldIds), array_diff($oldIds, $ids));
+                // Log::debug($newIds);
+                foreach ($request->pembelian as $key => $pembelian) {
+                    $data = [
+                        'qty' => $pembelian['qty'],
+                        'harga' => $pembelian['harga'],
+                        'keterangan' => $pembelian['keterangan'],
+                    ];
+                    $siswaId = $pembelian['siswa_id'];
+                    if(!empty($siswaId)) {
+                        if (in_array($siswaId, $newIds)) {
+                            $barangjasa->siswa()->attach(
+                                $siswaId, $data
+                            );
+                        } else {
+                            $barangjasa->siswa()->updateExistingPivot(
+                                $siswaId, $data
+                            );
+                        }
+                    } elseif(!empty($pembelian['kelas_id'])) {
+                        $barangjasa->kelas()->sync([
+                            $pembelian['kelas_id'] => $data
+                        ]);
+                    }
+                }
+                if (!empty($newIds)) {
+                    $barangjasa->siswa()->sync($ids);
+                }
+                
+            }
             return Redirect::route('itemtagihan.index')->with(['type' => 'success', 'msg' => 'Berhasil disimpan: ' . $barangjasa->nama]);
         } else {
             return Redirect::route('itemtagihan.index')->with(['type' => 'danger', 'msg' => 'Ada kesalahan']);
