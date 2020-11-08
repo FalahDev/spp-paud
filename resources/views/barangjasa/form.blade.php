@@ -4,11 +4,12 @@
 @section('page-name', (isset($item) ? 'Ubah Item Tagihan' : 'Item Tagihan Baru'))
 
 @php
-    if (isset($item) && $item->beli->count() > 0 || $item->harga_jual == 0) {
+$persiswa = false;
+if (isset($item)){
+    if($item->beli->count() > 0 || $item->harga_jual == 0) {
         $persiswa = true;
-    } else {
-        $persiswa = false;
     }
+}
 @endphp
 
 @section('content')
@@ -71,6 +72,45 @@
                             </div>
 
                             <div id="form-subitem" class="form-group subitem">
+                            @if ($item->siswa->count() > 0 )
+                                @foreach ($item->siswa as $si)
+                                <div class="form-row">
+                                    <div class="form-group col kelas_id" style="display: none;">
+                                        <select name="pembelian[0][kelas_id]" class="form-control" placeholder="Kelas">
+                                        <option value="">-- Pilih Kelas --</option>
+                                        @foreach($kelas as $item)
+                                        <option value="{{ $item->id }}" {{ ($item->id == $si->pivot->kelas_id) ? 'selected' : ''}}>{{ $item->nama }} - {{ isset($item->periode) ? $item->periode->nama : '' }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col siswa_id">
+                                        <select name="pembelian[0][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>
+                                            <option value="">-- Pilih Siswa --</option>
+                                            @foreach($siswa as $key => $item)
+                                            <optgroup label="{{ $key }}">
+                                                @foreach ($item as $id => $name)
+                                                <option value="{{ $id }}" {{ ($id == $si->pivot->siswa_id) ? 'selected' : ''}}> {{ $name }} </option>
+                                                @endforeach
+                                            </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <input type="number" min="1" max="100" value="{{ $si->pivot->qty }}" name="pembelian[0][qty]" class="form-control" placeholder="Jumlah item" required>
+                                    </div>
+                                    <div class="form-group col">
+                                        <input type="text" value="{{ $si->pivot->harga }}" name="pembelian[0][harga]" class="form-control" placeholder="Harga satuan" required>
+                                    </div>
+                                    <div class="form-group col">
+                                        <input type="text" value="{{ $si->pivot->keterangan }}" name="pembelian[0][keterangan]" class="form-control" placeholder="Keterangan">
+                                    </div>
+                                    <div class="form-group col-auto">
+                                        {{-- <input type="button" class="btn btn-primary addrow" value="+"> --}}
+                                        <input type="button" class="btn btn-secondary" disabled value="-">
+                                    </div>
+                                </div>
+                                @endforeach
+                                @else
                                 <div class="form-row">
                                     <div class="form-group col kelas_id" style="display: none;">
                                         <select name="pembelian[0][kelas_id]" class="form-control" placeholder="Kelas">
@@ -86,7 +126,7 @@
                                             @foreach($siswa as $key => $item)
                                             <optgroup label="{{ $key }}">
                                                 @foreach ($item as $id => $name)
-                                                <option value="{{ $id }}"> {{ $name }} </option>
+                                                <option value="{{ $id }}" > {{ $name }} </option>
                                                 @endforeach
                                             </optgroup>
                                             @endforeach
@@ -106,6 +146,7 @@
                                         <input type="button" class="btn btn-secondary" disabled value="-">
                                     </div>
                                 </div>
+                            @endif
                                 
                             </div>
                             <div class="form-group subitem">

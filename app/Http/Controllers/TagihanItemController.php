@@ -35,7 +35,16 @@ class TagihanItemController extends Controller
 
     public function create()
     {
-        return view('barangjasa.form');
+        $siswadata = Siswa::with('kelas')->where('is_lulus', '0')->orderBy('nama', 'asc')->get();
+        $kelasdata = Kelas::all();
+        $siswa = [];
+        foreach ($siswadata as $data) {
+            $siswa[$data->kelas->nama][$data->id] = $data->nama;
+        }
+        return view('barangjasa.form', [
+            'siswa' => $siswa,
+            'kelas' => $kelasdata,
+        ]);
     }
 
     /**
@@ -67,7 +76,7 @@ class TagihanItemController extends Controller
         foreach ($siswadata as $data) {
             $siswa[$data->kelas->nama][$data->id] = $data->nama;
         }
-        // $barangjasa = BarangJasa::find($item->id)->get();
+
         return view('barangjasa.form', [ 
             'item' => $item,
             'siswa' => $siswa,

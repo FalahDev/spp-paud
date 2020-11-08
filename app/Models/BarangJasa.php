@@ -35,12 +35,14 @@ class BarangJasa extends Model
 
     public function siswa()
     {
-        return $this->belongsToMany(\App\Models\Siswa::class, 'pembelian', 'bj_id');
+        return $this->belongsToMany(\App\Models\Siswa::class, 'pembelian', 'bj_id')
+            ->withPivot(['qty','harga','keterangan'])->withTimestamps();
     }
 
     public function kelas()
     {
-        return $this->belongsToMany(\App\Models\Kelas::class, 'pembelian', 'bj_id');
+        return $this->belongsToMany(\App\Models\Kelas::class, 'pembelian', 'bj_id')
+            ->withPivot(['qty','harga','keterangan'])->withTimestamps();
     }
 
     public function tagihan()
