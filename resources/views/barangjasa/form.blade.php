@@ -275,7 +275,22 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
             // $('#item-tagihan').prop('required', checked)
             $('.subitem').toggle(checked)
             $('.form-row .required').prop('required', checked)
-            $('.form-row .required').prop('disabled', !checked)
+            $('.form-row .form-control').prop('disabled', !checked)
+
+            var radiosiskls = $('input[name="appliedto"]:checked').val();
+            console.log(radiosiskls)
+            if(radiosiskls == 'siswa') {
+                defsis = true;
+            } else {
+                defsis = false;
+            }
+            $('.kelas_id').toggle(!defsis && checked)
+            $('.kelas_id select').prop('required', !defsis && checked)
+            $('.kelas_id select').prop('disabled', defsis  || !checked)
+            $('.siswa_id').toggle(defsis && checked)
+            $('.siswa_id select').prop('required', defsis  && checked)
+            $('.siswa_id select').prop('disabled', !defsis  || !checked)
+            
         })
 
         $('#tipe').change(function(event){
