@@ -83,7 +83,7 @@ if (isset($item)){
                                 @foreach ($subitemData as $sid => $si)
                                 <div class="form-row">
                                     <div class="form-group col-md-4 kelas_id" {!! (!$itemkelas) ? 'style="display: none;"' : ''!!}>
-                                        <select name="pembelian[{{ $sid }}][kelas_id]" class="form-control" placeholder="Kelas">
+                                        <select name="pembelian[{{ $sid }}][kelas_id]" class="form-control" placeholder="Kelas" {!! (!$itemkelas) ? 'disabled' : 'required'!!}>
                                         <option value="">-- Pilih Kelas --</option>
                                         @foreach($kelas as $kls)
                                         <option value="{{ $kls->id }}" {{ ($kls->id == $si->pivot->kelas_id) ? 'selected' : ''}}>{{ $kls->nama }} - {{ isset($kls->periode) ? $kls->periode->nama : '' }}</option>
@@ -91,7 +91,7 @@ if (isset($item)){
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4 siswa_id" {!! ($itemkelas) ? 'style="display: none;"' : ''!!}>
-                                        <select name="pembelian[{{ $sid }}][siswa_id]" class="form-control selectsiswa required" placeholder="Nama siswa" required>
+                                        <select name="pembelian[{{ $sid }}][siswa_id]" class="form-control selectsiswa required" placeholder="Nama siswa" {!! ($itemkelas) ? 'disabled' : 'required'!!}>
                                             <option value="">-- Pilih Siswa --</option>
                                             @foreach($siswa as $key => $sis)
                                             <optgroup label="{{ $key }}">
@@ -219,7 +219,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
 
             var cols = '';
             cols += '<div class="form-group col-md-4 kelas_id" {!! (!$itemkelas) ? 'style="display: none;"' : '' !!} >\
-                        <select name="pembelian[' + count + '][kelas_id]" class="form-control" placeholder="Kelas">\
+                        <select name="pembelian[' + count + '][kelas_id]" class="form-control" placeholder="Kelas" {!! (!$itemkelas) ? 'disabled' : 'required'!!}>\
                         <option value="">-- Pilih Kelas --</option>'+
                         @foreach($kelas as $item)
                         '<option value="{{ $item->id }}" >{{ $item->nama }} - {{ isset($item->periode) ? $item->periode->nama : '' }}</option>'+
@@ -227,7 +227,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
                         '</select>\
                     </div>'
             cols += '<div class="form-group col-md-4 siswa_id" {!! ($itemkelas) ? 'style="display: none;"' : '' !!} >\
-                        <select name="pembelian[' + count + '][siswa_id]" class="form-control selectsiswa required" placeholder="Nama siswa" required>' +
+                        <select name="pembelian[' + count + '][siswa_id]" class="form-control selectsiswa required" placeholder="Nama siswa" {!! ($itemkelas) ? 'disabled' : 'required'!!}>' +
                             '<option value="">-- Pilih Siswa --</option>' +
                             @foreach($siswa as $key => $item)
                             '<optgroup label="{{ $key }}">' +
@@ -275,7 +275,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
             // $('#item-tagihan').prop('required', checked)
             $('.subitem').toggle(checked)
             $('.form-row .required').prop('required', checked)
-            $('.form-row .form-control').prop('disabled', !checked)
+            $('.form-row .required').prop('disabled', !checked)
         })
 
         $('#tipe').change(function(event){
@@ -300,8 +300,10 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
             }
             $('.kelas_id').toggle(!defsis)
             $('.kelas_id select').prop('required', !defsis)
+            $('.kelas_id select').prop('disabled', defsis)
             $('.siswa_id').toggle(defsis)
             $('.siswa_id select').prop('required', defsis)
+            $('.siswa_id select').prop('disabled', !defsis)
         })
     });
 </script>
