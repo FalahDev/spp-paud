@@ -254,7 +254,7 @@
                         axios.get(`{{ route("api.gettagihan") }}/` + this.value, {headers: {'Authorization': 'Bearer '+ tok}})
                     ])
                     .then(axios.spread(function(modifier, tagihan) {
-                        console.log(modifier.data)
+                        // console.log(modifier.data)
                         var result = modifier.data
                         titipan = result.lebih
                         

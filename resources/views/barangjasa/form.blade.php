@@ -6,7 +6,7 @@
 @php
 $persiswa = false;
 if (isset($item)){
-    if($item->beli->count() > 0 || $item->harga_jual == 0) {
+    if($item->siswa->count() > 0 || $item->harga_jual == 0) {
         $persiswa = true;
     }
 }
@@ -72,37 +72,36 @@ if (isset($item)){
                             </div>
 
                             <div id="form-subitem" class="form-group subitem">
-                            @isset($item)
-                            @if ($item->siswa->count() > 0 )
+                            @if ($persiswa)
                                 @foreach ($item->siswa as $sid => $si)
                                 <div class="form-row">
-                                    <div class="form-group col kelas_id" style="display: none;">
+                                    <div class="form-group col-md-4 kelas_id" style="display: none;">
                                         <select name="pembelian[{{ $sid }}][kelas_id]" class="form-control" placeholder="Kelas">
                                         <option value="">-- Pilih Kelas --</option>
-                                        @foreach($kelas as $item)
-                                        <option value="{{ $item->id }}" {{ ($item->id == $si->pivot->kelas_id) ? 'selected' : ''}}>{{ $item->nama }} - {{ isset($item->periode) ? $item->periode->nama : '' }}</option>
+                                        @foreach($kelas as $kls)
+                                        <option value="{{ $kls->id }}" {{ ($kls->id == $si->pivot->kelas_id) ? 'selected' : ''}}>{{ $kls->nama }} - {{ isset($kls->periode) ? $kls->periode->nama : '' }}</option>
                                         @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col siswa_id">
+                                    <div class="form-group col-md-4 siswa_id">
                                         <select name="pembelian[{{ $sid }}][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>
                                             <option value="">-- Pilih Siswa --</option>
-                                            @foreach($siswa as $key => $item)
+                                            @foreach($siswa as $key => $sis)
                                             <optgroup label="{{ $key }}">
-                                                @foreach ($item as $id => $name)
+                                                @foreach ($sis as $id => $name)
                                                 <option value="{{ $id }}" {{ ($id == $si->pivot->siswa_id) ? 'selected' : ''}}> {{ $name }} </option>
                                                 @endforeach
                                             </optgroup>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group col-md-2">
                                         <input type="number" min="1" max="100" value="{{ $si->pivot->qty }}" name="pembelian[{{ $sid }}][qty]" class="form-control" placeholder="Jumlah item" required>
                                     </div>
-                                    <div class="form-group col">
-                                        <input type="text" value="{{ $si->pivot->harga }}" name="pembelian[{{ $sid }}][harga]" class="form-control" placeholder="Harga satuan" required>
+                                    <div class="form-group col-md-2">
+                                        <input type="number" min="1000" step="1000" value="{{ $si->pivot->harga }}" name="pembelian[{{ $sid }}][harga]" class="form-control" placeholder="Harga satuan" required>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group col-md-3">
                                         <input type="text" value="{{ $si->pivot->keterangan }}" name="pembelian[{{ $sid }}][keterangan]" class="form-control" placeholder="Keterangan">
                                     </div>
                                     <div class="form-group col-auto">
@@ -115,36 +114,36 @@ if (isset($item)){
                                     </div>
                                 </div>
                                 @endforeach
-                                @else
+                            @else
                                 <div class="form-row">
-                                    <div class="form-group col kelas_id" style="display: none;">
-                                        <select name="pembelian[0][kelas_id]" class="form-control" placeholder="Kelas">
+                                    <div class="form-group col-md-4 kelas_id" style="display: none;">
+                                        <select name="pembelian[0][kelas_id]" class="form-control" placeholder="Kelas" disabled>
                                         <option value="">-- Pilih Kelas --</option>
-                                        @foreach($kelas as $item)
-                                        <option value="{{ $item->id }}" >{{ $item->nama }} - {{ isset($item->periode) ? $item->periode->nama : '' }}</option>
+                                        @foreach($kelas as $kls)
+                                        <option value="{{ $kls->id }}" >{{ $kls->nama }} - {{ isset($kls->periode) ? $kls->periode->nama : '' }}</option>
                                         @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col siswa_id">
-                                        <select name="pembelian[0][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>
+                                    <div class="form-group col-md-4 siswa_id">
+                                        <select name="pembelian[0][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" disabled>
                                             <option value="">-- Pilih Siswa --</option>
-                                            @foreach($siswa as $key => $item)
+                                            @foreach($siswa as $key => $sis)
                                             <optgroup label="{{ $key }}">
-                                                @foreach ($item as $id => $name)
+                                                @foreach ($sis as $id => $name)
                                                 <option value="{{ $id }}" > {{ $name }} </option>
                                                 @endforeach
                                             </optgroup>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col">
-                                        <input type="number" min="1" max="100" name="pembelian[0][qty]" class="form-control" placeholder="Jumlah item" required>
+                                    <div class="form-group col-md-2">
+                                        <input type="number" min="1" max="100" name="pembelian[0][qty]" class="form-control" placeholder="Jumlah item" disabled>
                                     </div>
-                                    <div class="form-group col">
-                                        <input type="text" name="pembelian[0][harga]" class="form-control" placeholder="Harga satuan" required>
+                                    <div class="form-group col-md-2">
+                                        <input type="number" min="1000" step="1000" name="pembelian[0][harga]" class="form-control" placeholder="Harga satuan" disabled>
                                     </div>
-                                    <div class="form-group col">
-                                        <input type="text" name="pembelian[0][keterangan]" class="form-control" placeholder="Keterangan">
+                                    <div class="form-group col-md-3">
+                                        <input type="text" name="pembelian[0][keterangan]" class="form-control" placeholder="Keterangan" disabled>
                                     </div>
                                     <div class="form-group col-auto">
                                         {{-- <input type="button" class="btn btn-primary addrow" value="+"> --}}
@@ -152,7 +151,6 @@ if (isset($item)){
                                     </div>
                                 </div>
                             @endif
-                            @endisset
                             </div>
                             <div class="form-group subitem">
                                 <input type="button" id="addrow" class="btn btn-secondary btn-block" value="Tambah baris">
@@ -196,7 +194,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
         $('.selectsiswa').select2({
             theme: 'bootstrap4',
             dropdownAutoWidth: false,
-            // width: 'auto',
+            width: 'auto',
             placeholder: "-- Pilih siswa --",
         });
 
@@ -206,13 +204,14 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
         //         event.preventDefault()
         //     }
         // })
-        var count = 1;
+        var count = {{ $persiswa ? $item->siswa->count() : '1' }};
+
 
         $('#addrow').click(function(event){
             var newRow = $('<div class="form-row">');
 
             var cols = '';
-            cols += '<div class="form-group col kelas_id" style="display: none;">\
+            cols += '<div class="form-group col-md-4 kelas_id" style="display: none;">\
                         <select name="pembelian[' + count + '][kelas_id]" class="form-control" placeholder="Kelas">\
                         <option value="">-- Pilih Kelas --</option>'+
                         @foreach($kelas as $item)
@@ -220,7 +219,7 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
                         @endforeach
                         '</select>\
                     </div>'
-            cols += '<div class="form-group col siswa_id">\
+            cols += '<div class="form-group col-md-4 siswa_id">\
                         <select name="pembelian[' + count + '][siswa_id]" class="form-control selectsiswa" placeholder="Nama siswa" required>' +
                             '<option value="">-- Pilih Siswa --</option>' +
                             @foreach($siswa as $key => $item)
@@ -232,13 +231,13 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
                             @endforeach
                         '</select>\
                     </div>'
-            cols += '<div class="form-group col">\
+            cols += '<div class="form-group col-md-2">\
                         <input type="number" min="1" max="100" name="pembelian[' + count + '][qty]" class="form-control" placeholder="Jumlah item" required>\
                     </div>'
-            cols += '<div class="form-group col">\
-                        <input type="text" name="pembelian[' + count + '][harga]" class="form-control" placeholder="Harga satuan" required>\
+            cols += '<div class="form-group col-md-2">\
+                        <input type="number" min="1000" step="1000" name="pembelian[' + count + '][harga]" class="form-control" placeholder="Harga satuan" required>\
                     </div>'
-            cols += '<div class="form-group col">\
+            cols += '<div class="form-group col-md-3">\
                         <input type="text" name="pembelian[' + count + '][keterangan]" class="form-control" placeholder="Keterangan">\
                     </div>'
             cols += '<div class="form-group col-auto">\
@@ -268,6 +267,8 @@ require(['jquery', 'selectize','select2', 'sweetalert'],
             // $('#form-item').toggle(checked)
             // $('#item-tagihan').prop('required', checked)
             $('.subitem').toggle(checked)
+            $('.form-row .form-control').prop('required', checked)
+            $('.form-row .form-control').prop('disabled', !checked)
         })
 
         $('#tipe').change(function(event){

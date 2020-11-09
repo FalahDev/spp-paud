@@ -125,7 +125,7 @@ class TagihanItemController extends Controller
                 // $oldIds = $barangjasa->siswa()->whereIn('siswa.id', $ids)
                 //     ->pluck('siswa.id')->toArray();
                 $oldIds = $barangjasa->siswa()->allRelatedIds()->toArray();
-                $newIds = array_merge(array_diff($ids, $oldIds), array_diff($oldIds, $ids));
+                $newIds = array_diff($ids, $oldIds);
                 // Log::debug($newIds);
                 foreach ($request->pembelian as $key => $pembelian) {
                     $data = [
@@ -150,7 +150,7 @@ class TagihanItemController extends Controller
                         ]);
                     }
                 }
-                if (!empty($newIds)) {
+                if (!empty(array_filter($newIds)) && !empty($request->pembelian)) {
                     $barangjasa->siswa()->sync($ids);
                 }
                 
