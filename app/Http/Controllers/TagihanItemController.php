@@ -125,7 +125,7 @@ class TagihanItemController extends Controller
                 // $oldIds = $barangjasa->siswa()->whereIn('siswa.id', $ids)
                 //     ->pluck('siswa.id')->toArray();
                 $oldIds = $barangjasa->siswa()->allRelatedIds()->toArray();
-                $newIds = array_diff($ids, $oldIds);
+                $newIds = array_filter(array_diff($ids, $oldIds));
                 // Log::debug($newIds);
                 foreach ($request->pembelian as $key => $pembelian) {
                     $data = [
@@ -133,8 +133,19 @@ class TagihanItemController extends Controller
                         'harga' => $pembelian['harga'],
                         'keterangan' => $pembelian['keterangan'],
                     ];
+                    $kelasId = $pembelian['kelas_id'];
                     $siswaId = $pembelian['siswa_id'];
-                    if(!empty($siswaId)) {
+                    if (!empty($kelasId)) {
+                        $data['kelas_id'] = $kelasId;
+                        // $barangjasa->kelas()->sync([
+                        //     $kelasId => $data
+                        // ]);
+                        $siswas = Kelas::find($kelasId)->siswa->pluck('id')->toArray();
+                        foreach ($siswas as $siswa) {
+                            $barangjasa->siswa()->sync($siswas);
+                            $barangjasa->siswa()->updateExistingPivot($siswa, $data);
+                        }
+                    } elseif (!empty($siswaId)) {
                         if (in_array($siswaId, $newIds)) {
                             $barangjasa->siswa()->attach(
                                 $siswaId, $data
@@ -144,13 +155,9 @@ class TagihanItemController extends Controller
                                 $siswaId, $data
                             );
                         }
-                    } elseif(!empty($pembelian['kelas_id'])) {
-                        $barangjasa->kelas()->sync([
-                            $pembelian['kelas_id'] => $data
-                        ]);
                     }
                 }
-                if (!empty(array_filter($newIds)) && !empty($request->pembelian)) {
+                if (!empty($newIds) && !empty($request->pembelian)) {
                     $barangjasa->siswa()->sync($ids);
                 }
                 
