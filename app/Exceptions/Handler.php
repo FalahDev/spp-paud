@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ValidationException) {
+        if ($request->wantsJson() && $exception instanceof ValidationException) {
             return response()->json([
                 'message' => 'Data yang dikirimkan salah!',
                 'errors' => $exception->validator->getMessageBag()
