@@ -58,25 +58,32 @@ class TagihanItemController extends Controller
             'nama' => 'required|max:255',
             'harga_jual' => 'required|numeric',
         ]);
+        Log::debug($request);
         $barangjasa = BarangJasa::make($request->except('_token'));
         if($barangjasa->save()){
             if(isset($request->pembelian)) {
+                
+                // Log::debug($newIds);
                 foreach ($request->pembelian as $key => $pembelian) {
-                    if(!empty($pembelian['siswa_id'])) {
+                    $data = [
+                        'qty' => $pembelian['qty'],
+                        'harga' => $pembelian['harga'],
+                        'keterangan' => $pembelian['keterangan'],
+                    ];
+                    $kelasId = $pembelian['kelas_id'];
+                    $siswaId = $pembelian['siswa_id'];
+                    if (!empty($kelasId)) {
+                        $data['kelas_id'] = $kelasId;
+                        $siswas = Kelas::find($kelasId)->siswa->pluck('id')->toArray();
+                        foreach ($siswas as $siswa) {
+                            $barangjasa->siswa()->attach($siswa, $data);
+                        }
+                    } elseif (!empty($siswaId)) {
+                        
                         $barangjasa->siswa()->attach(
-                            $pembelian['siswa_id'], [
-                                'qty' => $pembelian['qty'],
-                                'harga' => $pembelian['harga'],
-                                'keterangan' => $pembelian['keterangan'],
-                            ]);
-                    } elseif(!empty($pembelian['kelas_id'])) {
-                        $barangjasa->kelas()->attach(
-                            $pembelian['kelas_id'], [
-                                'qty' => $pembelian['qty'],
-                                'harga' => $pembelian['harga'],
-                                'keterangan' => $pembelian['keterangan'],
-                            ]
+                            $siswaId, $data
                         );
+                        
                     }
                 }
             }
