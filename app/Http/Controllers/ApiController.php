@@ -108,20 +108,21 @@ class ApiController extends Controller
     protected function getTagihan(Siswa $siswa)
     {
         // wajib semua
+        $columns = ['id','jumlah','nama', 'has_item'];
         $tagihan_wajib = Tagihan::where('wajib_semua', '1')
             ->whereHas('periode', function ($q) {$q->where('is_active', 1);
-            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get()->toArray();
+            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get($columns)->toArray();
         // Log::debug($tagihan_wajib);
         //kelas only
         $tagihan_kelas = Tagihan::where('kelas_id', $siswa->kelas->id)
             ->whereHas('periode', function ($q) {$q->where('is_active', 1);
-            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get()->toArray();
+            })->orWhereHas('periode', function ($q) {$q;}, '<', 1)->get($columns)->toArray();
 
         //student only
         $tagihan_siswa     = [];
         $tagihan_rolesiswa = $siswa->bayar;
         foreach ($tagihan_rolesiswa as $tag_siswa) {
-            $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
+            $tagihan_siswa[] = $tag_siswa->tagihan()->first($columns)->toArray();
         }
 
         $tagihan_item = $siswa->beli;
