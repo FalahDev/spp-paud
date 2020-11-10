@@ -13,14 +13,14 @@ class Pembelian extends Model
 
     public function getHargaAttribute($value)
     {
-        return 'Rp' . number_format($value, 0, ',', '.');
+        return format_idr($value);
     }
 
     public function getTotalHargaAttribute()
     {
         $total = $this->attributes['qty'] * $this->attributes['harga'];
         // return 'Rp' . number_format($total, 0, ',', '.');
-        return $total;
+        return format_idr($total);
     }
 
     public function siswa()
