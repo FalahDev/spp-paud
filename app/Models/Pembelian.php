@@ -19,7 +19,8 @@ class Pembelian extends Model
     public function getTotalHargaAttribute()
     {
         $total = $this->attributes['qty'] * $this->attributes['harga'];
-        return 'Rp' . number_format($total, 0, ',', '.');
+        // return 'Rp' . number_format($total, 0, ',', '.');
+        return $total;
     }
 
     public function siswa()

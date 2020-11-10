@@ -33,6 +33,15 @@ class BarangJasa extends Model
         return ucfirst($value);
     }
 
+    public function getHargaJualAttribute($value)
+    {
+        if ($this->attributes['harga_jual'] == 0) {
+            return $this->beli()->avg('harga');
+        } else {
+            return $this->attributes['harga_jual'];
+        }
+    }
+
     public function beli()
     {
         return $this->hasMany(\App\Models\Pembelian::class, 'bj_id', 'id');

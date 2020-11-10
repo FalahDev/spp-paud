@@ -124,6 +124,17 @@ class ApiController extends Controller
             $tagihan_siswa[] = $tag_siswa->tagihan->toArray();
         }
 
+        $tagihan_item = $siswa->beli;
+        foreach ($tagihan_item as $item) {
+            if(!empty($item->barangjasa->tagihan)){
+                $tagihan_siswa[] = [
+                    'id' =>$item->barangjasa->tagihan->tagihan_id,
+                    'nama' => $item->barangjasa->tagihan->nama,
+                    'jumlah' => $item->total_harga,
+                ];
+            }
+        }
+
         $tagihan = array_merge($tagihan_wajib, $tagihan_kelas, $tagihan_siswa);
 
         return $tagihan;

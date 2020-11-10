@@ -70,8 +70,8 @@ class TagihanItemController extends Controller
                         'harga' => $pembelian['harga'],
                         'keterangan' => $pembelian['keterangan'],
                     ];
-                    $kelasId = $pembelian['kelas_id'];
-                    $siswaId = $pembelian['siswa_id'];
+                    $kelasId = $pembelian['kelas_id'] ?? null;
+                    $siswaId = $pembelian['siswa_id'] ?? null;
                     if (!empty($kelasId)) {
                         $data['kelas_id'] = $kelasId;
                         $siswas = Kelas::find($kelasId)->siswa->pluck('id')->toArray();
@@ -140,8 +140,8 @@ class TagihanItemController extends Controller
                         'harga' => $pembelian['harga'],
                         'keterangan' => $pembelian['keterangan'],
                     ];
-                    $kelasId = $pembelian['kelas_id'];
-                    $siswaId = $pembelian['siswa_id'];
+                    $kelasId = $pembelian['kelas_id'] ?? null;
+                    $siswaId = $pembelian['siswa_id'] ?? null;
                     if (!empty($kelasId)) {
                         $data['kelas_id'] = $kelasId;
                         // $barangjasa->kelas()->sync([
@@ -173,6 +173,27 @@ class TagihanItemController extends Controller
         } else {
             return Redirect::route('itemtagihan.index')->with(['type' => 'danger', 'msg' => 'Ada kesalahan']);
 
+        }
+    }
+
+    public function destroy(BarangJasa $item)
+    {
+        $btagihan = $item->has('tagihan')->where('id', $item->id)->get();
+        if($btagihan->count() > 0){
+            if ($btagihan->first()->tagihan->transaksi->count() > 0) {
+                return redirect()->route('itemtagihan.index')->with([
+                    'type' => 'danger',
+                    'msg' => 'Tidak dapat menghapus item tagihan yang masih memiliki transaksi'
+                ]);
+            }
+            
+        }
+        $item->siswa()->detach();
+        if($item->delete()){
+            return redirect()->route('itemtagihan.index')->with([
+                'type' => 'success',
+                'msg' => 'Item tagihan telah dihapus'
+            ]);
         }
     }
 }

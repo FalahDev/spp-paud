@@ -48,6 +48,11 @@ class Tagihan extends Model
         }
     }
 
+    public function getJumlahIdrAttribute()
+    {
+        return "Rp" . format_idr($this->jumlah);
+    }
+
     public function barangjasa()
     {
         return $this->hasMany(\App\Models\BarangJasa::class, 'tagihan_id');
@@ -88,8 +93,4 @@ class Tagihan extends Model
         return $this->belongsTo(\App\Models\Periode::class);
     }
 
-    public function getJumlahIdrAttribute()
-    {
-        return "Rp" . format_idr($this->jumlah);
-    }
 }
