@@ -89,7 +89,7 @@
         Route::post('tagihan-item/{item}/ubah','TagihanItemController@update')->name('itemtagihan.update');
         Route::post('tagihan-item/{item}/hapus', 'TagihanItemController@destroy')->name('itemtagihan.destroy');
         Route::get('pembelian-siswa', 'PembelianController@index')->name('pembelian.index');
-        Route::get('tambah-pembelian', 'PembelianController@create')->name('pembelian.create');
+        // Route::get('tambah-pembelian', 'PembelianController@create')->name('pembelian.create');
         // Route::post('simpan-pembelian', 'PembelianController@store')->name('pembelian.store');
         Route::get('pembelian-item/{item}/ubah', 'PembelianController@edit')->name('pembelian.edit');
         Route::get('pembelian-item/{item}/detail', 'PembelianController@show')->name('pembelian.show');

@@ -23,6 +23,19 @@ class Pembelian extends Model
         return format_idr($total);
     }
 
+    public function getLunasAttribute()
+    {
+        $lunas = false;
+        $tagihan =  $this->barangjasa->tagihan;
+        if (!empty($tagihan)) {
+            $transaksi = $tagihan->transaksi->where('siswa_id', $this->siswa->id)->first();
+            if (!empty($transaksi)) {
+                $lunas = $transaksi->is_lunas;
+            }
+        }
+        return $lunas;
+    }
+
     public function siswa()
     {
         return $this->belongsTo(\App\Models\Siswa::class);

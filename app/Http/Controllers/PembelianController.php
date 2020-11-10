@@ -13,8 +13,9 @@ class PembelianController extends Controller
 
     public function index()
     {
-        $pembelian = Pembelian::paginate(10);
-        return view('pembelian.index', ['transaksi' => $pembelian]);
+        $pembeliansiswa = Pembelian::whereNull('kelas_id')->paginate(10);
+        $pembeliankelas = Pembelian::whereNotNull('kelas_id')->paginate(10);
+        return view('pembelian.index', ['siswa' => $pembeliansiswa, 'kelas' => $pembeliankelas]);
     }
 
     // public function show(BarangJasa $item)
