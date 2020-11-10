@@ -43,7 +43,9 @@ class UserController extends Controller
             'role' => 'required|in:SuperAdmin,Admin,Bendahara'
         ]);
 
-        if(User::create($request->input())){
+        $user = $request->input();
+        $user['api_token'] = '';
+        if(User::create($user)){
             return redirect()->route('user.index')->with([
                 'type' => 'success',
                 'msg' => 'Pengguna ditambahkan'

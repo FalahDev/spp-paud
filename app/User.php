@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role'
+        'name', 'email', 'password', 'role', 'api_token'
     ];
 
     /**
@@ -26,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api_token'
     ];
 
     /**
@@ -41,6 +42,15 @@ class User extends Authenticatable
     protected function setPasswordAttribute($val)
     {
         $this->attributes['password'] = \Hash::make($val);
+    }
+
+    protected function setApiTokenAttribute($val)
+    {
+        if(empty($val)) {
+            $this->attributes['api_token'] = Str::random(80);
+        } else {
+            $this->attributes['api_token'] = $val;
+        }
     }
 
 }
